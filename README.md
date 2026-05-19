@@ -1,23 +1,26 @@
-# StreamHIVE
+# StreamHIVE V2
 
-A cinematic PHP movie, TV, episode, and actor database powered by the TMDB API and local SQLite storage. The app keeps a fast local cache in SQLite, fetches missing content from TMDB on demand, and uses clean Apache routes for a streaming-app style browsing experience.
+StreamHIVE V2 is a cinematic PHP movie, TV, episode, and actor database powered by the TMDB API and local SQLite storage. The app keeps a fast local cache in SQLite, fetches missing content from TMDB on demand, and uses clean Apache routes for a streaming-app style browsing experience.
 
 > This product uses the TMDB API but is not endorsed or certified by TMDB.
 
 ## Features
 
-- Netflix-style dark UI with movie, TV, season, episode, actor, search, profile, and admin pages.
+- Streaming-app style dark UI with movie, TV, season, episode, actor, search, profile, and admin pages.
 - SQLite-first storage with automatic TMDB imports and upgrades.
 - Fast SQL-level pagination, filtering, sorting, and search for listing pages.
 - Live navbar search with up to 6 clickable local results.
 - AJAX filtering and pagination on `/movies`, `/tv`, and `/s`.
 - Blocking fetching-content modal for missing or partially imported content.
-- Movie, TV, episode, and actor metadata, cast, ratings, genres, seasons, and recommendations.
+- Movie, TV, episode, and actor metadata, cast, ratings, genres, seasons, collections, and recommendations.
 - “More like this” recommendations ranked by similar names first, then shared genres.
+- Full-width movie collection carousel on movie detail pages when a movie belongs to a TMDB collection.
+- Collection carousel uses the collection backdrop and hides future-dated or undated movies.
+- Global release-date visibility rules hide movies, TV shows, seasons, and episodes without dates, and hide unreleased media everywhere except `/coming-this-year`.
 - Runtime display such as `1 hour 30 mins` on movie, TV, episode, and card views where available.
 - MultiEmbed player support using TMDB IDs first, then IMDb IDs as fallback.
 - Browser-local profile page using `localStorage` for bookmarks and recently viewed items.
-- Admin dashboard for imports, SQLite stats, and managing movies, TV shows, and actors.
+- Admin dashboard for imports, prefetched full-imports, SQLite stats, and managing movies, TV shows, and actors.
 - Clean collision-safe slugs for duplicate titles/names.
 - SEO/social metadata with Open Graph and Twitter card tags.
 
@@ -122,6 +125,8 @@ http://localhost:8000
 /profile
 ```
 
+`/coming-this-year` is the exception to the global released-only filter, so upcoming movies and TV shows can still be listed there.
+
 ## Admin routes
 
 Use your `ADMIN_TOKEN` query string value:
@@ -134,7 +139,7 @@ Use your `ADMIN_TOKEN` query string value:
 /admin/manage/actors?token=change-this-token
 ```
 
-The admin area includes stats, imports, filters, sorting, previews, pagination, and delete actions. For a public production site, replace the query-string token with proper authentication.
+The admin area includes stats, imports, prefetched full-import actions, filters, sorting, previews, pagination, and delete actions. For a public production site, replace the query-string token with proper authentication.
 
 ## SQLite storage
 
@@ -159,6 +164,29 @@ The app is tuned for a single-writer cache workflow:
 - Slug checks use indexed lookups.
 - Pages query only the rows needed for the current page.
 - Missing content is fetched, saved, verified as readable, then redirected.
+
+## Content visibility rules
+
+Across the public browsing and detail pages, StreamHIVE hides media that should not appear in the main catalogue yet:
+
+- Movies with no release date are hidden.
+- TV shows with no first air date are hidden.
+- Seasons and episodes with no air date are hidden.
+- Future-dated movies, TV shows, seasons, and episodes are hidden globally.
+- `/coming-this-year` intentionally bypasses the released-only rule so upcoming movies and TV shows can be discovered there.
+- Actors are not hidden by these release-date rules.
+
+## Movie collections
+
+Movie detail pages can show a full-width **Movies In This Collection** section when TMDB returns collection data for the movie.
+
+The collection section:
+
+- Appears above the cast/recommended row.
+- Uses the TMDB collection backdrop as the section background.
+- Renders movies in the same card format used by index/listing pages.
+- Uses a Splide carousel with normal scrolling, no elastic re-centering, and far-left/far-right arrows.
+- Excludes future-dated and undated movies.
 
 ## Player embeds
 
@@ -259,6 +287,6 @@ The visible footer attribution is checked strictly: changing the creator text, T
 
 - Metadata and images: TMDB API
 - Player embed format: MultiEmbed
-- UI libraries: Bootstrap 5.3.3 and Font Awesome
+- UI libraries: Bootstrap 5.3.3, Font Awesome, and Splide
 - Storage: SQLite
 - Created by [GingerDev](https://github.com/GingerDev0)
