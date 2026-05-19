@@ -7,7 +7,7 @@ $link = $type === 'person' ? url('actors/' . $slug) : ($type === 'tv' ? url('tv/
 $rating = round((float)($item['vote_average'] ?? 0), 1);
 $genres = array_values(array_filter(array_map('strval', $item['genres'] ?? [])));
 $genreText = genre_links($genres, $type, 2, 'genre-link genre-link-home');
-$ageRating = trim((string)($item['age_rating'] ?? '')) ?: 'NR';
+$ageRating = display_age_rating($item['age_rating'] ?? '', $type);
 $overview = trim((string)($item['overview'] ?? $item['biography'] ?? '')) ?: 'No overview available yet.';
 $importStatus = (string)($item['import_status'] ?? '');
 $isFetchReady = $importStatus === 'full';

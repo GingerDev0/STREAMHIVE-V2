@@ -7,7 +7,8 @@ $episodeLabel = 'Episode ' . (string)$episodeNumber;
 $backdrop = $episode['still_path'] ?? ($show['backdrop_path'] ?? ($show['poster_path'] ?? null));
 $poster = $show['poster_path'] ?? ($episode['still_path'] ?? null);
 $episodeMediaUrl = url('tv/'.$show['slug'].'/s'.str_pad((string)$season,2,'0',STR_PAD_LEFT).'/e'.str_pad((string)$episodeNumber,2,'0',STR_PAD_LEFT));
-$episodeMediaTitle = ($show['title'] ?? 'Show') . ' - S' . str_pad((string)$season,2,'0',STR_PAD_LEFT) . 'E' . str_pad((string)$episodeNumber,2,'0',STR_PAD_LEFT) . ' - ' . $episodeTitle;
+$episodeCode = 'S' . str_pad((string)$season,2,'0',STR_PAD_LEFT) . 'E' . str_pad((string)$episodeNumber,2,'0',STR_PAD_LEFT);
+$episodeMediaTitle = ($show['title'] ?? 'Show') . ' - ' . $episodeTitle . ' (' . $episodeCode . ')';
 $episodeMediaMeta = 'Episode · ' . $seasonLabel . ' · ' . $episodeLabel;
 $episodePlayerUrl = multiembed_player_url($show, 'episode', (int)$season, $episodeNumber);
 ?>
@@ -33,6 +34,7 @@ $episodePlayerUrl = multiembed_player_url($show, 'episode', (int)$season, $episo
       <div class="v2-hero-actions">
         <a class="btn btn-outline-light btn-lg" href="<?= e(url('tv/'.$show['slug'].'/s'.str_pad((string)$season,2,'0',STR_PAD_LEFT))) ?>"><i class="fa-solid fa-list me-2"></i>View season</a>
         <button class="btn btn-outline-light btn-lg detail-bookmark js-bookmark-btn" type="button" data-media="<?= media_storage_payload($show, 'episode', $episodeMediaUrl, $episodeMediaTitle, $episodeMediaMeta, tmdb_img($episode['still_path'] ?? ($show['poster_path'] ?? null), 'w500')) ?>"><i class="fa-regular fa-bookmark me-2"></i>Save episode</button>
+        <?= share_button($episodeMediaTitle, $episodeMediaUrl) ?>
       </div>
     </div>
     <?php if ($episodePlayerUrl !== '' && $episodeNumber > 0): ?>

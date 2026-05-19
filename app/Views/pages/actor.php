@@ -44,6 +44,9 @@ $profile = tmdb_img($actor['profile_path'] ?? null, 'w500');
           <?php if ($productionCredits): ?><span><strong><?= e((string)count($productionCredits)) ?></strong> In Production</span><?php endif; ?>
           <span><strong><?= e((string)count($credits)) ?></strong> Credits</span>
         </div>
+        <div class="v2-hero-actions actor-share-actions mt-3">
+          <?= share_button($actor['name'] ?? 'Actor profile', actor_url($actor)) ?>
+        </div>
       </div>
     </div>
   </div>

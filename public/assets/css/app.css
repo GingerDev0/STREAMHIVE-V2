@@ -2664,3 +2664,768 @@ main.v2-main{
 body.modal-open #contentFetchModal.fetch-modal{
   display:block!important;
 }
+
+/* Share bar modal */
+.v2-share-open{
+  border-color:rgba(255,255,255,.22)!important;
+  background:rgba(255,255,255,.055)!important;
+  color:#fff!important;
+}
+.v2-share-open:hover{
+  border-color:rgba(229,9,20,.55)!important;
+  background:rgba(229,9,20,.18)!important;
+  color:#fff!important;
+}
+.v2-share-backdrop{
+  position:fixed;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:1rem;
+  background:rgba(0,0,0,.58);
+  backdrop-filter:blur(12px);
+  z-index:2147482000;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .18s ease;
+}
+.v2-share-backdrop.is-open{
+  opacity:1;
+  pointer-events:auto;
+}
+.v2-share-bar{
+  width:min(980px,100%);
+  color:#fff;
+  border:1px solid rgba(255,255,255,.13);
+  border-radius:28px;
+  background:linear-gradient(135deg,rgba(13,16,25,.98),rgba(23,6,10,.98));
+  box-shadow:0 34px 110px rgba(0,0,0,.72),0 0 0 1px rgba(229,9,20,.11) inset;
+  padding:1rem;
+  max-height:calc(100vh - 2rem);
+  overflow-y:auto;
+  transform:translateY(10px) scale(.98);
+  transition:transform .2s ease;
+}
+.v2-share-backdrop.is-open .v2-share-bar{
+  transform:translateY(0) scale(1);
+}
+.v2-share-bar-head{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:1rem;
+  padding:.2rem .25rem .85rem;
+}
+.v2-share-bar-head span{
+  display:inline-flex;
+  align-items:center;
+  gap:.45rem;
+  color:#e50914;
+  font-size:.78rem;
+  font-weight:900;
+  text-transform:uppercase;
+  letter-spacing:.16em;
+}
+.v2-share-bar-head h2{
+  margin:.15rem 0 0;
+  font-size:clamp(1.15rem,2vw,1.65rem);
+  font-weight:950;
+}
+.v2-share-close{
+  width:42px;
+  height:42px;
+  display:grid;
+  place-items:center;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:999px;
+  color:#fff;
+  background:rgba(255,255,255,.06);
+}
+.v2-share-close:hover{
+  background:rgba(229,9,20,.22);
+  border-color:rgba(229,9,20,.4);
+}
+.v2-share-url-row{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:.6rem;
+  margin-bottom:.85rem;
+}
+.v2-share-url-row input{
+  min-height:48px;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:16px;
+  color:#fff;
+  background:rgba(255,255,255,.06);
+  padding:0 1rem;
+  outline:none;
+}
+.v2-share-url-row input:focus{
+  border-color:rgba(229,9,20,.52);
+  box-shadow:0 0 0 .2rem rgba(229,9,20,.14);
+}
+.v2-share-url-row button{
+  min-height:48px;
+  border:0;
+  border-radius:16px;
+  color:#fff;
+  background:#e50914;
+  padding:0 1rem;
+  font-weight:900;
+  white-space:nowrap;
+}
+.v2-share-url-row button.is-copied{
+  background:#17b26a;
+}
+.v2-share-actions{
+  display:grid;
+  grid-template-columns:repeat(7,minmax(80px,1fr));
+  gap:.55rem;
+}
+.v2-share-action{
+  min-height:74px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:.45rem;
+  border:1px solid rgba(255,255,255,.11);
+  border-radius:18px;
+  color:#fff;
+  text-decoration:none;
+  background:rgba(255,255,255,.055);
+  transition:background .16s ease,border-color .16s ease,transform .16s ease;
+}
+.v2-share-action i{
+  font-size:1.35rem;
+}
+.v2-share-action span{
+  font-size:.78rem;
+  font-weight:850;
+}
+.v2-share-action:hover{
+  color:#fff;
+  background:rgba(229,9,20,.18);
+  border-color:rgba(229,9,20,.42);
+  transform:translateY(-2px);
+}
+.share-bar-open{
+  overflow:hidden;
+}
+@media (max-width:767.98px){
+  .v2-share-backdrop{padding:.65rem;}
+  .v2-share-bar{border-radius:24px;padding:.85rem;}
+  .v2-share-url-row{grid-template-columns:1fr;}
+  .v2-share-actions{grid-template-columns:repeat(3,minmax(0,1fr));}
+  .v2-share-action{min-height:68px;}
+}
+
+
+/* TV detail overview + actor biography: full readable text panels */
+.v2-tv-detail-hero .v2-detail-copy{
+  width:100%!important;
+  min-width:0!important;
+}
+.v2-tv-detail-hero .v2-detail-copy .v2-lead{
+  width:100%!important;
+  max-width:none!important;
+}
+.actor-hero .actor-bio{
+  display:block!important;
+  -webkit-line-clamp:unset!important;
+  -webkit-box-orient:initial!important;
+  width:100%!important;
+  max-width:none!important;
+  max-height:10.5rem!important;
+  overflow-y:auto!important;
+  overflow-x:hidden!important;
+  padding:.92rem 1rem!important;
+  margin:1.05rem 0!important;
+  border-radius:.85rem!important;
+  background:linear-gradient(145deg,rgba(255,255,255,.075),rgba(255,255,255,.035))!important;
+  border:1px solid rgba(255,255,255,.105)!important;
+  color:rgba(255,255,255,.78)!important;
+  font-size:1.1rem!important;
+  line-height:1.75!important;
+  scrollbar-width:thin!important;
+  scrollbar-color:#e50914 rgba(255,255,255,.08)!important;
+}
+.actor-hero .actor-bio::-webkit-scrollbar{width:.48rem!important}
+.actor-hero .actor-bio::-webkit-scrollbar-track{background:rgba(255,255,255,.08)!important;border-radius:999px!important}
+.actor-hero .actor-bio::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#e50914,#8d050b)!important;border-radius:999px!important}
+.actor-hero .actor-bio::-webkit-scrollbar-thumb:hover{background:#ff1f2d!important}
+@media (max-width:767.98px){
+  .actor-hero .actor-bio{max-height:12rem!important;font-size:1rem!important}
+}
+
+/* Fix More like this play overlay alignment: center over poster only */
+.v2-related-poster-wrap{
+  position:relative!important;
+}
+.v2-related-play{
+  top:50%!important;
+  left:50%!important;
+  right:auto!important;
+  bottom:auto!important;
+  transform:translate(-50%,-50%) scale(.92)!important;
+  z-index:4!important;
+  pointer-events:none!important;
+}
+.v2-related-item:hover .v2-related-play{
+  opacity:1!important;
+  transform:translate(-50%,-50%) scale(1)!important;
+}
+
+/* Professional footer refresh */
+.pro-footer{
+  position:relative!important;
+  z-index:2!important;
+  width:100%!important;
+  margin-top:clamp(3rem,7vw,6rem)!important;
+  padding:0!important;
+  color:rgba(255,255,255,.72)!important;
+  border-top:1px solid rgba(255,255,255,.08)!important;
+  border-radius:0!important;
+  overflow:hidden!important;
+  background:
+    radial-gradient(circle at 12% 0%,rgba(229,9,20,.24),transparent 25rem),
+    radial-gradient(circle at 86% 0%,rgba(110,168,254,.12),transparent 28rem),
+    linear-gradient(180deg,rgba(12,13,20,.98),#05060a 72%,#020307 100%)!important;
+  box-shadow:0 -1.4rem 4rem rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.06)!important;
+}
+.pro-footer:before{
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  top:0;
+  height:1px;
+  background:linear-gradient(90deg,rgba(229,9,20,.92),rgba(255,255,255,.2),rgba(110,168,254,.38),rgba(229,9,20,.72));
+}
+.pro-footer-shell{
+  width:100%!important;
+  max-width:none!important;
+  margin:0!important;
+  padding:clamp(1.25rem,3vw,2.2rem) clamp(1rem,3vw,2rem)!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  backdrop-filter:none!important;
+}
+.pro-footer-inner{
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr) auto;
+  align-items:center;
+  gap:clamp(1rem,3vw,2rem);
+  width:100%;
+}
+.pro-footer-brand{
+  display:inline-flex;
+  align-items:center;
+  gap:.8rem;
+  color:#fff!important;
+  text-decoration:none!important;
+  min-width:max-content;
+}
+.pro-footer-brand:hover{color:#fff!important;text-decoration:none!important;}
+.pro-footer-brand-mark{
+  width:3rem;
+  height:3rem;
+  display:grid;
+  place-items:center;
+  border-radius:.95rem;
+  background:linear-gradient(135deg,#e50914,#b20710 58%,#ff4b55);
+  color:#fff;
+  box-shadow:0 .9rem 2rem rgba(229,9,20,.24);
+}
+.pro-footer-brand strong{
+  display:block;
+  font-size:1.28rem;
+  line-height:1;
+  letter-spacing:-.045em;
+  font-weight:1000;
+}
+.pro-footer-brand small{
+  display:block;
+  margin-top:.18rem;
+  color:#e50914;
+  font-size:.66rem;
+  letter-spacing:.32em;
+  text-transform:uppercase;
+  font-weight:950;
+}
+.pro-footer-copy{
+  min-width:0;
+  color:rgba(255,255,255,.66);
+  font-size:.92rem;
+  line-height:1.55;
+}
+.pro-footer-copy p{
+  margin:0;
+}
+.pro-footer-copy p + p{
+  margin-top:.2rem;
+}
+.pro-footer-copy a,
+.pro-footer-actions a{
+  color:#fff!important;
+  text-decoration:none!important;
+  font-weight:900!important;
+}
+.pro-footer-copy a:hover,
+.pro-footer-actions a:hover{
+  color:#e50914!important;
+  text-decoration:none!important;
+}
+.pro-footer-actions{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+  gap:.55rem;
+  margin:0;
+}
+.pro-footer-actions a{
+  display:inline-flex;
+  align-items:center;
+  gap:.42rem;
+  padding:.58rem .78rem;
+  border:1px solid rgba(255,255,255,.11);
+  border-radius:999px;
+  background:rgba(255,255,255,.055);
+  color:rgba(255,255,255,.82)!important;
+  transition:background .18s ease,border-color .18s ease,color .18s ease;
+}
+.pro-footer-actions a:hover{
+  background:rgba(229,9,20,.16);
+  border-color:rgba(229,9,20,.36);
+}
+.pro-footer-bottom,
+.pro-footer-columns,
+.pro-footer-main,
+.pro-footer-col{
+  display:contents;
+}
+@media (max-width:1199.98px){
+  .pro-footer-inner{
+    grid-template-columns:1fr;
+    align-items:flex-start;
+  }
+  .pro-footer-actions{
+    justify-content:flex-start;
+  }
+}
+@media (max-width:575.98px){
+  .pro-footer-shell{
+    padding:1.1rem!important;
+  }
+  .pro-footer-actions a{
+    flex:1 1 calc(50% - .55rem);
+    justify-content:center;
+  }
+  .pro-footer-copy{
+    overflow-wrap:anywhere;
+  }
+}
+
+/* Premium animated play buttons — image/play hover only, no card scaling */
+@keyframes premiumPlayPulse{
+  0%{box-shadow:0 1rem 2.2rem rgba(0,0,0,.56),0 0 0 0 rgba(229,9,20,.38),inset 0 0 0 1px rgba(255,255,255,.42)}
+  70%{box-shadow:0 1.15rem 2.6rem rgba(0,0,0,.66),0 0 0 .62rem rgba(229,9,20,0),inset 0 0 0 1px rgba(255,255,255,.5)}
+  100%{box-shadow:0 1rem 2.2rem rgba(0,0,0,.56),0 0 0 0 rgba(229,9,20,0),inset 0 0 0 1px rgba(255,255,255,.42)}
+}
+@keyframes premiumPlayIconNudge{
+  0%,100%{transform:translateX(0)}
+  45%{transform:translateX(.12rem)}
+}
+.home-poster-play,
+.poster-play,
+.episode-play,
+.actor-credit-play,
+.listing-play,
+.v2-related-play{
+  isolation:isolate!important;
+  overflow:visible!important;
+  background:linear-gradient(135deg,#fff 0%,#f4f4f4 48%,#d8d8d8 100%)!important;
+  color:#070707!important;
+  border:1px solid rgba(255,255,255,.42)!important;
+  box-shadow:0 1rem 2.2rem rgba(0,0,0,.56),0 0 0 .18rem rgba(229,9,20,.18),inset 0 0 0 1px rgba(255,255,255,.38)!important;
+  transition:opacity .22s ease,transform .28s cubic-bezier(.2,.9,.2,1.15),filter .22s ease,background .22s ease,box-shadow .28s ease!important;
+}
+.home-poster-play::before,
+.poster-play::before,
+.episode-play::before,
+.actor-credit-play::before,
+.listing-play::before,
+.v2-related-play::before{
+  content:"";
+  position:absolute;
+  inset:-.48rem;
+  border-radius:inherit;
+  z-index:-1;
+  opacity:0;
+  background:radial-gradient(circle,rgba(229,9,20,.34) 0%,rgba(229,9,20,.18) 38%,transparent 70%);
+  filter:blur(.18rem);
+  transform:scale(.74);
+  transition:opacity .28s ease,transform .28s cubic-bezier(.2,.9,.2,1.15);
+}
+.home-poster-play i,
+.poster-play i,
+.episode-play i,
+.actor-credit-play i,
+.listing-play i,
+.v2-related-play i{
+  position:relative;
+  z-index:1;
+  filter:drop-shadow(0 .08rem .08rem rgba(0,0,0,.22));
+}
+.home-poster-card:hover .home-poster-play,
+.home-poster-wrap:hover .poster-play,
+.home-media-card:hover .poster-play,
+.season-episode-card:hover .episode-play,
+.profile-card-link:hover .episode-play,
+.actor-credit-card:hover .actor-credit-play,
+.listing-media-card:hover .listing-play{
+  background:linear-gradient(135deg,#fff 0%,#fafafa 44%,#e8e8e8 100%)!important;
+  filter:brightness(1.05)!important;
+  transform:translate(-50%,-50%) scale(1.08)!important;
+  animation:premiumPlayPulse 1.55s ease-out infinite!important;
+}
+.home-poster-card:hover .home-poster-play::before,
+.home-poster-wrap:hover .poster-play::before,
+.home-media-card:hover .poster-play::before,
+.season-episode-card:hover .episode-play::before,
+.profile-card-link:hover .episode-play::before,
+.actor-credit-card:hover .actor-credit-play::before,
+.listing-media-card:hover .listing-play::before,
+.v2-related-item:hover .v2-related-play::before{
+  opacity:1;
+  transform:scale(1);
+}
+.home-poster-card:hover .home-poster-play i,
+.home-poster-wrap:hover .poster-play i,
+.home-media-card:hover .poster-play i,
+.season-episode-card:hover .episode-play i,
+.profile-card-link:hover .episode-play i,
+.actor-credit-card:hover .actor-credit-play i,
+.listing-media-card:hover .listing-play i,
+.v2-related-item:hover .v2-related-play i{
+  animation:premiumPlayIconNudge .82s ease-in-out infinite!important;
+}
+.v2-related-item:hover .v2-related-play{
+  background:linear-gradient(135deg,#fff 0%,#fafafa 44%,#e8e8e8 100%)!important;
+  filter:brightness(1.05)!important;
+  transform:translate(-50%,-50%) scale(1.08)!important;
+  animation:premiumPlayPulse 1.55s ease-out infinite!important;
+}
+.v2-play-float{
+  background:linear-gradient(135deg,var(--brand,#e50914),#b20710)!important;
+  color:#fff!important;
+  border:1px solid rgba(255,255,255,.16)!important;
+  box-shadow:0 1rem 2.4rem rgba(229,9,20,.28),0 .75rem 2rem rgba(0,0,0,.45)!important;
+  transition:transform .24s cubic-bezier(.2,.9,.2,1.15),box-shadow .24s ease,filter .2s ease!important;
+}
+.v2-feature-card:hover .v2-play-float,
+.v2-play-float:hover{
+  transform:translateY(-.08rem)!important;
+  filter:brightness(1.08)!important;
+  box-shadow:0 1.1rem 2.8rem rgba(229,9,20,.36),0 .9rem 2.2rem rgba(0,0,0,.55)!important;
+}
+.v2-feature-card:hover .v2-play-float i,
+.v2-play-float:hover i{animation:premiumPlayIconNudge .82s ease-in-out infinite!important;}
+@media (prefers-reduced-motion:reduce){
+  .home-poster-play,.poster-play,.episode-play,.actor-credit-play,.listing-play,.v2-related-play,.v2-play-float,
+  .home-poster-play i,.poster-play i,.episode-play i,.actor-credit-play i,.listing-play i,.v2-related-play i,.v2-play-float i{animation:none!important;transition:none!important;}
+}
+
+/* Solid red play buttons — larger, no animations, subtle hover zoom only */
+.home-poster-play,
+.poster-play,
+.episode-play,
+.actor-credit-play,
+.listing-play,
+.v2-related-play{
+  width:3.35rem!important;
+  height:3.35rem!important;
+  min-width:3.35rem!important;
+  min-height:3.35rem!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  background:#e50914!important;
+  color:#fff!important;
+  border:1px solid rgba(255,255,255,.16)!important;
+  box-shadow:0 .95rem 2.1rem rgba(0,0,0,.72),0 0 1.25rem rgba(0,0,0,.82)!important;
+  filter:none!important;
+  animation:none!important;
+  transition:transform .22s cubic-bezier(.2,.8,.2,1),box-shadow .22s ease,filter .22s ease,background-color .22s ease!important;
+}
+.home-poster-play::before,
+.poster-play::before,
+.episode-play::before,
+.actor-credit-play::before,
+.listing-play::before,
+.v2-related-play::before{
+  display:none!important;
+  content:none!important;
+  animation:none!important;
+}
+.home-poster-play i,
+.poster-play i,
+.episode-play i,
+.actor-credit-play i,
+.listing-play i,
+.v2-related-play i{
+  color:#fff!important;
+  animation:none!important;
+  transform:none!important;
+  filter:drop-shadow(0 .15rem .18rem rgba(0,0,0,.45))!important;
+  font-size:1.08rem!important;
+}
+.home-poster-card:hover .home-poster-play,
+.home-poster-wrap:hover .poster-play,
+.home-media-card:hover .poster-play,
+.season-episode-card:hover .episode-play,
+.profile-card-link:hover .episode-play,
+.actor-credit-card:hover .actor-credit-play,
+.listing-media-card:hover .listing-play,
+.v2-related-item:hover .v2-related-play{
+  background:#f1121d!important;
+  filter:none!important;
+  transform:translate(-50%,-50%) scale(1.08)!important;
+  box-shadow:0 1.15rem 2.55rem rgba(0,0,0,.82),0 0 1.75rem rgba(0,0,0,.95)!important;
+  animation:none!important;
+}
+.home-poster-card:hover .home-poster-play i,
+.home-poster-wrap:hover .poster-play i,
+.home-media-card:hover .poster-play i,
+.season-episode-card:hover .episode-play i,
+.profile-card-link:hover .episode-play i,
+.actor-credit-card:hover .actor-credit-play i,
+.listing-media-card:hover .listing-play i,
+.v2-related-item:hover .v2-related-play i{
+  color:#fff!important;
+  animation:none!important;
+  transform:none!important;
+}
+.v2-play-float{
+  min-width:3.35rem!important;
+  min-height:3.35rem!important;
+  background:#e50914!important;
+  color:#fff!important;
+  border:1px solid rgba(255,255,255,.16)!important;
+  box-shadow:0 .95rem 2.1rem rgba(0,0,0,.72),0 0 1.25rem rgba(0,0,0,.82)!important;
+  animation:none!important;
+  transition:transform .22s cubic-bezier(.2,.8,.2,1),box-shadow .22s ease,filter .22s ease,background-color .22s ease!important;
+}
+.v2-feature-card:hover .v2-play-float,
+.v2-play-float:hover{
+  background:#f1121d!important;
+  filter:none!important;
+  transform:scale(1.06)!important;
+  box-shadow:0 1.15rem 2.55rem rgba(0,0,0,.82),0 0 1.75rem rgba(0,0,0,.95)!important;
+  animation:none!important;
+}
+.v2-play-float i,
+.v2-feature-card:hover .v2-play-float i,
+.v2-play-float:hover i{
+  color:#fff!important;
+  animation:none!important;
+  transform:none!important;
+}
+@media (prefers-reduced-motion:reduce){
+  .home-poster-card:hover .home-poster-play,
+  .home-poster-wrap:hover .poster-play,
+  .home-media-card:hover .poster-play,
+  .season-episode-card:hover .episode-play,
+  .profile-card-link:hover .episode-play,
+  .actor-credit-card:hover .actor-credit-play,
+  .listing-media-card:hover .listing-play,
+  .v2-related-item:hover .v2-related-play{
+    transform:translate(-50%,-50%)!important;
+  }
+  .v2-feature-card:hover .v2-play-float,
+  .v2-play-float:hover{
+    transform:none!important;
+  }
+}
+
+/* Black translucent play buttons + dimmed hover images */
+.home-poster-play,
+.poster-play,
+.episode-play,
+.actor-credit-play,
+.listing-play,
+.v2-related-play{
+  background:rgba(0,0,0,.75)!important;
+  color:#fff!important;
+  border:1px solid rgba(255,255,255,.18)!important;
+  box-shadow:0 1rem 2.4rem rgba(0,0,0,.88),0 0 1.5rem rgba(0,0,0,.72)!important;
+  filter:none!important;
+}
+.home-poster-card:hover .home-poster-play,
+.home-poster-wrap:hover .poster-play,
+.home-media-card:hover .poster-play,
+.season-episode-card:hover .episode-play,
+.profile-card-link:hover .episode-play,
+.actor-credit-card:hover .actor-credit-play,
+.listing-media-card:hover .listing-play,
+.v2-related-item:hover .v2-related-play{
+  background:rgba(0,0,0,.75)!important;
+  color:#fff!important;
+  transform:translate(-50%,-50%) scale(1.08)!important;
+  box-shadow:0 1.2rem 2.7rem rgba(0,0,0,.92),0 0 1.9rem rgba(0,0,0,.82)!important;
+}
+.home-poster-play i,
+.poster-play i,
+.episode-play i,
+.actor-credit-play i,
+.listing-play i,
+.v2-related-play i,
+.home-poster-card:hover .home-poster-play i,
+.home-poster-wrap:hover .poster-play i,
+.home-media-card:hover .poster-play i,
+.season-episode-card:hover .episode-play i,
+.profile-card-link:hover .episode-play i,
+.actor-credit-card:hover .actor-credit-play i,
+.listing-media-card:hover .listing-play i,
+.v2-related-item:hover .v2-related-play i{
+  color:#fff!important;
+}
+.v2-play-float,
+.v2-feature-card:hover .v2-play-float,
+.v2-play-float:hover{
+  background:rgba(0,0,0,.75)!important;
+  color:#fff!important;
+  border:1px solid rgba(255,255,255,.18)!important;
+  box-shadow:0 1rem 2.4rem rgba(0,0,0,.88),0 0 1.5rem rgba(0,0,0,.72)!important;
+}
+.v2-play-float i,
+.v2-feature-card:hover .v2-play-float i,
+.v2-play-float:hover i{color:#fff!important;}
+.home-poster-card:hover .card-img-top,
+.home-poster-card:hover .home-poster-card-img,
+.home-poster-wrap:hover img,
+.home-media-card:hover img,
+.media-card:hover .card-img-top,
+.listing-media-card:hover img,
+.season-episode-card:hover img,
+.profile-card-link:hover img,
+.actor-credit-card:hover img,
+.v2-related-item:hover img,
+.admin-media-card:hover .admin-media-poster img{
+  opacity:.58!important;
+}
+
+/* Larger translucent black play buttons */
+.home-poster-play,
+.poster-play,
+.episode-play,
+.actor-credit-play,
+.listing-play,
+.v2-related-play{
+  width:4.15rem!important;
+  height:4.15rem!important;
+  min-width:4.15rem!important;
+  min-height:4.15rem!important;
+  border-radius:999px!important;
+  background:rgba(0,0,0,.75)!important;
+  color:#fff!important;
+  box-shadow:0 1.15rem 2.8rem rgba(0,0,0,.9),0 0 2rem rgba(0,0,0,.78)!important;
+}
+.home-poster-play i,
+.poster-play i,
+.episode-play i,
+.actor-credit-play i,
+.listing-play i,
+.v2-related-play i{
+  font-size:1.35rem!important;
+  color:#fff!important;
+}
+.home-poster-card:hover .home-poster-play,
+.home-poster-wrap:hover .poster-play,
+.home-media-card:hover .poster-play,
+.season-episode-card:hover .episode-play,
+.profile-card-link:hover .episode-play,
+.actor-credit-card:hover .actor-credit-play,
+.listing-media-card:hover .listing-play,
+.v2-related-item:hover .v2-related-play{
+  background:rgba(0,0,0,.75)!important;
+  transform:translate(-50%,-50%) scale(1.08)!important;
+}
+.v2-play-float,
+.v2-feature-card:hover .v2-play-float,
+.v2-play-float:hover{
+  min-width:4.15rem!important;
+  min-height:4.15rem!important;
+  width:4.15rem!important;
+  height:4.15rem!important;
+  background:rgba(0,0,0,.75)!important;
+  color:#fff!important;
+  box-shadow:0 1.15rem 2.8rem rgba(0,0,0,.9),0 0 2rem rgba(0,0,0,.78)!important;
+}
+.v2-play-float i,
+.v2-feature-card:hover .v2-play-float i,
+.v2-play-float:hover i{
+  font-size:1.35rem!important;
+  color:#fff!important;
+}
+
+@media (max-width:575.98px){
+  .home-poster-play,
+  .poster-play,
+  .episode-play,
+  .actor-credit-play,
+  .listing-play,
+  .v2-related-play{
+    width:3.6rem!important;
+    height:3.6rem!important;
+    min-width:3.6rem!important;
+    min-height:3.6rem!important;
+  }
+  .home-poster-play i,
+  .poster-play i,
+  .episode-play i,
+  .actor-credit-play i,
+  .listing-play i,
+  .v2-related-play i{
+    font-size:1.18rem!important;
+  }
+}
+
+/* Center and enlarge AJAX loading state inside results grids */
+.jquery-listing-shell.is-loading > .row.g-3{
+  min-height:18rem!important;
+}
+.jquery-listing-shell.is-loading > .row.g-3:before{
+  content:'Loading'!important;
+  position:absolute!important;
+  left:50%!important;
+  top:50%!important;
+  z-index:30!important;
+  transform:translate(-50%,-50%)!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  min-width:11rem!important;
+  padding:1rem 1.45rem!important;
+  border-radius:999px!important;
+  background:rgba(7,9,14,.94)!important;
+  border:1px solid rgba(255,255,255,.16)!important;
+  box-shadow:0 1.4rem 3.4rem rgba(0,0,0,.62),0 0 0 1px rgba(229,9,20,.18),0 0 2rem rgba(0,0,0,.75)!important;
+  color:#fff!important;
+  font-size:1rem!important;
+  font-weight:900!important;
+  letter-spacing:.08em!important;
+  line-height:1!important;
+  text-transform:uppercase!important;
+  backdrop-filter:blur(18px)!important;
+  pointer-events:none!important;
+}
+.jquery-listing-shell.is-loading > .row.g-3:after{
+  inset:-.75rem!important;
+  z-index:20!important;
+  border-radius:1.2rem!important;
+  background:radial-gradient(circle at center,rgba(0,0,0,.44),rgba(3,5,9,.22) 48%,rgba(3,5,9,.42))!important;
+}

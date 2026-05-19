@@ -58,7 +58,8 @@ $base = '/admin/manage/' . $type . '?token=' . rawurlencode($token);
           <h2><a href="<?= e($publicUrl) ?>"><?= e($titleText) ?></a></h2>
           <span class="admin-chip"><?= e((string)($item['import_status'] ?? 'full')) ?></span>
         </div>
-        <div class="admin-muted small mb-2"><?= e($date ? format_date($date) : 'No date') ?><?= !empty($item['age_rating']) ? ' · ' . e((string)$item['age_rating']) : '' ?><?= isset($item['vote_average']) ? ' · ' . e((string)round((float)$item['vote_average'], 1)) . ' ★' : '' ?></div>
+        <?php $adminAgeRating = display_age_rating($item['age_rating'] ?? '', $item['media_type'] ?? 'movie'); ?>
+        <div class="admin-muted small mb-2"><?= e($date ? format_date($date) : 'No date') ?><?= $adminAgeRating !== '' ? ' · ' . e($adminAgeRating) : '' ?><?= isset($item['vote_average']) ? ' · ' . e((string)round((float)$item['vote_average'], 1)) . ' ★' : '' ?></div>
         <div class="admin-muted small text-truncate mb-3"><?= e((string)($item['slug'] ?? '')) ?></div>
         <div class="d-flex gap-2 mt-auto">
           <a class="btn btn-sm btn-outline-light flex-fill" href="<?= e($publicUrl) ?>"><i class="fa-solid fa-up-right-from-square me-1"></i>Open</a>

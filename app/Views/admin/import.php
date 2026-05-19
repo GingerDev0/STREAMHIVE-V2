@@ -53,7 +53,7 @@
         <div class="d-flex flex-wrap gap-2 mb-3">
           <span class="admin-chip">ID <?= e((string)($record['id'] ?? '')) ?></span>
           <?php if (!empty($record['imdb_id'])): ?><span class="admin-chip">IMDb <?= e((string)$record['imdb_id']) ?></span><?php endif; ?>
-          <?php if (!empty($record['age_rating'])): ?><span class="admin-chip"><?= e((string)$record['age_rating']) ?></span><?php endif; ?>
+          <?php $adminAgeRating = display_age_rating($record['age_rating'] ?? '', $record['media_type'] ?? 'movie'); if ($adminAgeRating !== ''): ?><span class="admin-chip"><?= e($adminAgeRating) ?></span><?php endif; ?>
           <span class="admin-chip"><?= e((string)round((float)($record['vote_average'] ?? 0), 1)) ?> ★</span>
         </div>
         <p class="admin-muted mb-3"><?= e((string)($record['overview'] ?? 'No overview available.')) ?></p>

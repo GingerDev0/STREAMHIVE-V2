@@ -38,7 +38,7 @@
             <span class="v2-related-title"><?= e($relTitle) ?></span>
             <span class="v2-related-meta">
               <?php if ($relYear !== ''): ?><span><?= e($relYear) ?></span><?php endif; ?>
-              <?php if (!empty($rel['age_rating'])): ?><span><?= e((string)$rel['age_rating']) ?></span><?php endif; ?>
+              <?php $relAgeRating = display_age_rating($rel['age_rating'] ?? '', $rel['media_type'] ?? 'movie'); if ($relAgeRating !== ''): ?><span><?= e($relAgeRating) ?></span><?php endif; ?>
             </span>
             <span class="v2-related-score"><i class="fa-solid fa-star"></i> <?= e((string)$relRating) ?></span>
           </span>

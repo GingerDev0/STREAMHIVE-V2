@@ -14,6 +14,7 @@ $seasonName = $season['name'] ?? ('Season ' . $seasonNumber);
       <h1 class="mb-2"><?= e($seasonName) ?></h1>
       <p class="text-white-50 mb-3"><?= e((string)count($episodes)) ?> episodes<?= !empty($season['air_date']) ? ' · ' . e(format_date($season['air_date'])) : '' ?></p>
       <?php if (!empty($season['overview'])): ?><p class="mb-0"><?= e($season['overview']) ?></p><?php endif; ?>
+      <div class="v2-hero-actions season-share-actions mt-3"><?= share_button(($show['title'] ?? 'TV Show') . ' - ' . $seasonName, url('tv/'.$show['slug'].'/s'.str_pad((string)$seasonNumber,2,'0',STR_PAD_LEFT))) ?></div>
     </div>
   </div>
 </div>

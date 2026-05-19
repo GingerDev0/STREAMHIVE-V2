@@ -1,18 +1,20 @@
 <?php require_once app_path('app/Helpers/helpers.php'); ?>
+<?php $tvAgeRating = display_age_rating($item['age_rating'] ?? '', 'tv'); ?>
 <div class="js-page-media d-none" data-media="<?= media_storage_payload($item, 'tv', url('tv/'.$item['slug'])) ?>"></div>
-<section class="v2-detail-hero">
+<section class="v2-detail-hero v2-tv-detail-hero">
   <div class="v2-detail-backdrop" style="background-image:url('<?= e(tmdb_img($item['backdrop_path'] ?? ($item['poster_path'] ?? null), 'w1280')) ?>')"></div>
   <div class="v2-detail-grid">
     <div class="v2-detail-poster-wrap"><img class="v2-detail-poster" src="<?= e(tmdb_img($item['poster_path'] ?? null)) ?>" alt="<?= e($item['title']) ?> poster"></div>
     <div class="v2-detail-copy">
       <span class="v2-kicker"><i class="fa-solid fa-tv"></i> TV Show</span>
       <h1><?= e($item['title']) ?></h1>
-      <div class="v2-chip-row mb-3"><span><i class="fa-solid fa-calendar"></i> <?= e(format_date($item['release_date'] ?? '')) ?></span><?php if (media_runtime($item, 'tv') !== ''): ?><span><i class="fa-regular fa-clock"></i> <?= e(media_runtime($item, 'tv')) ?></span><?php endif; ?><span><i class="fa-solid fa-star"></i> <?= e((string)round((float)($item['vote_average'] ?? 0), 1)) ?></span><span><?= e($item['age_rating'] ?? 'NR') ?></span></div>
+      <div class="v2-chip-row mb-3"><span><i class="fa-solid fa-calendar"></i> <?= e(format_date($item['release_date'] ?? '')) ?></span><?php if (media_runtime($item, 'tv') !== ''): ?><span><i class="fa-regular fa-clock"></i> <?= e(media_runtime($item, 'tv')) ?></span><?php endif; ?><span><i class="fa-solid fa-star"></i> <?= e((string)round((float)($item['vote_average'] ?? 0), 1)) ?></span><?php if ($tvAgeRating !== ''): ?><span><?= e($tvAgeRating) ?></span><?php endif; ?></div>
       <div class="v2-genre-row mb-3"><?= genre_links($item['genres'] ?? [], 'tv', 0, 'genre-link') ?></div>
       <p class="v2-lead"><?= e($item['overview'] ?? '') ?></p>
       <div class="v2-hero-actions">
         <a class="btn btn-warning btn-lg" href="#seasons"><i class="fa-solid fa-layer-group me-2"></i>View seasons</a>
         <button class="btn btn-outline-light btn-lg detail-bookmark js-bookmark-btn" type="button" data-media="<?= media_storage_payload($item, 'tv', url('tv/'.$item['slug'])) ?>"><i class="fa-regular fa-bookmark me-2"></i>Save to profile</button>
+        <?= share_button($item['title'] ?? 'TV Show', url('tv/'.$item['slug'])) ?>
       </div>
       <p class="small text-white-50 mb-0 mt-3"><i class="fa-solid fa-circle-play me-1 text-warning"></i>Open a season and choose an episode to launch the player.</p>
     </div>

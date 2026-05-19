@@ -46,6 +46,13 @@ function media_url(array $item): string {
 function actor_url(array $person): string { return url('actors/' . $person['slug']); }
 
 
+function share_button(string $title, string $url, string $label = 'Share'): string {
+    $title = trim($title) !== '' ? $title : 'Movie DB';
+    $url = absolute_url($url);
+    return '<button class="btn btn-outline-light btn-lg v2-share-open js-share-open" type="button" data-share-title="' . e($title) . '" data-share-url="' . e($url) . '"><i class="fa-solid fa-share-nodes me-2"></i>' . e($label) . '</button>';
+}
+
+
 function multiembed_player_url(array $item, string $type = 'movie', ?int $season = null, ?int $episode = null): string {
     $tmdbId = (int)($item['tmdb_id'] ?? $item['id'] ?? 0);
     $imdbId = trim((string)($item['imdb_id'] ?? ''));
@@ -74,6 +81,28 @@ function multiembed_player_url(array $item, string $type = 'movie', ?int $season
 }
 
 
+
+
+function uk_age_rating(int|string|null $rating, string $type = ''): string {
+    $value = strtoupper(trim((string)$rating));
+    if ($value === '' || in_array($value, ['NR','N/R','NOT RATED','UNRATED','TBC','TBD','N/A','NA'], true)) return '';
+    $value = str_replace(['_', '.'], ['-', ''], $value);
+    $value = preg_replace('/\s+/', '', $value) ?: $value;
+
+    return match ($value) {
+        'U', 'G', 'TV-G', 'TV-Y' => 'U',
+        'PG', 'TV-PG', 'TV-Y7', 'TV-Y7-FV' => 'PG',
+        '12' => '12',
+        '12A', 'PG-13' => '12A',
+        '15', 'R', 'TV-14', 'M' => '15',
+        '18', 'NC-17', 'X', 'TV-MA' => '18',
+        default => in_array($value, ['U','PG','12','12A','15','18'], true) ? $value : '',
+    };
+}
+
+function display_age_rating(int|string|null $rating, string $type = ''): string {
+    return uk_age_rating($rating, $type);
+}
 
 function media_release_date(array $item): string {
     return trim((string)($item['release_date'] ?? $item['first_air_date'] ?? $item['air_date'] ?? ''));
@@ -190,7 +219,7 @@ function media_storage_payload(array $item, string $type, ?string $href = null, 
     $meta = $metaOverride ?: trim(implode(' · ', array_filter([
         $typeText,
         $year,
-        !empty($item['age_rating']) && $type !== 'person' ? (string)$item['age_rating'] : null,
+        !empty($item['age_rating']) && $type !== 'person' ? display_age_rating($item['age_rating'], $type) : null,
     ])));
     $payload = [
         'type' => $type,

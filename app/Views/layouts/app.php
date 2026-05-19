@@ -70,12 +70,56 @@ $robots = (string)($robots ?? 'index, follow');
   </div>
 </nav>
 <main class="container-fluid px-3 px-lg-4 py-4 v2-main"> <?= $content ?> </main>
-<footer class="container-fluid px-3 px-lg-4 py-4 small v2-footer">
-  <div class="d-flex flex-column flex-md-row gap-2 justify-content-between align-items-md-center">
-    <span>Created by <a href="https://github.com/GingerDev0" target="_blank" rel="noopener noreferrer">GingerDev</a></span>
-    <span>TMDB data powers imports. This product is not endorsed or certified by TMDB.</span>
+<footer class="v2-footer pro-footer">
+  <div class="pro-footer-shell">
+    <div class="pro-footer-inner">
+      <a class="pro-footer-brand" href="/" aria-label="Movie DB home">
+        <span class="pro-footer-brand-mark"><i class="fa-solid fa-film"></i></span>
+        <span><strong>Movie DB</strong><small>V2</small></span>
+      </a>
+
+      <div class="pro-footer-copy">
+        <p>Created by <a href="https://github.com/GingerDev0" target="_blank" rel="noopener noreferrer">GingerDev</a></p>
+        <p>TMDB data powers imports. This product is not endorsed or certified by TMDB.</p>
+        <p>Project link: <a href="https://github.com/GingerDev0/Movie-DB-V2" target="_blank" rel="noopener noreferrer">https://github.com/GingerDev0/Movie-DB-V2</a></p>
+      </div>
+
+      <nav class="pro-footer-actions" aria-label="Footer links">
+        <a href="/movies"><i class="fa-solid fa-film"></i> Movies</a>
+        <a href="/tv"><i class="fa-solid fa-tv"></i> TV Shows</a>
+        <a href="/actors"><i class="fa-solid fa-user-group"></i> Actors</a>
+        <a href="/s"><i class="fa-solid fa-compass"></i> Discover</a>
+        <a href="https://github.com/GingerDev0/Movie-DB-V2" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-github"></i> GitHub</a>
+      </nav>
+    </div>
   </div>
 </footer>
+
+
+<div class="v2-share-backdrop js-share-backdrop" aria-hidden="true">
+  <div class="v2-share-bar js-share-bar" role="dialog" aria-modal="true" aria-labelledby="shareBarTitle">
+    <div class="v2-share-bar-head">
+      <div>
+        <span><i class="fa-solid fa-share-nodes"></i> Share</span>
+        <h2 id="shareBarTitle">Share this page</h2>
+      </div>
+      <button class="v2-share-close js-share-close" type="button" aria-label="Close share options"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="v2-share-url-row">
+      <input class="js-share-url" type="text" readonly value="" aria-label="Shareable link">
+      <button class="js-share-copy" type="button"><i class="fa-regular fa-copy"></i> Copy</button>
+    </div>
+    <div class="v2-share-actions" aria-label="Popular sharing apps">
+      <a class="js-share-native v2-share-action v2-share-native" href="#"><i class="fa-solid fa-arrow-up-from-bracket"></i><span>Share</span></a>
+      <a class="js-share-whatsapp v2-share-action" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-whatsapp"></i><span>WhatsApp</span></a>
+      <a class="js-share-facebook v2-share-action" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-facebook-f"></i><span>Facebook</span></a>
+      <a class="js-share-x v2-share-action" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-x-twitter"></i><span>X</span></a>
+      <a class="js-share-telegram v2-share-action" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-telegram"></i><span>Telegram</span></a>
+      <a class="js-share-reddit v2-share-action" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-reddit-alien"></i><span>Reddit</span></a>
+      <a class="js-share-email v2-share-action"><i class="fa-regular fa-envelope"></i><span>Email</span></a>
+    </div>
+  </div>
+</div>
 
 <div class="modal fade fetch-modal" id="contentFetchModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
   <div class="modal-dialog modal-dialog-centered">

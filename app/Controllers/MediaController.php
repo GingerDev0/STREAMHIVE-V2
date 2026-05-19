@@ -247,7 +247,7 @@ final class MediaController
             $meta = trim(implode(' · ', array_filter([
                 $typeLabel,
                 $year,
-                ($type !== 'person' && !empty($item['age_rating'])) ? (string)$item['age_rating'] : null,
+                ($type !== 'person' && !empty($item['age_rating'])) ? display_age_rating($item['age_rating'], $type) : null,
             ])));
 
             $media = [
@@ -651,7 +651,7 @@ final class MediaController
                 if (!str_contains($haystack, $query)) return false;
             }
             if (!$isPerson && $genre !== '' && !in_array($genre, $item['genres'] ?? [], true)) return false;
-            if (!$isPerson && $rating !== '' && (string)($item['age_rating'] ?? 'NR') !== $rating) return false;
+            if (!$isPerson && $rating !== '' && display_age_rating($item['age_rating'] ?? '', $type) !== display_age_rating($rating, $type)) return false;
             if (!$isPerson && $year !== '') {
                 $date = (string)($item['release_date'] ?? $item['first_air_date'] ?? '');
                 if (substr($date, 0, 4) !== $year) return false;
@@ -705,15 +705,16 @@ final class MediaController
 
     private function availableRatings(?string $type = null): array
     {
+        $order = ['U', 'PG', '12', '12A', '15', '18'];
         $stores = $type === 'movie' ? [$this->repo->movies] : ($type === 'tv' ? [$this->repo->tv] : [$this->repo->movies, $this->repo->tv]);
         $ratings = [];
         foreach ($stores as $store) {
             foreach ($store->distinctValues('age_rating') as $rating) {
-                if ($rating !== '') $ratings[$rating] = $rating;
+                $uk = display_age_rating($rating, $type ?? 'movie');
+                if ($uk !== '') $ratings[$uk] = true;
             }
         }
-        natcasesort($ratings);
-        return array_values($ratings);
+        return array_values(array_filter($order, static fn(string $rating): bool => isset($ratings[$rating])));
     }
 
     private function autoImport(string $type, string $slug): ?array

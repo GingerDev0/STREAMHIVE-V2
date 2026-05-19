@@ -283,7 +283,7 @@ final class ImportService
             'backdrop_path' => $data['backdrop_path'] ?? null,
             'release_date' => $date,
             'vote_average' => $data['vote_average'] ?? null,
-            'age_rating' => 'NR',
+            'age_rating' => '',
             'runtime' => null,
             'episode_run_time' => [],
             'genres' => $genres,
@@ -395,7 +395,7 @@ final class ImportService
                 'backdrop_path' => null,
                 'release_date' => $credit['release_date'] ?? null,
                 'vote_average' => null,
-                'age_rating' => 'NR',
+                'age_rating' => '',
                 'runtime' => null,
                 'episode_run_time' => [],
                 'genres' => [],
@@ -415,28 +415,47 @@ final class ImportService
     private function ageRating(array $data, string $type): string
     {
         if ($type === 'movie') {
-            $countries = ['US', 'GB'];
+            $countries = ['GB', 'US'];
             foreach ($countries as $country) {
                 foreach (($data['release_dates']['results'] ?? []) as $result) {
                     if (($result['iso_3166_1'] ?? '') !== $country) continue;
                     foreach (($result['release_dates'] ?? []) as $release) {
                         $cert = trim((string)($release['certification'] ?? ''));
-                        if ($cert !== '') return $cert;
+                        if ($cert !== '') return $this->ukAgeRating($cert);
                     }
                 }
             }
-            return 'NR';
+            return '';
         }
 
-        foreach (['US', 'GB'] as $country) {
+        foreach (['GB', 'US'] as $country) {
             foreach (($data['content_ratings']['results'] ?? []) as $result) {
                 if (($result['iso_3166_1'] ?? '') === $country) {
                     $rating = trim((string)($result['rating'] ?? ''));
-                    if ($rating !== '') return $rating;
+                    if ($rating !== '') return $this->ukAgeRating($rating);
                 }
             }
         }
-        return 'NR';
+        return '';
+    }
+
+
+    private function ukAgeRating(int|string|null $rating): string
+    {
+        $value = strtoupper(trim((string)$rating));
+        if ($value === '' || in_array($value, ['NR','N/R','NOT RATED','UNRATED','TBC','TBD','N/A','NA'], true)) return '';
+        $value = str_replace(['_', '.'], ['-', ''], $value);
+        $value = preg_replace('/\s+/', '', $value) ?: $value;
+
+        return match ($value) {
+            'U', 'G', 'TV-G', 'TV-Y' => 'U',
+            'PG', 'TV-PG', 'TV-Y7', 'TV-Y7-FV' => 'PG',
+            '12' => '12',
+            '12A', 'PG-13' => '12A',
+            '15', 'R', 'TV-14', 'M' => '15',
+            '18', 'NC-17', 'X', 'TV-MA' => '18',
+            default => in_array($value, ['U','PG','12','12A','15','18'], true) ? $value : '',
+        };
     }
 
     private function normalizePerson(array $data): array

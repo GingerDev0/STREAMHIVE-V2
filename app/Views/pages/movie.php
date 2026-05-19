@@ -1,5 +1,6 @@
 <?php require_once app_path('app/Helpers/helpers.php'); ?>
 <?php $moviePlayerUrl = multiembed_player_url($item, 'movie'); ?>
+<?php $movieAgeRating = display_age_rating($item['age_rating'] ?? '', 'movie'); ?>
 <div class="js-page-media d-none" data-media="<?= media_storage_payload($item, 'movie', url('movies/'.$item['slug'])) ?>"></div>
 <section class="v2-detail-hero has-inline-player movie-detail-hero">
   <div class="v2-detail-backdrop" style="background-image:url('<?= e(tmdb_img($item['backdrop_path'] ?? ($item['poster_path'] ?? null), 'w1280')) ?>')"></div>
@@ -8,11 +9,12 @@
     <div class="v2-detail-copy">
       <span class="v2-kicker"><i class="fa-solid fa-film"></i> Movie</span>
       <h1><?= e($item['title']) ?></h1>
-      <div class="v2-chip-row mb-3"><span><i class="fa-solid fa-calendar"></i> <?= e(format_date($item['release_date'] ?? '')) ?></span><?php if (media_runtime($item, 'movie') !== ''): ?><span><i class="fa-regular fa-clock"></i> <?= e(media_runtime($item, 'movie')) ?></span><?php endif; ?><span><i class="fa-solid fa-star"></i> <?= e((string)round((float)($item['vote_average'] ?? 0), 1)) ?></span><span><?= e($item['age_rating'] ?? 'NR') ?></span></div>
+      <div class="v2-chip-row mb-3"><span><i class="fa-solid fa-calendar"></i> <?= e(format_date($item['release_date'] ?? '')) ?></span><?php if (media_runtime($item, 'movie') !== ''): ?><span><i class="fa-regular fa-clock"></i> <?= e(media_runtime($item, 'movie')) ?></span><?php endif; ?><span><i class="fa-solid fa-star"></i> <?= e((string)round((float)($item['vote_average'] ?? 0), 1)) ?></span><?php if ($movieAgeRating !== ''): ?><span><?= e($movieAgeRating) ?></span><?php endif; ?></div>
       <div class="v2-genre-row mb-3"><?= genre_links($item['genres'] ?? [], 'movie', 0, 'genre-link') ?></div>
       <p class="v2-lead"><?= e($item['overview'] ?? '') ?></p>
       <div class="v2-hero-actions">
         <button class="btn btn-outline-light btn-lg detail-bookmark js-bookmark-btn" type="button" data-media="<?= media_storage_payload($item, 'movie', url('movies/'.$item['slug'])) ?>"><i class="fa-regular fa-bookmark me-2"></i>Save to profile</button>
+        <?= share_button($item['title'] ?? 'Movie', url('movies/'.$item['slug'])) ?>
       </div>
     </div>
     <?php if ($moviePlayerUrl !== ''): ?>

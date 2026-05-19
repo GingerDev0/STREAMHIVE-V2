@@ -663,3 +663,97 @@ document.documentElement.classList.add('js-ready');
     hideResults();
   });
 })(window.jQuery);
+
+/* Share bar modal: popular apps + copyable page link */
+(function ($) {
+  if (!$) return;
+
+  const $backdrop = $('.js-share-backdrop').first();
+  const $bar = $('.js-share-bar').first();
+  if (!$backdrop.length || !$bar.length) return;
+
+  const $urlInput = $backdrop.find('.js-share-url').first();
+  const $copy = $backdrop.find('.js-share-copy').first();
+  const $native = $backdrop.find('.js-share-native').first();
+  const $whatsapp = $backdrop.find('.js-share-whatsapp').first();
+  const $facebook = $backdrop.find('.js-share-facebook').first();
+  const $x = $backdrop.find('.js-share-x').first();
+  const $telegram = $backdrop.find('.js-share-telegram').first();
+  const $reddit = $backdrop.find('.js-share-reddit').first();
+  const $email = $backdrop.find('.js-share-email').first();
+
+  let shareTitle = document.title || 'Movie DB';
+  let shareUrl = window.location.href;
+
+  const encode = encodeURIComponent;
+
+  const setLinks = function () {
+    const text = shareTitle + ' ' + shareUrl;
+    $urlInput.val(shareUrl);
+    $whatsapp.attr('href', 'https://wa.me/?text=' + encode(text));
+    $facebook.attr('href', 'https://www.facebook.com/sharer/sharer.php?u=' + encode(shareUrl));
+    $x.attr('href', 'https://twitter.com/intent/tweet?text=' + encode(shareTitle) + '&url=' + encode(shareUrl));
+    $telegram.attr('href', 'https://t.me/share/url?url=' + encode(shareUrl) + '&text=' + encode(shareTitle));
+    $reddit.attr('href', 'https://www.reddit.com/submit?url=' + encode(shareUrl) + '&title=' + encode(shareTitle));
+    $email.attr('href', 'mailto:?subject=' + encode(shareTitle) + '&body=' + encode(shareUrl));
+  };
+
+  const closeShare = function () {
+    $backdrop.removeClass('is-open').attr('aria-hidden', 'true');
+    $('body').removeClass('share-bar-open');
+  };
+
+  const openShare = function (button) {
+    const $button = $(button || []);
+    shareTitle = String($button.data('share-title') || document.title || 'Movie DB').trim();
+    shareUrl = String($button.data('share-url') || window.location.href).trim();
+    try { shareUrl = new URL(shareUrl, window.location.href).href; } catch (error) { shareUrl = window.location.href; }
+    setLinks();
+    const modalTitle = 'Share ' + (shareTitle || 'this page');
+    $('#shareBarTitle').text(modalTitle);
+    $copy.html('<i class="fa-regular fa-copy"></i> Copy').removeClass('is-copied');
+    $backdrop.addClass('is-open').attr('aria-hidden', 'false');
+    $('body').addClass('share-bar-open');
+    setTimeout(function () { $urlInput.trigger('focus').trigger('select'); }, 80);
+  };
+
+  $(document).on('click', '.js-share-open', function (event) {
+    event.preventDefault();
+    openShare(this);
+  });
+
+  $backdrop.on('mousedown touchstart', function (event) {
+    if (!$(event.target).closest('.js-share-bar').length) closeShare();
+  });
+
+  $backdrop.find('.js-share-close').on('click', function () { closeShare(); });
+
+  $native.on('click', function (event) {
+    if (navigator.share) {
+      event.preventDefault();
+      navigator.share({ title: shareTitle, url: shareUrl }).catch(function () {});
+    }
+  });
+
+  $copy.on('click', function () {
+    const done = function () {
+      $copy.html('<i class="fa-solid fa-check"></i> Copied').addClass('is-copied');
+      setTimeout(function () { $copy.html('<i class="fa-regular fa-copy"></i> Copy').removeClass('is-copied'); }, 1500);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(shareUrl).then(done).catch(function () {
+        $urlInput.trigger('select');
+        document.execCommand('copy');
+        done();
+      });
+    } else {
+      $urlInput.trigger('select');
+      document.execCommand('copy');
+      done();
+    }
+  });
+
+  $(document).on('keydown', function (event) {
+    if (event.key === 'Escape' && $backdrop.hasClass('is-open')) closeShare();
+  });
+})(window.jQuery);

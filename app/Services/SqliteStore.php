@@ -151,6 +151,9 @@ final class SqliteStore
 
         $record['created_at'] = $record['created_at'] ?? $now;
         $record['updated_at'] = $now;
+        if (($record['media_type'] ?? $this->mediaTypeForBucket()) !== 'person') {
+            $record['age_rating'] = self::ukAgeRating($record['age_rating'] ?? '');
+        }
 
         $payloadRecord = $record;
         unset($payloadRecord['created_at'], $payloadRecord['updated_at']);
@@ -167,7 +170,7 @@ final class SqliteStore
             'import_status' => (string)($record['import_status'] ?? 'full'),
             'release_date' => (string)($record['release_date'] ?? $record['first_air_date'] ?? ''),
             'release_year' => self::extractYear($record),
-            'age_rating' => (string)($record['age_rating'] ?? 'NR'),
+            'age_rating' => self::ukAgeRating($record['age_rating'] ?? ''),
             'genres_text' => self::genresText($record),
             'search_text' => self::searchText($record),
             'vote_average' => isset($record['vote_average']) ? (float)$record['vote_average'] : null,
@@ -266,10 +269,16 @@ final class SqliteStore
                 $params[':genre'] = '%|' . $genre . '|%';
             }
 
-            $rating = trim((string)($options['rating'] ?? ''));
+            $rating = self::ukAgeRating($options['rating'] ?? '');
             if ($rating !== '') {
-                $where[] = 'age_rating = :rating';
-                $params[':rating'] = $rating;
+                $aliases = self::ukAgeRatingAliases($rating);
+                $ratingPlaceholders = [];
+                foreach ($aliases as $i => $alias) {
+                    $key = ':rating' . $i;
+                    $ratingPlaceholders[] = $key;
+                    $params[$key] = $alias;
+                }
+                $where[] = 'age_rating IN (' . implode(',', $ratingPlaceholders) . ')';
             }
 
             $year = trim((string)($options['year'] ?? ''));
@@ -601,7 +610,11 @@ final class SqliteStore
     private function decode(string $json): array
     {
         $record = json_decode($json, true);
-        return is_array($record) ? $record : [];
+        if (!is_array($record)) return [];
+        if (($record['media_type'] ?? '') !== 'person' && array_key_exists('age_rating', $record)) {
+            $record['age_rating'] = self::ukAgeRating($record['age_rating']);
+        }
+        return $record;
     }
 
     private static function orderByForSort(string $sort, bool $containsPeople = false): string
@@ -616,6 +629,38 @@ final class SqliteStore
             'updated_desc' => 'updated_at DESC, rowid DESC',
             'popular_desc' => 'COALESCE(popularity, 0) DESC, COALESCE(vote_average, 0) DESC, rowid DESC',
             default => $nameExpr . ' COLLATE NOCASE ASC, rowid ASC',
+        };
+    }
+
+
+    private static function ukAgeRating(int|string|null $rating): string
+    {
+        $value = strtoupper(trim((string)$rating));
+        if ($value === '' || in_array($value, ['NR','N/R','NOT RATED','UNRATED','TBC','TBD','N/A','NA'], true)) return '';
+        $value = str_replace(['_', '.'], ['-', ''], $value);
+        $value = preg_replace('/\s+/', '', $value) ?: $value;
+
+        return match ($value) {
+            'U', 'G', 'TV-G', 'TV-Y' => 'U',
+            'PG', 'TV-PG', 'TV-Y7', 'TV-Y7-FV' => 'PG',
+            '12' => '12',
+            '12A', 'PG-13' => '12A',
+            '15', 'R', 'TV-14', 'M' => '15',
+            '18', 'NC-17', 'X', 'TV-MA' => '18',
+            default => in_array($value, ['U','PG','12','12A','15','18'], true) ? $value : '',
+        };
+    }
+
+    private static function ukAgeRatingAliases(string $ukRating): array
+    {
+        return match ($ukRating) {
+            'U' => ['U', 'G', 'TV-G', 'TV-Y'],
+            'PG' => ['PG', 'TV-PG', 'TV-Y7', 'TV-Y7-FV'],
+            '12' => ['12'],
+            '12A' => ['12A', 'PG-13'],
+            '15' => ['15', 'R', 'TV-14', 'M'],
+            '18' => ['18', 'NC-17', 'X', 'TV-MA'],
+            default => [],
         };
     }
 
@@ -672,7 +717,7 @@ final class SqliteStore
                 if (!is_array($record)) continue;
                 $update->execute([
                     'release_year' => self::extractYear($record),
-                    'age_rating' => (string)($record['age_rating'] ?? 'NR'),
+                    'age_rating' => self::ukAgeRating($record['age_rating'] ?? ''),
                     'genres_text' => self::genresText($record),
                     'search_text' => self::searchText($record),
                     'popularity' => isset($record['popularity']) ? (float)$record['popularity'] : null,
