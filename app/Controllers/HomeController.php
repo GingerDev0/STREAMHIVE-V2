@@ -41,7 +41,7 @@ final class HomeController
         // Carousel spotlight should rotate through the full local movie database,
         // not just the current TMDB trending/recent response. Missing-poster
         // movies are excluded here only; they still show everywhere else.
-        $heroMovies = SqliteStore::randomReleasedFromBucket('movies', 10, true);
+        $heroMovies = SqliteStore::randomReleasedFromBucket('movies', 10, true, 7.5);
         if (!$heroMovies) {
             $heroMovies = $this->randomMoviesForHero($moviesTrending, $moviesRecent);
         }
@@ -68,6 +68,7 @@ final class HomeController
                 // Carousel-only rule: skip movies without a real poster here,
                 // but do not remove them from normal listings/search/details.
                 if (!$this->hasUsablePoster($item)) continue;
+                if (!$this->hasMinimumRating($item, 7.5)) continue;
 
                 $seen[$id] = true;
                 $item['media_type'] = 'movie';
@@ -86,6 +87,12 @@ final class HomeController
 
         return !str_contains($poster, 'placeholder.jpg')
             && !str_contains($poster, 'placeholder.svg');
+    }
+
+    private function hasMinimumRating(array $item, float $minimum): bool
+    {
+        $rating = (float)($item['vote_average'] ?? $item['rating'] ?? 0);
+        return $rating >= $minimum;
     }
 
     private function hydrateFromLocal(array $items, string $type, Repository $repo): array

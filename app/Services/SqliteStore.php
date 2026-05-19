@@ -249,6 +249,49 @@ final class SqliteStore
         return array_values(array_filter(array_map('strval', $stmt->fetchAll(PDO::FETCH_COLUMN))));
     }
 
+
+    /**
+     * Return future-dated movies/TV for the Coming This Year page.
+     * This intentionally bypasses the global released-only filters used by
+     * normal listings/search/detail routes, while still requiring a real date.
+     */
+    public static function upcomingInYear(string $bucket, int $year): array
+    {
+        if (!in_array($bucket, ['movies', 'tv'], true)) return [];
+
+        $today = gmdate('Y-m-d');
+        $start = max($today, sprintf('%04d-01-01', $year));
+        $end = sprintf('%04d-12-31', $year);
+        if ($start > $end) return [];
+
+        $stmt = self::pdo()->prepare(
+            'SELECT payload, created_at, updated_at
+             FROM records
+             WHERE bucket = :bucket
+               AND release_date IS NOT NULL
+               AND release_date <> \'\'
+               AND release_date > :today
+               AND release_date BETWEEN :start AND :end
+             ORDER BY release_date ASC, vote_average DESC, title COLLATE NOCASE ASC'
+        );
+        $stmt->execute([
+            'bucket' => $bucket,
+            'today' => $today,
+            'start' => $start,
+            'end' => $end,
+        ]);
+
+        $items = [];
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
+            $record = json_decode((string)$row['payload'], true);
+            if (!is_array($record)) continue;
+            $record['created_at'] = $record['created_at'] ?? $row['created_at'];
+            $record['updated_at'] = $record['updated_at'] ?? $row['updated_at'];
+            $items[] = $record;
+        }
+        return $items;
+    }
+
     public function paginated(array $options): array
     {
         return self::queryBuckets([$this->bucket], $options);
@@ -304,12 +347,26 @@ final class SqliteStore
                 $where[] = 'age_rating IN (' . implode(',', $ratingPlaceholders) . ')';
             }
 
+            $userRating = trim((string)($options['user_rating'] ?? ($options['score'] ?? '')));
+            if ($userRating !== '' && is_numeric($userRating)) {
+                $minimumUserRating = max(0.0, min(10.0, floor(((float)$userRating) * 2) / 2));
+                $maximumUserRating = $minimumUserRating + 0.5;
+                if ($minimumUserRating >= 10.0) {
+                    $where[] = 'COALESCE(vote_average, 0) >= :user_rating_min';
+                    $params[':user_rating_min'] = '10.0';
+                } else {
+                    $where[] = '(COALESCE(vote_average, 0) >= :user_rating_min AND COALESCE(vote_average, 0) < :user_rating_max)';
+                    $params[':user_rating_min'] = number_format($minimumUserRating, 1, '.', '');
+                    $params[':user_rating_max'] = number_format($maximumUserRating, 1, '.', '');
+                }
+            }
+
             $year = trim((string)($options['year'] ?? ''));
             if ($year !== '') {
                 $where[] = 'release_year = :year';
                 $params[':year'] = $year;
             }
-        } elseif (trim((string)($options['genre'] ?? '')) !== '' || trim((string)($options['rating'] ?? '')) !== '' || trim((string)($options['year'] ?? '')) !== '') {
+        } elseif (trim((string)($options['genre'] ?? '')) !== '' || trim((string)($options['rating'] ?? '')) !== '' || (trim((string)($options['user_rating'] ?? '')) !== '' || trim((string)($options['score'] ?? '')) !== '') || trim((string)($options['year'] ?? '')) !== '') {
             return ['items' => [], 'total' => 0, 'page' => 1, 'pages' => 1];
         }
 
@@ -400,7 +457,7 @@ final class SqliteStore
      * carousel so it can rotate through the full local movie database rather
      * than only the latest TMDB trending/recent API results.
      */
-    public static function randomReleasedFromBucket(string $bucket, int $limit = 10, bool $requirePoster = false): array
+    public static function randomReleasedFromBucket(string $bucket, int $limit = 10, bool $requirePoster = false, ?float $minimumRating = null): array
     {
         $bucket = trim($bucket);
         $limit = min(50, max(1, $limit));
@@ -419,11 +476,17 @@ final class SqliteStore
              FROM records
              WHERE bucket = :bucket
                AND (release_date IS NOT NULL AND release_date <> '' AND release_date <= :today)
+               AND (:minimum_rating IS NULL OR COALESCE(vote_average, 0) >= :minimum_rating)
              ORDER BY RANDOM()
              LIMIT :limit"
         );
         $stmt->bindValue(':bucket', $bucket, PDO::PARAM_STR);
         $stmt->bindValue(':today', $today, PDO::PARAM_STR);
+        if ($minimumRating === null) {
+            $stmt->bindValue(':minimum_rating', null, PDO::PARAM_NULL);
+        } else {
+            $stmt->bindValue(':minimum_rating', $minimumRating);
+        }
         $stmt->bindValue(':limit', $candidateLimit, PDO::PARAM_INT);
         $stmt->execute();
 

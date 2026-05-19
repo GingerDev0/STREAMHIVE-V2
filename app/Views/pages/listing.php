@@ -6,8 +6,9 @@
     <a class="btn btn-outline-light" href="<?= e(url('s')) ?>"><i class="fa-solid fa-magnifying-glass me-1"></i> Advanced search</a>
   </div>
   <form class="row g-2" method="get">
-    <div class="col-md-3"><select name="genre" class="form-select"><option value="">All genres</option><?php foreach ($genres as $g): ?><option value="<?= e($g) ?>" <?= $genre===$g?'selected':'' ?>><?= e($g) ?></option><?php endforeach; ?></select></div>
+    <div class="col-md-2"><select name="genre" class="form-select"><option value="">All genres</option><?php foreach ($genres as $g): ?><option value="<?= e($g) ?>" <?= $genre===$g?'selected':'' ?>><?= e($g) ?></option><?php endforeach; ?></select></div>
     <div class="col-md-2"><select name="rating" class="form-select"><option value="">Any age rating</option><?php foreach ($ratings as $r): ?><option value="<?= e($r) ?>" <?= $rating===$r?'selected':'' ?>><?= e($r) ?></option><?php endforeach; ?></select></div>
+    <div class="col-md-2"><select name="user_rating" class="form-select" aria-label="Filter by user rating"><option value="">Any TMDB rating</option><?php foreach (($userRatingOptions ?? []) as $option): ?><option value="<?= e((string)$option['value']) ?>" <?= (string)($score ?? '') === (string)$option['value'] ? 'selected' : '' ?>><?= e((string)$option['label']) ?></option><?php endforeach; ?></select></div>
     <div class="col-md-2">
       <select name="year" class="form-select" aria-label="Filter by year">
         <option value="">Any year</option>
@@ -16,7 +17,7 @@
         <?php endfor; ?>
       </select>
     </div>
-    <div class="col-md-3"><select name="sort" class="form-select">
+    <div class="col-md-2"><select name="sort" class="form-select">
       <?php foreach (['title_asc'=>'Title A-Z','title_desc'=>'Title Z-A','date_desc'=>'Newest release','date_asc'=>'Oldest release','rating_desc'=>'Top rated','rating_asc'=>'Lowest rated','updated_desc'=>'Recently updated'] as $value=>$label): ?>
         <option value="<?= e($value) ?>" <?= $sort===$value?'selected':'' ?>><?= e($label) ?></option>
       <?php endforeach; ?>

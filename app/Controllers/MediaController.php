@@ -298,8 +298,10 @@ final class MediaController
         $year = (int)(new \DateTimeImmutable('today'))->format('Y');
         $this->prefetchComingThisYear($year);
 
-        $movies = $this->comingItems($this->repo->movies->all(), 'movie', $year);
-        $tvShows = $this->comingItems($this->repo->tv->all(), 'tv', $year);
+        // Coming This Year is the one place future-dated movies/TV should still be visible.
+        // Normal listings, search, detail pages, carousels, collections, and episodes remain released-only.
+        $movies = $this->comingItems(SqliteStore::upcomingInYear('movies', $year), 'movie', $year);
+        $tvShows = $this->comingItems(SqliteStore::upcomingInYear('tv', $year), 'tv', $year);
 
         return View::render('pages/coming', [
             'title' => 'Coming This Year',
@@ -332,6 +334,7 @@ final class MediaController
         $genre = trim((string)($_GET['genre'] ?? ''));
         $rating = trim((string)($_GET['rating'] ?? ''));
         $year = trim((string)($_GET['year'] ?? ''));
+        $score = trim((string)($_GET['user_rating'] ?? ($_GET['score'] ?? '')));
         $sort = (string)($_GET['sort'] ?? 'title_asc');
         $page = max(1, (int)($_GET['page'] ?? 1));
         $perPage = min(48, max(6, (int)($_GET['per_page'] ?? 24)));
@@ -349,6 +352,8 @@ final class MediaController
             'genre' => $genre,
             'rating' => $rating,
             'year' => $year,
+            'user_rating' => $score,
+            'score' => $score,
             'sort' => $sort,
             'page' => $page,
             'per_page' => $perPage,
@@ -370,9 +375,12 @@ final class MediaController
             'genre' => $genre,
             'rating' => $rating,
             'year' => $year,
+            'user_rating' => $score,
+            'score' => $score,
             'sort' => $sort,
             'genres' => $this->availableGenres(),
             'ratings' => $this->availableRatings(),
+            'userRatingOptions' => $this->userRatingFilterOptions(),
         ]);
     }
 
@@ -381,6 +389,7 @@ final class MediaController
         $genre = trim((string)($_GET['genre'] ?? ''));
         $rating = trim((string)($_GET['rating'] ?? ''));
         $year = trim((string)($_GET['year'] ?? ''));
+        $score = trim((string)($_GET['user_rating'] ?? ($_GET['score'] ?? '')));
         $sort = (string)($_GET['sort'] ?? 'title_asc');
         $page = max(1, (int)($_GET['page'] ?? 1));
         $perPage = min(48, max(6, (int)($_GET['per_page'] ?? 24)));
@@ -392,6 +401,8 @@ final class MediaController
             'genre' => $genre,
             'rating' => $rating,
             'year' => $year,
+            'user_rating' => $score,
+            'score' => $score,
             'sort' => $sort,
             'page' => $page,
             'per_page' => $perPage,
@@ -413,9 +424,12 @@ final class MediaController
             'genre' => $genre,
             'rating' => $rating,
             'year' => $year,
+            'user_rating' => $score,
+            'score' => $score,
             'sort' => $sort,
             'genres' => $this->availableGenres($type),
             'ratings' => $this->availableRatings($type),
+            'userRatingOptions' => $this->userRatingFilterOptions(),
         ]);
     }
 
@@ -713,6 +727,18 @@ final class MediaController
         }
         natcasesort($genres);
         return array_values($genres);
+    }
+
+
+    private function userRatingFilterOptions(): array
+    {
+        $options = [];
+        for ($i = 0; $i <= 20; $i++) {
+            $value = $i / 2;
+            $label = rtrim(rtrim(number_format($value, 1, '.', ''), '0'), '.');
+            $options[] = ['value' => $label, 'label' => $label . '+'];
+        }
+        return $options;
     }
 
     private function availableRatings(?string $type = null): array
