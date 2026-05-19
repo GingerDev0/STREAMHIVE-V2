@@ -1,4 +1,4 @@
-# Movie DB SQLite V2
+# StreamHIVE
 
 A cinematic PHP movie, TV, episode, and actor database powered by the TMDB API and local SQLite storage. The app keeps a fast local cache in SQLite, fetches missing content from TMDB on demand, and uses clean Apache routes for a streaming-app style browsing experience.
 
@@ -242,10 +242,10 @@ The footer must keep:
 ```text
 Created by GingerDev
 TMDB data powers imports. This product is not endorsed or certified by TMDB.
-Project link: https://github.com/GingerDev0/Movie-DB-V2
+Project link: https://github.com/GingerDev0/StreamHIVE-V2
 ```
 
-The GitHub project link is expected to appear in the footer attribution and footer navigation. Restore the required text/link to make the site load again.
+The visible footer attribution is checked strictly: changing the creator text, TMDB notice, project-link text, project URL, or removing the GitHub footer navigation link will make the app return `503 Project attribution required`. Restore the exact required footer attribution to make the site load again.
 
 ## Production notes
 
