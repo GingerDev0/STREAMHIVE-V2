@@ -1,56 +1,86 @@
-# Movie DB SQLite V2
+# MDBV2 — Movie & TV Database
 
-A cinematic PHP movie, TV, episode, and actor database powered by the TMDB API and local SQLite storage. The app keeps a fast local cache in SQLite, fetches missing content from TMDB on demand, and uses clean Apache routes for a streaming-app style browsing experience.
+A fast, cinematic PHP movie database powered by **TMDB**, **SQLite**, and a premium streaming-style UI.
+
+MDBV2 lets you browse movies, TV shows, seasons, episodes, actors, recommendations, profiles, and admin imports from a lightweight PHP app. Missing content is fetched from TMDB on demand, cached locally in SQLite, and served quickly from then on.
 
 > This product uses the TMDB API but is not endorsed or certified by TMDB.
 
-## Features
+---
 
-- Netflix-style dark UI with movie, TV, season, episode, actor, search, profile, and admin pages.
-- SQLite-first storage with automatic TMDB imports and upgrades.
-- Fast SQL-level pagination, filtering, sorting, and search for listing pages.
-- Live navbar search with up to 6 clickable local results.
-- AJAX filtering and pagination on `/movies`, `/tv`, and `/s`.
-- Blocking fetching-content modal for missing or partially imported content.
-- Movie, TV, episode, and actor metadata, cast, ratings, genres, seasons, and recommendations.
-- “More like this” recommendations ranked by similar names first, then shared genres.
-- Runtime display such as `1 hour 30 mins` on movie, TV, episode, and card views where available.
-- MultiEmbed player support using TMDB IDs first, then IMDb IDs as fallback.
-- Browser-local profile page using `localStorage` for bookmarks and recently viewed items.
-- Admin dashboard for imports, SQLite stats, and managing movies, TV shows, and actors.
-- Clean collision-safe slugs for duplicate titles/names.
-- SEO/social metadata with Open Graph and Twitter card tags.
+## Highlights
+
+- **Streaming-app UI** inspired by modern premium services.
+- **SQLite-first storage** with automatic schema setup and local caching.
+- **On-demand TMDB fetching** for missing movies, TV shows, episodes, seasons, and actors.
+- **Fetching content modal** that blocks navigation while missing records are imported.
+- **Fast listing pages** with SQL-level filtering, sorting, search, and pagination.
+- **AJAX-powered `/movies`, `/tv`, and `/s` pages** with top and bottom pagination.
+- **Live navbar search** capped at 6 clickable local results.
+- **Movie, TV, episode, actor, season, search, profile, and admin pages**.
+- **More like this recommendations** ranked by similar titles first, then shared genres.
+- **Runtime display** such as `1 hour 30 mins`.
+- **MultiEmbed player integration** using TMDB IDs first, with IMDb fallback.
+- **Browser-local profile page** for bookmarks and recently viewed items.
+- **Admin dashboard** for imports, database stats, and content management.
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Backend | PHP 8.1+ |
+| Database | SQLite via PDO |
+| Frontend | HTML, CSS, JavaScript, jQuery |
+| API | TMDB |
+| Web Server | Apache with `mod_rewrite`, or PHP built-in server |
+| Player Embed | MultiEmbed |
+
+---
 
 ## Requirements
 
-- PHP 8.1 or newer
+Before installing, make sure your environment has:
+
+- PHP **8.1 or newer**
 - Apache with `mod_rewrite`, or PHP's built-in server for local development
 - PHP extensions:
   - `curl`
   - `pdo_sqlite`
   - `sqlite3`
-- A TMDB API v4 Read Access Token, or a TMDB v3 API key
+- A TMDB API credential:
+  - TMDB v4 Read Access Token, recommended
+  - or TMDB v3 API key as fallback
+
+---
 
 ## Installation
 
-1. Clone or upload this repository to your server.
-2. Point your web root to `public/`.
-   - If you cannot change the web root, keep the included root `.htaccess`; it routes requests into `public/`.
-3. Copy `.env.example` to `.env`.
-4. Add your TMDB credentials and change the admin token.
-5. Make `storage/` writable by PHP.
-6. Open the site in your browser.
-
-Example:
+Clone or upload the project, then configure your environment.
 
 ```bash
+git clone https://github.com/your-username/your-repo-name.git
+cd your-repo-name
 cp .env.example .env
 chmod -R 775 storage
 ```
 
-## Environment file
+Then edit `.env` and add your TMDB credentials.
 
-Create a `.env` file in the project root:
+For Apache hosting, point your web root to:
+
+```text
+public/
+```
+
+If your host does not allow changing the web root, keep the included root `.htaccess`. It forwards requests into `public/`.
+
+---
+
+## Environment Setup
+
+Your `.env` should look like this:
 
 ```ini
 TMDB_BEARER_TOKEN=your_tmdb_v4_read_access_token_here
@@ -67,30 +97,41 @@ SQLITE_SYNCHRONOUS=NORMAL
 SQLITE_BUSY_TIMEOUT_MS=10000
 ```
 
-Notes:
+### Important `.env` notes
 
-- Do not commit your real `.env` file.
-- Leave `SQLITE_PATH=` blank to use `storage/database.sqlite`.
-- `SQLITE_JOURNAL_MODE=MEMORY` avoids slow `database.sqlite-wal` and `database.sqlite-journal` sidecar writes on hosts where those files are slow.
-- For a more crash-safe but slower setup, use `SQLITE_JOURNAL_MODE=DELETE` and `SQLITE_SYNCHRONOUS=FULL`.
-- In production, set `APP_DEBUG=false`.
+- Do **not** commit your real `.env` file.
+- Leave `SQLITE_PATH=` blank to use the default SQLite database path.
+- Change `ADMIN_TOKEN` before deploying.
+- Set `APP_DEBUG=false` in production.
+- `SQLITE_JOURNAL_MODE=MEMORY` avoids slow `database.sqlite-wal` and `database.sqlite-journal` sidecar writes on hosts where disk sidecar files are slow.
 
-## TMDB credentials
+For safer but slower SQLite writes, use:
 
-This app prefers the TMDB v4 API Read Access Token.
+```ini
+SQLITE_JOURNAL_MODE=DELETE
+SQLITE_SYNCHRONOUS=FULL
+```
 
-1. Create or log in to a TMDB account.
-2. Open account settings.
+---
+
+## TMDB Credentials
+
+MDBV2 works best with a TMDB v4 Read Access Token.
+
+1. Create or log into a TMDB account.
+2. Open your TMDB account settings.
 3. Go to the API section.
-4. Create/request API access.
-5. Copy the v4 API Read Access Token into `TMDB_BEARER_TOKEN`.
-6. Optionally copy the v3 API key into `TMDB_API_KEY` as a fallback.
+4. Request or create API access.
+5. Copy the **v4 Read Access Token** into `TMDB_BEARER_TOKEN`.
+6. Optionally add the v3 API key to `TMDB_API_KEY`.
 
-Paste the bearer token without the word `Bearer`; the app adds the header automatically.
+Paste only the token value. Do not include the word `Bearer`; the app adds the authorization header automatically.
 
-## Local development
+---
 
-From the project root:
+## Local Development
+
+Run the app locally with PHP's built-in server:
 
 ```bash
 php -S localhost:8000 -t public
@@ -102,29 +143,32 @@ Then open:
 http://localhost:8000
 ```
 
-## Main routes
+---
 
-```text
-/
-/movies
-/movies/movie-name
-/tv
-/tv/tv-show-name
-/tv/tv-show-name/s01
-/tv/tv-show-name/s01/e01
-/actors
-/actors/actor-name
-/actor/actor-name
-/coming-this-year
-/s
-/s/search-query
-/s?q=search-query
-/profile
-```
+## Main Routes
 
-## Admin routes
+| Route | Description |
+|---|---|
+| `/` | Home page |
+| `/movies` | Movie listings |
+| `/movies/movie-name` | Movie detail page |
+| `/tv` | TV show listings |
+| `/tv/show-name` | TV show detail page |
+| `/tv/show-name/s01` | Season page |
+| `/tv/show-name/s01/e01` | Episode page |
+| `/actors` | Actor listings |
+| `/actors/actor-name` | Actor detail page |
+| `/actor/actor-name` | Actor detail alias |
+| `/coming-this-year` | Upcoming/current-year content |
+| `/s` | Search page |
+| `/s?q=query` | Search results |
+| `/profile` | Local profile, bookmarks, and history |
 
-Use your `ADMIN_TOKEN` query string value:
+---
+
+## Admin Routes
+
+Admin routes use your `ADMIN_TOKEN` as a query string value.
 
 ```text
 /admin?token=change-this-token
@@ -134,116 +178,247 @@ Use your `ADMIN_TOKEN` query string value:
 /admin/manage/actors?token=change-this-token
 ```
 
-The admin area includes stats, imports, filters, sorting, previews, pagination, and delete actions. For a public production site, replace the query-string token with proper authentication.
+The admin area includes:
 
-## SQLite storage
+- SQLite stats
+- Import tools
+- Movie, TV, and actor management
+- Filtering and sorting
+- Pagination
+- Preview links
+- Delete actions
 
-By default, the app creates:
+For a public production site, replace query-string token access with proper authentication.
+
+---
+
+## SQLite Storage
+
+By default, MDBV2 stores its database at:
 
 ```text
 storage/database.sqlite
 ```
 
-You can override it in `.env`:
+You can override this with:
 
 ```ini
 SQLITE_PATH=/absolute/path/to/database.sqlite
 ```
 
-SQLite schema and derived search/filter columns are created automatically. Existing rows are backfilled when needed.
+SQLite setup is automatic. The app creates the required tables, indexes, and derived search/filter columns when needed.
 
-The app is tuned for a single-writer cache workflow:
+### Performance features
 
-- Batch upserts use transactions.
-- Prepared statements are reused.
-- Slug checks use indexed lookups.
-- Pages query only the rows needed for the current page.
-- Missing content is fetched, saved, verified as readable, then redirected.
+MDBV2 is tuned for a single-writer SQLite cache workflow:
 
-## Player embeds
+- SQL-level pagination instead of loading every row.
+- SQL-level search, year, rating, genre, and sort filters.
+- Batch upserts wrapped in transactions.
+- Reused prepared statements for multiple writes.
+- Indexed slug lookups.
+- Avoids rewriting unchanged records.
+- Read-after-write verification before redirecting after imports.
 
-Movies use MultiEmbed with TMDB ID first:
+---
+
+## Fetching Missing Content
+
+When a user opens content that is not fully available locally, MDBV2 shows a non-dismissible **Fetching content** modal.
+
+The app then:
+
+1. Requests the missing data from TMDB.
+2. Saves or updates the record in SQLite.
+3. Verifies the saved record is readable.
+4. Automatically redirects to the finished page.
+
+This prevents broken pages and avoids users manually refreshing after imports.
+
+---
+
+## Search and Filtering
+
+MDBV2 supports:
+
+- Movie, TV, actor, and combined search
+- Live navbar search capped to 6 local results
+- AJAX listing updates without full reloads
+- Genre filters
+- Year dropdowns
+- Age rating filters
+- Sort order controls
+- Top and bottom pagination
+- Browser back/forward support for AJAX listing changes
+
+---
+
+## Player Embeds
+
+MDBV2 uses MultiEmbed for playback links.
+
+Movies prefer TMDB IDs:
 
 ```text
 https://multiembed.mov/?video_id={tmdb_id}&tmdb=1
 ```
 
-Episodes use:
+Episodes use the parent TV TMDB ID with season and episode numbers:
 
 ```text
-https://multiembed.mov/?video_id={tv_tmdb_id}&tmdb=1&s={season}&e={episode}
+https://multiembed.mov/?video_id={tv_tmdb_id}&tmdb=1&s={season_number}&e={episode_number}
 ```
 
 If a TMDB ID is unavailable, the app can fall back to IMDb ID URLs.
 
-## Auto-import and fetching modal
+---
 
-When a visitor opens a movie, TV show, episode, season, or actor that is missing locally, the app shows a non-dismissible “Fetching content” modal. It imports or upgrades the record from TMDB, writes it to SQLite, waits until the record is readable, then navigates automatically.
+## Recommendations
 
-Fully imported local records open immediately.
+The **More like this** section is ranked by:
 
-## Search and filtering
+1. Similar title or name
+2. Shared genres
+3. Rating and release date fallback
 
-The app supports:
+The panel is styled separately from the player and uses its own scrolling behavior on larger screens.
 
-- Search by title/name
-- Movies, TV, actors, or combined search
-- Genre filters
-- Year filters
-- Age-rating filters
-- Sort order
-- Top and bottom pagination
-- AJAX updates without full-page reloads on listings/search
-- Navbar live search capped to 6 local results
+---
 
-## Profile page
+## Profile Page
 
-`/profile` is stored in the visitor’s browser with `localStorage`.
+The `/profile` page uses the visitor's browser `localStorage`.
 
 It includes:
 
-- Bookmarks
+- Bookmarked items
 - Recently viewed items
-- One history entry per item; opening it again moves it to the front
+- One history entry per item
+- Latest visit moves an item back to the front
 
 No account system is required.
 
-## Migrating old JSON storage
+---
 
-If you have older JSON folders such as `storage/movies`, `storage/tv`, or `storage/people`, the app can migrate them into SQLite.
+## Migrating Older JSON Storage
 
-Manual migration:
+If you have an older version that used JSON folders such as:
+
+```text
+storage/movies
+storage/tv
+storage/people
+```
+
+run:
 
 ```bash
 php scripts/migrate-json-to-sqlite.php
 ```
 
-After confirming the admin dashboard shows the imported records, the JSON files can be removed or kept as a backup.
+After confirming the admin dashboard shows the imported records, you can keep the old JSON files as backup or remove them.
 
-## GitHub packaging notes
+---
 
-This repository should include source files, `.env.example`, `.gitignore`, `.htaccess` files, and `.gitkeep` files for empty storage folders.
+## Recommended GitHub Files
 
-Do not commit:
+Commit these:
 
-- `.env`
-- `storage/database.sqlite`
-- `database.sqlite`
-- SQLite sidecar files such as `*.sqlite-wal`, `*.sqlite-shm`, or `*.sqlite-journal`
-- Runtime cache/import files in `storage/cache`, `storage/movies`, `storage/tv`, or `storage/people`
+```text
+app/
+public/
+scripts/
+storage/.gitkeep
+storage/cache/.gitkeep
+storage/indexes/.gitkeep
+storage/movies/.gitkeep
+storage/people/.gitkeep
+storage/tv/.gitkeep
+.env.example
+.gitignore
+.htaccess
+README.md
+```
 
-## Production notes
+Do **not** commit these:
 
-- Set `APP_ENV=production` and `APP_DEBUG=false`.
-- Change `ADMIN_TOKEN` to a strong secret or replace token auth with real authentication.
-- Ensure Apache rewrite rules are enabled.
-- Ensure `storage/` is writable but not publicly browseable.
-- Keep TMDB credentials private.
+```text
+.env
+storage/database.sqlite
+database.sqlite
+*.sqlite-wal
+*.sqlite-shm
+*.sqlite-journal
+storage/cache/*
+storage/movies/*.json
+storage/tv/*.json
+storage/people/*.json
+```
+
+---
+
+## Production Checklist
+
+Before going live:
+
+- Set `APP_ENV=production`.
+- Set `APP_DEBUG=false`.
+- Replace `ADMIN_TOKEN` with a strong secret.
+- Make sure Apache rewrite rules are enabled.
+- Point the web root to `public/`.
+- Make sure `storage/` is writable by PHP.
+- Keep `.env` outside version control.
+- Consider replacing token-based admin access with real authentication.
+
+---
+
+## Troubleshooting
+
+### Pages show 404
+
+Make sure Apache rewrite rules are enabled and that either:
+
+- your web root points to `public/`, or
+- the root `.htaccess` file is present.
+
+### SQLite database is not created
+
+Check that PHP can write to `storage/`:
+
+```bash
+chmod -R 775 storage
+```
+
+### Fetching content is slow
+
+Use the faster SQLite settings:
+
+```ini
+SQLITE_JOURNAL_MODE=MEMORY
+SQLITE_SYNCHRONOUS=NORMAL
+SQLITE_BUSY_TIMEOUT_MS=10000
+```
+
+Also make sure your server is not blocking outbound requests to TMDB.
+
+### Admin routes do not work
+
+Check that the `token` query string matches your `.env` value:
+
+```text
+/admin?token=your-admin-token
+```
+
+---
 
 ## Credits
 
-- Metadata and images: TMDB API
-- Player embed format: MultiEmbed
-- UI libraries: Bootstrap 5.3.3 and Font Awesome
-- Storage: SQLite
-- Created by [GingerDev](https://github.com/GingerDev0)
+- Metadata provided by TMDB.
+- Player embeds powered by MultiEmbed.
+- UI and application code built for MDBV2.
+
+---
+
+## Disclaimer
+
+MDBV2 is a personal movie and TV database/cache application. Make sure your usage of third-party APIs, metadata, images, and embeds complies with their respective terms of service.
