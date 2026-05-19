@@ -36,7 +36,7 @@ function app_enforce_attribution_guard(): void
     $requiredCreatorName = 'GingerDev';
     $requiredCreatorLink = 'https://github.com/GingerDev0';
     $requiredTmdbNotice = 'TMDB data powers imports. This product is not endorsed or certified by TMDB.';
-    $requiredProjectLink = 'https://github.com/GingerDev0/Movie-DB-V2';
+    $requiredProjectLink = 'https://github.com/GingerDev0/StreamHIVE-V2';
 
     $layout = is_file($layoutFile) ? (string) file_get_contents($layoutFile) : '';
     $normalizedLayout = app_normalize_attribution_markup($layout);

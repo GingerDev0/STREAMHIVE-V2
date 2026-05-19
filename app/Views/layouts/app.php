@@ -82,7 +82,7 @@ $robots = (string)($robots ?? 'index, follow');
       <div class="pro-footer-copy">
         <p>Created by <a href="https://github.com/GingerDev0" target="_blank" rel="noopener noreferrer">GingerDev</a></p>
         <p>TMDB data powers imports. This product is not endorsed or certified by TMDB.</p>
-        <p>Project link: <a href="https://github.com/GingerDev0/Movie-DB-V2" target="_blank" rel="noopener noreferrer">https://github.com/GingerDev0/Movie-DB-V2</a></p>
+        <p>Project link: <a href="https://github.com/GingerDev0/StreamHIVE-V2" target="_blank" rel="noopener noreferrer">https://github.com/GingerDev0/StreamHIVE-V2</a></p>
       </div>
 
       <nav class="pro-footer-actions" aria-label="Footer links">
@@ -90,7 +90,7 @@ $robots = (string)($robots ?? 'index, follow');
         <a href="/tv"><i class="fa-solid fa-tv"></i> TV Shows</a>
         <a href="/actors"><i class="fa-solid fa-user-group"></i> Actors</a>
         <a href="/s"><i class="fa-solid fa-compass"></i> Discover</a>
-        <a href="https://github.com/GingerDev0/Movie-DB-V2" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-github"></i> GitHub</a>
+        <a href="https://github.com/GingerDev0/StreamHIVE-V2" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-github"></i> GitHub</a>
       </nav>
     </div>
   </div>
