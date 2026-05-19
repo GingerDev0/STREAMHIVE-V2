@@ -28,22 +28,31 @@ final class AdminController
         $people = $this->repo->people->all();
         $allMedia = array_merge(
             array_map(static fn(array $item): array => $item + ['admin_type' => 'movies'], $movies),
-            array_map(static fn(array $item): array => $item + ['admin_type' => 'tv'], $tv)
+            array_map(static fn(array $item): array => $item + ['admin_type' => 'tv'], $tv),
+            array_map(static fn(array $item): array => $item + ['admin_type' => 'people'], $people)
         );
 
         usort($allMedia, static fn(array $a, array $b): int => strcmp((string)($b['updated_at'] ?? ''), (string)($a['updated_at'] ?? '')));
 
+        $prefetchedBreakdown = [
+            'movies' => $this->repo->movies->countByStatus('prefetched'),
+            'tv' => $this->repo->tv->countByStatus('prefetched'),
+            'people' => $this->repo->people->countByStatus('prefetched'),
+        ];
+
         return View::render('admin/dashboard', [
             'title' => 'Admin Dashboard',
-            'metaDescription' => 'Private admin dashboard for managing Movie DB content.',
+            'metaDescription' => 'Private admin dashboard for managing StreamHIVE content.',
             'robots' => 'noindex, nofollow',
             'movieCount' => count($movies),
             'tvCount' => count($tv),
             'peopleCount' => count($people),
-            'prefetchedCount' => count(array_filter($allMedia, static fn(array $item): bool => ($item['import_status'] ?? '') === 'prefetched')),
+            'prefetchedCount' => array_sum($prefetchedBreakdown),
+            'prefetchedBreakdown' => $prefetchedBreakdown,
             'missingRatingCount' => count(array_filter($allMedia, static fn(array $item): bool => trim((string)($item['age_rating'] ?? '')) === '')),
             'recentItems' => array_slice($allMedia, 0, 8),
             'storageStats' => $this->storageStats(),
+            'bulkImportResult' => $this->bulkImportResultFromQuery(),
         ]);
     }
 
@@ -67,7 +76,7 @@ final class AdminController
 
         return View::render('admin/import', compact('message', 'error', 'record', 'input') + [
             'title' => 'Import Media',
-            'metaDescription' => 'Private import tool for Movie DB content.',
+            'metaDescription' => 'Private import tool for StreamHIVE content.',
             'robots' => 'noindex, nofollow',
         ]);
     }
@@ -128,9 +137,73 @@ final class AdminController
 
         return View::render('admin/manage', compact('type', 'items', 'q', 'status', 'sort', 'page', 'pages', 'total', 'perPage') + [
             'title' => 'Manage ' . ucfirst($type),
-            'metaDescription' => 'Private management page for Movie DB content.',
+            'metaDescription' => 'Private management page for StreamHIVE content.',
             'robots' => 'noindex, nofollow',
         ]);
+    }
+
+    public function importPrefetched(): string
+    {
+        $this->guard();
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header('Location: /admin?token=' . urlencode((string)($_GET['token'] ?? $_POST['token'] ?? '')));
+            return '';
+        }
+
+        if (function_exists('set_time_limit')) {
+            @set_time_limit(0);
+        }
+
+        $token = (string)($_POST['token'] ?? $_GET['token'] ?? '');
+        $scope = (string)($_POST['scope'] ?? 'all');
+        $limit = max(0, (int)($_POST['limit'] ?? 0));
+
+        $buckets = match ($scope) {
+            'movies' => ['movies' => 'movie'],
+            'tv' => ['tv' => 'tv'],
+            'people', 'actors' => ['people' => 'person'],
+            default => ['movies' => 'movie', 'tv' => 'tv', 'people' => 'person'],
+        };
+
+        $importer = new ImportService();
+        $imported = ['movies' => 0, 'tv' => 0, 'people' => 0];
+        $failed = 0;
+        $remainingLimit = $limit;
+
+        foreach ($buckets as $bucket => $kind) {
+            $take = $remainingLimit > 0 ? $remainingLimit : 0;
+            $ids = $this->repo->store($bucket)->idsByStatus('prefetched', $take);
+
+            foreach ($ids as $id) {
+                try {
+                    match ($kind) {
+                        'movie' => $importer->importMovie((int)$id),
+                        'tv' => $importer->importTv((int)$id),
+                        'person' => $importer->importPerson((int)$id),
+                    };
+                    $imported[$bucket]++;
+                } catch (\Throwable) {
+                    $failed++;
+                }
+
+                if ($remainingLimit > 0) {
+                    $remainingLimit--;
+                    if ($remainingLimit <= 0) break 2;
+                }
+            }
+        }
+
+        $params = [
+            'token' => $token,
+            'bulk_imported_movies' => $imported['movies'],
+            'bulk_imported_tv' => $imported['tv'],
+            'bulk_imported_people' => $imported['people'],
+            'bulk_failed' => $failed,
+        ];
+
+        header('Location: /admin?' . http_build_query($params));
+        return '';
     }
 
     public function delete(array $params): string
@@ -149,6 +222,23 @@ final class AdminController
             http_response_code(403);
             exit('Forbidden: add ?token=YOUR_ADMIN_TOKEN');
         }
+    }
+
+    private function bulkImportResultFromQuery(): ?array
+    {
+        $keys = ['bulk_imported_movies', 'bulk_imported_tv', 'bulk_imported_people', 'bulk_failed'];
+        foreach ($keys as $key) {
+            if (isset($_GET[$key])) {
+                return [
+                    'movies' => max(0, (int)($_GET['bulk_imported_movies'] ?? 0)),
+                    'tv' => max(0, (int)($_GET['bulk_imported_tv'] ?? 0)),
+                    'people' => max(0, (int)($_GET['bulk_imported_people'] ?? 0)),
+                    'failed' => max(0, (int)($_GET['bulk_failed'] ?? 0)),
+                ];
+            }
+        }
+
+        return null;
     }
 
     private function storageStats(): array

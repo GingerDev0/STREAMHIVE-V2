@@ -8,6 +8,7 @@ use App\Core\View;
 use App\Models\Repository;
 use App\Services\ImportService;
 use App\Services\TmdbClient;
+use App\Services\SqliteStore;
 
 final class HomeController
 {
@@ -37,12 +38,18 @@ final class HomeController
         $tvRecent = $this->hydrateFromLocal($tvRecent, 'tv', $repo);
         $tvTrending = $this->hydrateFromLocal($tvTrending, 'tv', $repo);
 
-        $heroMovies = $this->randomMoviesForHero($moviesTrending, $moviesRecent);
+        // Carousel spotlight should rotate through the full local movie database,
+        // not just the current TMDB trending/recent response. Missing-poster
+        // movies are excluded here only; they still show everywhere else.
+        $heroMovies = SqliteStore::randomReleasedFromBucket('movies', 10, true);
+        if (!$heroMovies) {
+            $heroMovies = $this->randomMoviesForHero($moviesTrending, $moviesRecent);
+        }
 
         return View::render('pages/home', compact('moviesRecent','moviesTrending','tvRecent','tvTrending','heroMovies') + [
-            'title' => 'Movie DB V2',
+            'title' => 'StreamHIVE',
             'metaDescription' => 'Explore trending movies and TV shows with posters, cast, episodes, ratings, genres, bookmarks, and instant playback.',
-            'ogTitle' => 'Movie DB V2 | Trending Movies and TV Shows',
+            'ogTitle' => 'StreamHIVE | Trending Movies and TV Shows',
             'ogDescription' => 'Discover trending movies and TV shows in a bold cinematic interface.',
             'canonicalUrl' => absolute_url('/'),
         ]);
@@ -57,7 +64,11 @@ final class HomeController
             foreach ($group as $item) {
                 $id = (int)($item['tmdb_id'] ?? $item['id'] ?? 0);
                 if ($id <= 0 || isset($seen[$id])) continue;
-                if (empty($item['poster_path'])) continue;
+
+                // Carousel-only rule: skip movies without a real poster here,
+                // but do not remove them from normal listings/search/details.
+                if (!$this->hasUsablePoster($item)) continue;
+
                 $seen[$id] = true;
                 $item['media_type'] = 'movie';
                 $movies[] = $item;
@@ -66,6 +77,15 @@ final class HomeController
 
         shuffle($movies);
         return array_slice($movies, 0, 10);
+    }
+
+    private function hasUsablePoster(array $item): bool
+    {
+        $poster = trim((string)($item['poster_path'] ?? ''));
+        if ($poster === '') return false;
+
+        return !str_contains($poster, 'placeholder.jpg')
+            && !str_contains($poster, 'placeholder.svg');
     }
 
     private function hydrateFromLocal(array $items, string $type, Repository $repo): array

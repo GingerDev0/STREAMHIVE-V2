@@ -19,13 +19,13 @@ $heroBackground = $heroMovies[0] ?? ($moviesTrending[0] ?? $moviesRecent[0] ?? n
             $movieRuntime = media_runtime($movie, 'movie');
             $movieRating = round((float)($movie['vote_average'] ?? 0), 1);
             $movieGenres = is_array($movie['genres'] ?? null) ? array_slice($movie['genres'], 0, 3) : [];
-            $movieOverview = meta_excerpt((string)($movie['overview'] ?? 'Discover this movie in Movie DB.'), 190);
+            $movieOverview = meta_excerpt((string)($movie['overview'] ?? 'Discover this movie in StreamHIVE.'), 190);
             $movieMediaPayload = media_storage_payload($movie, 'movie', $movieUrl, $movieTitle);
           ?>
           <li class="splide__slide">
             <article class="v2-home-hero-slide" data-hero-backdrop="<?= e($movieBackdrop) ?>">
               <div class="v2-detail-grid v2-home-hero-grid">
-                <a class="v2-detail-poster-wrap v2-home-hero-poster-link js-media-link" href="<?= e($movieUrl) ?>" data-fetch-content="0" data-media='<?= $movieMediaPayload ?>' aria-label="Watch <?= e($movieTitle) ?>">
+                <a class="v2-detail-poster-wrap v2-home-hero-poster-link js-media-link" href="<?= e($movieUrl) ?>" data-fetch-content="1" data-media='<?= $movieMediaPayload ?>' aria-label="Watch <?= e($movieTitle) ?>">
                   <img class="v2-detail-poster" src="<?= e($moviePoster) ?>" alt="<?= e($movieTitle) ?> poster" loading="lazy">
                   <span class="v2-play-float v2-home-hero-play"><i class="fa-solid fa-play"></i></span>
                 </a>
@@ -42,7 +42,6 @@ $heroBackground = $heroMovies[0] ?? ($moviesTrending[0] ?? $moviesRecent[0] ?? n
                   <p class="v2-lead v2-home-hero-overview"><?= e($movieOverview) ?></p>
                   <div class="v2-hero-actions">
                     <a class="btn btn-warning btn-lg js-media-link" href="<?= e($movieUrl) ?>" data-fetch-content="1" data-media='<?= $movieMediaPayload ?>'><i class="fa-solid fa-play me-2"></i>Watch Now</a>
-                    <a class="btn btn-outline-light btn-lg" href="<?= e($movieUrl) ?>"><i class="fa-solid fa-circle-info me-2"></i>Details</a>
                   </div>
                 </div>
               </div>

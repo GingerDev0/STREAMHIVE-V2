@@ -1,14 +1,14 @@
 <?php require_once app_path('app/Helpers/helpers.php'); ?>
 <?php
-$siteName = 'Movie DB';
-$pageTitleRaw = trim((string)($title ?? 'Movie DB V2'));
+$siteName = 'StreamHIVE';
+$pageTitleRaw = trim((string)($title ?? 'StreamHIVE'));
 $pageTitle = str_contains($pageTitleRaw, $siteName) ? $pageTitleRaw : $pageTitleRaw . ' | ' . $siteName;
 $pageDescription = meta_excerpt((string)($metaDescription ?? 'Explore trending movies and TV shows with cast, episodes, ratings, genres, and instant playback in a bold cinematic layout.'), 165);
 $canonicalUrl = (string)($canonicalUrl ?? current_url());
 $ogTitle = (string)($ogTitle ?? $pageTitle);
 $ogDescription = meta_excerpt((string)($ogDescription ?? $pageDescription), 200);
 $ogType = (string)($ogType ?? 'website');
-$ogImage = (string)($ogImage ?? absolute_url(asset('img/placeholder.svg')));
+$ogImage = (string)($ogImage ?? absolute_url(asset('img/placeholder.jpg')));
 $robots = (string)($robots ?? 'index, follow');
 ?>
 <!doctype html>
@@ -47,7 +47,7 @@ $robots = (string)($robots ?? 'index, follow');
   <div class="container-fluid px-3 px-lg-4">
     <a class="navbar-brand v2-brand" href="/">
       <span class="v2-brand-mark"><i class="fa-solid fa-bolt"></i></span>
-      <span><strong>Movie DB</strong><small>V2</small></span>
+      <span><strong>StreamHIVE</strong><small>V2</small></span>
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"><span class="navbar-toggler-icon"></span></button>
     <div class="collapse navbar-collapse" id="mainNav">
@@ -74,9 +74,9 @@ $robots = (string)($robots ?? 'index, follow');
 <footer class="v2-footer pro-footer">
   <div class="pro-footer-shell">
     <div class="pro-footer-inner">
-      <a class="pro-footer-brand" href="/" aria-label="Movie DB home">
+      <a class="pro-footer-brand" href="/" aria-label="StreamHIVE home">
         <span class="pro-footer-brand-mark"><i class="fa-solid fa-film"></i></span>
-        <span><strong>Movie DB</strong><small>V2</small></span>
+        <span><strong>StreamHIVE</strong><small>V2</small></span>
       </a>
 
       <div class="pro-footer-copy">

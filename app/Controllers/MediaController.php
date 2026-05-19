@@ -35,7 +35,7 @@ final class MediaController
         return View::render('pages/movie', [
             'title' => ($movie['title'] ?? 'Movie') . ' | Watch Movie',
             'metaDescription' => meta_excerpt($movie['overview'] ?? ('Watch ' . ($movie['title'] ?? 'this movie') . ' with cast, ratings, genres, and recommendations.')),
-            'ogTitle' => ($movie['title'] ?? 'Movie') . ' | Movie DB',
+            'ogTitle' => ($movie['title'] ?? 'Movie') . ' | StreamHIVE',
             'ogDescription' => meta_excerpt($movie['overview'] ?? ''),
             'ogType' => 'video.movie',
             'ogImage' => meta_image($movie['backdrop_path'] ?? ($movie['poster_path'] ?? null)),
@@ -59,7 +59,7 @@ final class MediaController
         return View::render('pages/tv', [
             'title' => ($tv['title'] ?? 'TV Show') . ' | TV Show',
             'metaDescription' => meta_excerpt($tv['overview'] ?? ('Explore episodes, seasons, cast, ratings, and recommendations for ' . ($tv['title'] ?? 'this TV show') . '.')),
-            'ogTitle' => ($tv['title'] ?? 'TV Show') . ' | Movie DB',
+            'ogTitle' => ($tv['title'] ?? 'TV Show') . ' | StreamHIVE',
             'ogDescription' => meta_excerpt($tv['overview'] ?? ''),
             'ogType' => 'video.tv_show',
             'ogImage' => meta_image($tv['backdrop_path'] ?? ($tv['poster_path'] ?? null)),
@@ -90,7 +90,7 @@ final class MediaController
         return View::render('pages/season', [
             'title' => $tv['title'] . ' - Season ' . $seasonNumber,
             'metaDescription' => meta_excerpt('Browse every episode from ' . $tv['title'] . ' season ' . $seasonNumber . '.'),
-            'ogTitle' => $tv['title'] . ' - Season ' . $seasonNumber . ' | Movie DB',
+            'ogTitle' => $tv['title'] . ' - Season ' . $seasonNumber . ' | StreamHIVE',
             'ogDescription' => meta_excerpt($season['overview'] ?? ($tv['overview'] ?? '')),
             'ogType' => 'video.tv_show',
             'ogImage' => meta_image($season['poster_path'] ?? ($tv['backdrop_path'] ?? ($tv['poster_path'] ?? null))),
@@ -303,7 +303,7 @@ final class MediaController
         return View::render('pages/coming', [
             'title' => 'Coming This Year',
             'metaDescription' => 'Browse movies and TV shows coming later this year, grouped into tabs with quick pagination.',
-            'ogTitle' => 'Coming This Year | Movie DB',
+            'ogTitle' => 'Coming This Year | StreamHIVE',
             'ogDescription' => 'Upcoming movies and TV shows coming this year.',
             'canonicalUrl' => absolute_url('coming-this-year'),
             'year' => $year,
@@ -356,8 +356,8 @@ final class MediaController
         return View::render('pages/search', [
             'title' => $query ? 'Search: ' . $query : 'Discover Movies and TV',
             'metaDescription' => $query ? meta_excerpt('Search results for ' . $query . ' across movies, TV shows, and actors.') : 'Discover movies and TV shows by title, genre, age rating, year, and sort order.',
-            'ogTitle' => $query ? 'Search: ' . $query . ' | Movie DB' : 'Discover Movies and TV | Movie DB',
-            'ogDescription' => $query ? meta_excerpt('Search results for ' . $query . ' on Movie DB.') : 'Find movies and TV shows with advanced filters.',
+            'ogTitle' => $query ? 'Search: ' . $query . ' | StreamHIVE' : 'Discover Movies and TV | StreamHIVE',
+            'ogDescription' => $query ? meta_excerpt('Search results for ' . $query . ' on StreamHIVE.') : 'Find movies and TV shows with advanced filters.',
             'canonicalUrl' => absolute_url('s' . (!empty($_SERVER['QUERY_STRING'] ?? '') ? '?' . (string)$_SERVER['QUERY_STRING'] : '')),
             'items' => $pagination['items'],
             'total' => $pagination['total'],
@@ -399,8 +399,8 @@ final class MediaController
         return View::render('pages/listing', [
             'title' => $type === 'movie' ? 'All Movies' : 'All TV Shows',
             'metaDescription' => $type === 'movie' ? 'Browse every saved movie with filters, sorting, and pagination.' : 'Browse every saved TV show with filters, sorting, and pagination.',
-            'ogTitle' => $type === 'movie' ? 'All Movies | Movie DB' : 'All TV Shows | Movie DB',
-            'ogDescription' => $type === 'movie' ? 'Browse all movies on Movie DB.' : 'Browse all TV shows on Movie DB.',
+            'ogTitle' => $type === 'movie' ? 'All Movies | StreamHIVE' : 'All TV Shows | StreamHIVE',
+            'ogDescription' => $type === 'movie' ? 'Browse all movies on StreamHIVE.' : 'Browse all TV shows on StreamHIVE.',
             'canonicalUrl' => absolute_url($type === 'movie' ? 'movies' : 'tv'),
             'heading' => $type === 'movie' ? 'All Movies' : 'All TV Shows',
             'items' => $pagination['items'],
@@ -736,7 +736,7 @@ final class MediaController
     private function fetchingPage(string $type, string $slug, string $message): string
     {
         return View::render('pages/fetching-content', [
-            'title' => 'Fetching content | Movie DB',
+            'title' => 'Fetching content | StreamHIVE',
             'robots' => 'noindex, follow',
             'metaDescription' => 'This page is being fetched and saved locally.',
             'fetchType' => $type,

@@ -52,7 +52,7 @@ final class ActorController
         return View::render('pages/actors', [
             'title' => 'Actors',
             'metaDescription' => 'Browse saved actor pages and filmographies.',
-            'ogTitle' => 'Actors | Movie DB',
+            'ogTitle' => 'Actors | StreamHIVE',
             'ogDescription' => 'Browse actors and open filmography pages.',
             'canonicalUrl' => absolute_url('actors'),
             'items' => $items,
@@ -79,7 +79,7 @@ final class ActorController
 
         if (!$isFull) {
             return View::render('pages/fetching-content', [
-                'title' => 'Fetching actor | Movie DB',
+                'title' => 'Fetching actor | StreamHIVE',
                 'robots' => 'noindex, follow',
                 'metaDescription' => 'This actor page is being fetched and saved locally.',
                 'fetchType' => 'person',
@@ -92,7 +92,7 @@ final class ActorController
         return View::render('pages/actor', [
             'title' => ($actor['name'] ?? 'Actor') . ' | Filmography',
             'metaDescription' => meta_excerpt(($actor['biography'] ?? '') ?: ('Browse movies and TV shows featuring ' . ($actor['name'] ?? 'this actor') . '.')),
-            'ogTitle' => ($actor['name'] ?? 'Actor') . ' | Movie DB',
+            'ogTitle' => ($actor['name'] ?? 'Actor') . ' | StreamHIVE',
             'ogDescription' => meta_excerpt(($actor['biography'] ?? '') ?: ('Movies and TV shows featuring ' . ($actor['name'] ?? 'this actor') . '.')),
             'ogType' => 'profile',
             'ogImage' => meta_image($actor['profile_path'] ?? null, 'w500'),

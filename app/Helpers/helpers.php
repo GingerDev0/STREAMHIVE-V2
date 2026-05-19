@@ -30,7 +30,7 @@ function meta_excerpt(?string $text, int $length = 160): string {
 }
 function meta_image(?string $path, string $size = 'w1280'): string { return absolute_url(tmdb_img($path, $size)); }
 function tmdb_img(?string $path, string $size = 'w500'): string {
-    return $path ? "https://image.tmdb.org/t/p/{$size}{$path}" : '/assets/img/placeholder.svg';
+    return $path ? "https://image.tmdb.org/t/p/{$size}{$path}" : '/assets/img/placeholder.jpg';
 }
 function slugify(string $text): string {
     $text = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $text) ?: $text;
@@ -47,7 +47,7 @@ function actor_url(array $person): string { return url('actors/' . $person['slug
 
 
 function share_button(string $title, string $url, string $label = 'Share'): string {
-    $title = trim($title) !== '' ? $title : 'Movie DB';
+    $title = trim($title) !== '' ? $title : 'StreamHIVE';
     $url = absolute_url($url);
     return '<button class="btn btn-outline-light btn-lg v2-share-open js-share-open" type="button" data-share-title="' . e($title) . '" data-share-url="' . e($url) . '"><i class="fa-solid fa-share-nodes me-2"></i>' . e($label) . '</button>';
 }

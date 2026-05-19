@@ -32,6 +32,7 @@ $router->get('/actors/{slug}', [ActorController::class, 'show']);
 $router->get('/actor/{slug}', [ActorController::class, 'show']);
 $router->match(['GET','POST'], '/admin', [AdminController::class, 'dashboard']);
 $router->match(['GET','POST'], '/admin/import', [AdminController::class, 'import']);
+$router->post('/admin/import-prefetched', [AdminController::class, 'importPrefetched']);
 $router->get('/admin/manage/{type}', [AdminController::class, 'manage']);
 $router->post('/admin/delete/{type}/{id}', [AdminController::class, 'delete']);
 

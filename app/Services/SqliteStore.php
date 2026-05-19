@@ -226,6 +226,29 @@ final class SqliteStore
         return (int)$stmt->fetchColumn();
     }
 
+    public function countByStatus(string $status): int
+    {
+        $stmt = self::pdo()->prepare('SELECT COUNT(*) FROM records WHERE bucket = :bucket AND import_status = :status');
+        $stmt->execute(['bucket' => $this->bucket, 'status' => $status]);
+        return (int)$stmt->fetchColumn();
+    }
+
+    /**
+     * Return IDs for records that still need a full import. Keeping this query
+     * ID-only avoids decoding lots of JSON before the importer fetches full data.
+     */
+    public function idsByStatus(string $status, int $limit = 0): array
+    {
+        $sql = 'SELECT id FROM records WHERE bucket = :bucket AND import_status = :status ORDER BY updated_at DESC, id ASC';
+        if ($limit > 0) {
+            $sql .= ' LIMIT ' . max(1, $limit);
+        }
+
+        $stmt = self::pdo()->prepare($sql);
+        $stmt->execute(['bucket' => $this->bucket, 'status' => $status]);
+        return array_values(array_filter(array_map('strval', $stmt->fetchAll(PDO::FETCH_COLUMN))));
+    }
+
     public function paginated(array $options): array
     {
         return self::queryBuckets([$this->bucket], $options);
@@ -370,6 +393,61 @@ final class SqliteStore
             $items[] = $record;
         }
         return $items;
+    }
+
+    /**
+     * Return random released records from a bucket. Used by the homepage
+     * carousel so it can rotate through the full local movie database rather
+     * than only the latest TMDB trending/recent API results.
+     */
+    public static function randomReleasedFromBucket(string $bucket, int $limit = 10, bool $requirePoster = false): array
+    {
+        $bucket = trim($bucket);
+        $limit = min(50, max(1, $limit));
+        if (!in_array($bucket, ['movies', 'tv'], true)) return [];
+
+        $pdo = self::pdo();
+        $today = gmdate('Y-m-d');
+
+        // Pull a larger random candidate set when a poster is required because
+        // poster_path lives in the JSON payload. We then apply the poster guard
+        // after decoding without affecting normal listings/search results.
+        $candidateLimit = $requirePoster ? max($limit * 8, 40) : $limit;
+
+        $stmt = $pdo->prepare(
+            "SELECT payload, created_at, updated_at
+             FROM records
+             WHERE bucket = :bucket
+               AND (release_date IS NULL OR release_date = '' OR release_date <= :today)
+             ORDER BY RANDOM()
+             LIMIT :limit"
+        );
+        $stmt->bindValue(':bucket', $bucket, PDO::PARAM_STR);
+        $stmt->bindValue(':today', $today, PDO::PARAM_STR);
+        $stmt->bindValue(':limit', $candidateLimit, PDO::PARAM_INT);
+        $stmt->execute();
+
+        $items = [];
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
+            $record = json_decode((string)$row['payload'], true);
+            if (!is_array($record)) continue;
+            if ($requirePoster && !self::recordHasUsablePoster($record)) continue;
+            $record['created_at'] = $record['created_at'] ?? $row['created_at'];
+            $record['updated_at'] = $record['updated_at'] ?? $row['updated_at'];
+            $items[] = $record;
+            if (count($items) >= $limit) break;
+        }
+
+        return $items;
+    }
+
+    private static function recordHasUsablePoster(array $record): bool
+    {
+        $poster = trim((string)($record['poster_path'] ?? ''));
+        if ($poster === '') return false;
+
+        return !str_contains($poster, 'placeholder.jpg')
+            && !str_contains($poster, 'placeholder.svg');
     }
 
     public function distinctValues(string $field): array

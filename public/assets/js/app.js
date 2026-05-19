@@ -30,8 +30,8 @@ document.documentElement.classList.add('js-ready');
     slug: item.slug || '',
     title: item.title || 'Untitled',
     url: item.url || '#',
-    poster: item.poster || '/assets/img/placeholder.svg',
-    backdrop: item.backdrop || item.poster || '/assets/img/placeholder.svg',
+    poster: item.poster || '/assets/img/placeholder.jpg',
+    backdrop: item.backdrop || item.poster || '/assets/img/placeholder.jpg',
     year: item.year || '',
     rating: item.rating || '',
     meta: item.meta || '',
@@ -381,7 +381,7 @@ document.documentElement.classList.add('js-ready');
   });
 
   window.addEventListener('storage', () => { syncBookmarkButtons(); renderProfile(); });
-  window.MovieDBRefresh = () => { syncBookmarkButtons(); renderProfile(); };
+  window.StreamHIVERefresh = () => { syncBookmarkButtons(); renderProfile(); };
   syncBookmarkButtons();
   renderProfile();
 })();
@@ -534,7 +534,7 @@ document.documentElement.classList.add('js-ready');
   };
 
   const refreshListingBehaviours = function () {
-    if (window.MovieDBRefresh) window.MovieDBRefresh();
+    if (window.StreamHIVERefresh) window.StreamHIVERefresh();
   };
 
   const replaceListingFromHtml = function (html, url, push) {
@@ -669,7 +669,7 @@ document.documentElement.classList.add('js-ready');
       const mediaJson = escapeHtml(JSON.stringify(item.media || {}));
       const rating = item.rating ? '<span><i class="fa-solid fa-star"></i> ' + escapeHtml(item.rating) + '</span>' : '';
       html += '<a class="v2-live-search-item js-media-link" role="option" aria-selected="false" data-live-search-index="' + index + '" data-fetch-content="' + escapeHtml(item.fetch_content || '0') + '" data-media=\'' + mediaJson + '\' href="' + escapeHtml(item.url || '#') + '">';
-      html += '<span class="v2-live-search-poster"><img src="' + escapeHtml(item.poster || '/assets/img/placeholder.svg') + '" alt="' + escapeHtml(item.title || 'Result') + ' poster" loading="lazy"></span>';
+      html += '<span class="v2-live-search-poster"><img src="' + escapeHtml(item.poster || '/assets/img/placeholder.jpg') + '" alt="' + escapeHtml(item.title || 'Result') + ' poster" loading="lazy"></span>';
       html += '<span class="v2-live-search-copy"><strong>' + escapeHtml(item.title || 'Untitled') + '</strong><small><span>' + escapeHtml(item.meta || item.type_label || 'Result') + '</span>' + rating + '</small></span>';
       html += '<span class="v2-live-search-arrow"><i class="fa-solid fa-arrow-right"></i></span>';
       html += '</a>';
@@ -773,7 +773,7 @@ document.documentElement.classList.add('js-ready');
   const $reddit = $backdrop.find('.js-share-reddit').first();
   const $email = $backdrop.find('.js-share-email').first();
 
-  let shareTitle = document.title || 'Movie DB';
+  let shareTitle = document.title || 'StreamHIVE';
   let shareUrl = window.location.href;
 
   const encode = encodeURIComponent;
@@ -796,7 +796,7 @@ document.documentElement.classList.add('js-ready');
 
   const openShare = function (button) {
     const $button = $(button || []);
-    shareTitle = String($button.data('share-title') || document.title || 'Movie DB').trim();
+    shareTitle = String($button.data('share-title') || document.title || 'StreamHIVE').trim();
     shareUrl = String($button.data('share-url') || window.location.href).trim();
     try { shareUrl = new URL(shareUrl, window.location.href).href; } catch (error) { shareUrl = window.location.href; }
     setLinks();
