@@ -232,6 +232,21 @@ Do not commit:
 - SQLite sidecar files such as `*.sqlite-wal`, `*.sqlite-shm`, or `*.sqlite-journal`
 - Runtime cache/import files in `storage/cache`, `storage/movies`, `storage/tv`, or `storage/people`
 
+
+## Attribution guard
+
+This build includes a transparent runtime attribution guard. The app checks `app/Views/layouts/app.php` on boot and returns a clear `503 Project attribution required` page if the visible footer attribution is removed or changed.
+
+The footer must keep:
+
+```text
+Created by GingerDev
+TMDB data powers imports. This product is not endorsed or certified by TMDB.
+Project link: https://github.com/GingerDev0/Movie-DB-V2
+```
+
+The GitHub project link is expected to appear in the footer attribution and footer navigation. Restore the required text/link to make the site load again.
+
 ## Production notes
 
 - Set `APP_ENV=production` and `APP_DEBUG=false`.
