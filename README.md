@@ -45,7 +45,7 @@ The app fetches missing or incomplete movie, TV, episode, season, and actor reco
 |---|---|
 | **Browsing** | Movie, TV, season, episode, actor, search, profile, and admin pages. |
 | **Storage** | SQLite-first cache with automatic TMDB imports, upgrades, and backfills. |
-| **Search** | Live navbar search, full search pages, filters, sorting, genre/year/age-rating/user-rating support, and AJAX pagination. |
+| **Search** | Live navbar search, full search pages, filters, sorting, genre/year/age-rating/rating support, and AJAX pagination. |
 | **Detail pages** | Metadata, cast, ratings, genres, runtime, seasons, episodes, recommendations, and collection support. |
 | **Collections** | Full-width **Movies In This Collection** carousel with collection backdrop and index-style movie cards. |
 | **Recommendations** | “More like this” panels ranked by similar titles first, then shared genres. |
@@ -212,6 +212,12 @@ SQLite schema and derived search/filter columns are created automatically. Exist
 | SQL pagination | Pages query only the rows needed for the current page. |
 | Verified imports | Missing content is fetched, saved, verified as readable, then redirected. |
 
+To manually backfill rating buckets on an existing SQLite database, run:
+
+```bash
+php scripts/backfill-rating-buckets.php storage/database.sqlite
+```
+
 ---
 
 ## Content visibility rules
@@ -286,8 +292,8 @@ Fully imported local records open immediately.
 | Movies, TV, actors, or combined search | Yes |
 | Genre filters | Yes |
 | Year filters | Yes |
-| Age-rating filters | Yes |
-| User rating filters | Yes, separate from age rating, in `0.5` increments from `0+` to `10+`. |
+| Age-rating and separate rating filters | Yes |
+| Rating filters | Yes, separate from age rating, in `0.5` bands from `0+` to `10+`. Raw TMDB decimals such as `5.666` are placed into the correct half-point bucket. |
 | Sort order | Yes |
 | Top and bottom pagination | Yes |
 | AJAX listing/search updates | Yes |
