@@ -3707,3 +3707,205 @@ body.modal-open #contentFetchModal.fetch-modal{
 .genre-link-home i{
   font-size:.86em;
 }
+
+.v2-nav-pills .dropdown-toggle::after{
+  margin-left:.1rem;
+  transform:translateY(.08rem);
+}
+.v2-genre-dropdown{
+  position:relative;
+}
+.v2-genre-menu{
+  min-width:min(34rem,calc(100vw - 2rem));
+  padding:.7rem;
+  margin-top:.55rem!important;
+  border:1px solid rgba(255,255,255,.12)!important;
+  border-radius:.85rem!important;
+  background:rgba(8,8,10,.98)!important;
+  box-shadow:0 1.4rem 3.2rem rgba(0,0,0,.58)!important;
+}
+.v2-genre-menu-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:.2rem;
+}
+.v2-genre-menu .dropdown-item{
+  display:flex;
+  align-items:center;
+  gap:.55rem;
+  min-height:2.35rem;
+  border-radius:.5rem;
+  color:rgba(255,255,255,.78)!important;
+  font-weight:700;
+  white-space:normal;
+}
+.v2-genre-menu .dropdown-item i{
+  width:1.05rem;
+  color:var(--brand);
+  text-align:center;
+}
+.v2-genre-menu .dropdown-item:hover,
+.v2-genre-menu .dropdown-item:focus{
+  background:rgba(255,255,255,.1)!important;
+  color:#fff!important;
+}
+.v2-genre-menu-all{
+  margin-bottom:.25rem;
+}
+.v2-genre-menu .dropdown-divider{
+  border-color:rgba(255,255,255,.1);
+  margin:.35rem 0;
+}
+@media (min-width:992px){
+  .v2-genre-menu{
+    left:50%!important;
+    transform:translateX(-50%);
+  }
+}
+@media (max-width:991.98px){
+  .v2-genre-menu{
+    min-width:100%;
+    margin:.35rem 0 .5rem!important;
+    box-shadow:none!important;
+  }
+}
+@media (max-width:575.98px){
+  .v2-genre-menu-grid{
+    grid-template-columns:1fr;
+  }
+}
+
+/* Compact footer layout for the current footer markup. */
+.pro-footer{
+  margin-top:2.5rem!important;
+  background:linear-gradient(180deg,rgba(0,0,0,0),rgba(0,0,0,.84))!important;
+  border-top:1px solid rgba(255,255,255,.08)!important;
+  box-shadow:none!important;
+}
+.pro-footer:before{
+  display:none!important;
+}
+.pro-footer-shell{
+  max-width:1760px!important;
+  margin:0 auto!important;
+  padding:1.15rem clamp(1rem,2vw,1.5rem)!important;
+}
+.pro-footer-inner{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:1.25rem!important;
+  width:100%!important;
+}
+.pro-footer-brand-block{
+  display:flex;
+  align-items:center;
+  gap:1rem;
+  min-width:0;
+}
+.pro-footer-brand{
+  flex:0 0 auto;
+}
+.pro-footer-brand-mark{
+  width:clamp(8rem,13vw,11rem)!important;
+}
+.pro-footer-brand-block p,
+.pro-footer-note p{
+  margin:0;
+  color:rgba(255,255,255,.62);
+  font-size:.9rem;
+  line-height:1.45;
+}
+.pro-footer-links{
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:1.25rem;
+  min-width:0;
+}
+.pro-footer-group{
+  display:flex;
+  align-items:center;
+  gap:.45rem;
+}
+.pro-footer-group h2{
+  margin:0 .2rem 0 0;
+  color:rgba(255,255,255,.42);
+  font-size:.68rem;
+  font-weight:900;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+}
+.pro-footer-group a{
+  display:inline-flex;
+  align-items:center;
+  gap:.35rem;
+  padding:.38rem .52rem;
+  border-radius:.45rem;
+  color:rgba(255,255,255,.72)!important;
+  font-size:.88rem;
+  font-weight:800;
+  line-height:1;
+  text-decoration:none!important;
+}
+.pro-footer-group a:hover{
+  color:#fff!important;
+  background:rgba(255,255,255,.08);
+}
+.pro-footer-note{
+  align-items:flex-start;
+  flex-direction:column;
+  gap:.15rem;
+  max-width:18rem;
+}
+.pro-footer-note a{
+  display:inline;
+  padding:0;
+  color:#fff!important;
+}
+.pro-footer-note a:hover{
+  color:var(--brand)!important;
+  background:transparent;
+}
+@media (max-width:1199.98px){
+  .pro-footer-inner,
+  .pro-footer-links{
+    align-items:flex-start!important;
+  }
+  .pro-footer-inner{
+    flex-direction:column!important;
+  }
+  .pro-footer-links{
+    justify-content:flex-start;
+    flex-wrap:wrap;
+  }
+}
+@media (max-width:767.98px){
+  .pro-footer-brand-block,
+  .pro-footer-links,
+  .pro-footer-group{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+  .pro-footer-brand-mark{
+    width:10rem!important;
+  }
+  .pro-footer-group{
+    gap:.25rem;
+  }
+  .pro-footer-group a{
+    padding:.28rem 0;
+  }
+}
+
+/* Global site backdrop */
+body,
+body.v2-body{
+  background:
+    linear-gradient(180deg,rgba(2,2,3,.76) 0%,rgba(2,2,3,.86) 44%,rgba(2,2,3,.94) 100%),
+    radial-gradient(circle at 50% -12%,rgba(229,9,20,.18),transparent 32rem),
+    radial-gradient(circle at 105% 10%,rgba(0,168,225,.12),transparent 30rem),
+    url('/assets/img/bg.png') center top / cover fixed no-repeat,
+    #020202!important;
+  color:#fff!important;
+}

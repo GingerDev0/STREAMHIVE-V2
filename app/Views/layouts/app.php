@@ -13,13 +13,18 @@ $ogImage = (string)($ogImage ?? absolute_url($siteLogo));
 $robots = (string)($robots ?? 'index, follow');
 $currentPath = '/' . trim((string)(parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/'), '/');
 if ($currentPath !== '/') $currentPath = rtrim($currentPath, '/');
+$genreNavItems = [
+    'Action', 'Adventure', 'Animation', 'Comedy', 'Crime', 'Documentary',
+    'Drama', 'Family', 'Fantasy', 'Horror', 'Mystery', 'Romance',
+    'Science Fiction', 'Thriller', 'War', 'Western',
+];
+$isGenreNavActive = $currentPath === '/s';
 $navItems = [
     ['href' => '/', 'label' => 'Home', 'icon' => 'fa-house', 'match' => 'exact'],
     ['href' => '/movies', 'label' => 'Movies', 'icon' => 'fa-film', 'match' => 'prefix'],
     ['href' => '/tv', 'label' => 'TV Shows', 'icon' => 'fa-tv', 'match' => 'prefix'],
     ['href' => '/actors', 'label' => 'Actors', 'icon' => 'fa-user-group', 'match' => 'prefixes', 'prefixes' => ['/actors', '/actor']],
-    ['href' => '/s', 'label' => 'Discover', 'icon' => 'fa-sliders', 'match' => 'prefix'],
-    ['href' => '/coming-this-year', 'label' => 'Coming This Year', 'icon' => 'fa-calendar-days', 'match' => 'exact'],
+    ['href' => '/coming-this-year', 'label' => 'Coming', 'icon' => 'fa-calendar-days', 'match' => 'exact'],
     ['href' => '/profile', 'label' => 'My Profile', 'icon' => 'fa-user-astronaut', 'match' => 'prefix'],
 ];
 $isNavActive = static function (array $item) use ($currentPath): bool {
@@ -71,8 +76,24 @@ $isNavActive = static function (array $item) use ($currentPath): bool {
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"><span class="navbar-toggler-icon"></span></button>
     <div class="collapse navbar-collapse" id="mainNav">
       <ul class="navbar-nav mx-lg-auto mb-2 mb-lg-0 v2-nav-pills">
-        <?php foreach ($navItems as $navItem): $active = $isNavActive($navItem); ?>
+        <?php foreach ($navItems as $index => $navItem): $active = $isNavActive($navItem); ?>
         <li class="nav-item"><a class="nav-link<?= $active ? ' active' : '' ?>" href="<?= e((string)$navItem['href']) ?>"<?= $active ? ' aria-current="page"' : '' ?>><i class="fa-solid <?= e((string)$navItem['icon']) ?>"></i> <?= e((string)$navItem['label']) ?></a></li>
+        <?php if ($index === 2): ?>
+        <li class="nav-item dropdown v2-genre-dropdown">
+          <a class="nav-link dropdown-toggle<?= $isGenreNavActive ? ' active' : '' ?>" href="/s" id="genreNavDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"<?= $isGenreNavActive ? ' aria-current="page"' : '' ?>>
+            <i class="fa-solid fa-tags"></i> Genres
+          </a>
+          <div class="dropdown-menu v2-genre-menu dropdown-menu-dark" aria-labelledby="genreNavDropdown">
+            <a class="dropdown-item v2-genre-menu-all" href="<?= e(url('s')) ?>"><i class="fa-solid fa-sliders"></i><span>All genres</span></a>
+            <div class="dropdown-divider"></div>
+            <div class="v2-genre-menu-grid">
+              <?php foreach ($genreNavItems as $genreNavItem): ?>
+              <a class="dropdown-item" href="<?= e(genre_url($genreNavItem)) ?>"><i class="fa-solid <?= e(genre_icon($genreNavItem)) ?>"></i><span><?= e($genreNavItem) ?></span></a>
+              <?php endforeach; ?>
+            </div>
+          </div>
+        </li>
+        <?php endif; ?>
         <?php endforeach; ?>
       </ul>
       <form class="v2-nav-search js-live-search-form" action="/s" method="get" role="search" autocomplete="off">
@@ -105,8 +126,6 @@ $isNavActive = static function (array $item) use ($currentPath): bool {
         </nav>
 
         <div class="pro-footer-group pro-footer-note">
-          <h2>StreamHIVE</h2>
-          <p>Built for fast browsing, clean collections, and quick playback.</p>
           <p>Created by <a href="https://github.com/GingerDev0" target="_blank" rel="noopener noreferrer">GingerDev</a></p>
         </div>
       </div>
