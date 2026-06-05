@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Services\SqliteStore;
+use App\Services\MysqliStore;
 
 final class Repository
 {
-    public SqliteStore $movies;
-    public SqliteStore $tv;
-    public SqliteStore $people;
+    public MysqliStore $movies;
+    public MysqliStore $tv;
+    public MysqliStore $people;
 
     public function __construct()
     {
-        $this->movies = new SqliteStore('movies');
-        $this->tv = new SqliteStore('tv');
-        $this->people = new SqliteStore('people');
+        $this->movies = new MysqliStore('movies');
+        $this->tv = new MysqliStore('tv');
+        $this->people = new MysqliStore('people');
     }
 
     public function bySlug(string $type, string $slug): ?array
@@ -24,7 +24,7 @@ final class Repository
         return $this->store($type)->findBy('slug', $slug);
     }
 
-    public function store(string $type): SqliteStore
+    public function store(string $type): MysqliStore
     {
         return match ($type) {
             'movie', 'movies' => $this->movies,

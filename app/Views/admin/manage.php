@@ -9,7 +9,7 @@ $base = '/admin/manage/' . $type . '?token=' . rawurlencode($token);
     <div class="col-lg-8">
       <span class="admin-kicker"><i class="fa-solid fa-table-list"></i> Library manager</span>
       <h1 class="admin-title">Manage <?= e($typeLabel) ?></h1>
-      <p class="admin-lead mb-0">Search, sort, preview, open, and delete local SQLite records.</p>
+      <p class="admin-lead mb-0">Search, sort, preview, open, and delete local MySQL records.</p>
     </div>
     <div class="col-lg-4 text-lg-end">
       <a class="btn btn-warning" href="/admin/import?token=<?= e($token) ?>"><i class="fa-solid fa-plus me-2"></i>Import</a>

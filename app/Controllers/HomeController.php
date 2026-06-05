@@ -8,7 +8,7 @@ use App\Core\View;
 use App\Models\Repository;
 use App\Services\ImportService;
 use App\Services\TmdbClient;
-use App\Services\SqliteStore;
+use App\Services\MysqliStore;
 
 final class HomeController
 {
@@ -41,7 +41,7 @@ final class HomeController
         // Carousel spotlight should rotate through the full local movie database,
         // not just the current TMDB trending/recent response. Missing-poster
         // movies are excluded here only; they still show everywhere else.
-        $heroMovies = SqliteStore::randomReleasedFromBucket('movies', 10, true, 7.5);
+        $heroMovies = MysqliStore::randomReleasedFromBucket('movies', 10, true, 7.5);
         if (!$heroMovies) {
             $heroMovies = $this->randomMoviesForHero($moviesTrending, $moviesRecent);
         }

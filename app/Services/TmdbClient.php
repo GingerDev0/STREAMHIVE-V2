@@ -85,13 +85,9 @@ final class TmdbClient
     private function cacheGet(string $key): ?array
     {
         try {
-            $pdo = SqliteStore::connection();
-            $stmt = $pdo->prepare('SELECT response FROM tmdb_cache WHERE cache_key = :key AND expires_at > :now LIMIT 1');
-            $stmt->execute(['key' => $key, 'now' => time()]);
-            $body = $stmt->fetchColumn();
-            if (is_string($body) && $body !== '') return json_decode($body, true) ?: [];
+            return MysqliStore::tmdbCacheGet($key);
         } catch (\Throwable) {
-            // Cache is optional. If SQLite is unavailable, the main request will surface the error.
+            // Cache is optional. If MySQL is unavailable, the main request will surface the error.
         }
         return null;
     }
@@ -99,15 +95,7 @@ final class TmdbClient
     private function cachePut(string $key, string $body, int $ttl): void
     {
         try {
-            $pdo = SqliteStore::connection();
-            $pdo->prepare('DELETE FROM tmdb_cache WHERE expires_at <= :now')->execute(['now' => time()]);
-            $stmt = $pdo->prepare('INSERT INTO tmdb_cache (cache_key, response, expires_at, created_at) VALUES (:key, :response, :expires, :created) ON CONFLICT(cache_key) DO UPDATE SET response = excluded.response, expires_at = excluded.expires_at, created_at = excluded.created_at');
-            $stmt->execute([
-                'key' => $key,
-                'response' => $body,
-                'expires' => time() + $ttl,
-                'created' => gmdate(DATE_ATOM),
-            ]);
+            MysqliStore::tmdbCachePut($key, $body, $ttl);
         } catch (\Throwable) {
             // Ignore cache-write failures.
         }

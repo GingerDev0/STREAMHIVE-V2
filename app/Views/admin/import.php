@@ -5,7 +5,7 @@
     <div class="col-lg-8">
       <span class="admin-kicker"><i class="fa-solid fa-cloud-arrow-down"></i> Import center</span>
       <h1 class="admin-title">Import from IMDb or TMDB</h1>
-      <p class="admin-lead mb-0">Paste an IMDb URL, IMDb ID, or TMDB shortcut and the app will pull the matching movie, TV show, or person into local SQLite.</p>
+      <p class="admin-lead mb-0">Paste an IMDb URL, IMDb ID, or TMDB shortcut and the app will pull the matching movie, TV show, or person into local MySQL.</p>
     </div>
     <div class="col-lg-4 text-lg-end">
       <a class="btn btn-outline-light" href="/admin?token=<?= e($token) ?>"><i class="fa-solid fa-arrow-left me-2"></i>Dashboard</a>

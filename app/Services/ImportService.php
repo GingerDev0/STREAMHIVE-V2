@@ -36,7 +36,7 @@ final class ImportService
         $record['import_status'] = 'full';
         $people = $this->castRecordsToUpsert($data['credits']['cast'] ?? [], $record);
 
-        SqliteStore::transaction(function () use ($record, $people): void {
+        MysqliStore::transaction(function () use ($record, $people): void {
             $this->repo->movies->upsert($record);
             if ($people) $this->repo->people->upsertMany($people);
         });
@@ -51,7 +51,7 @@ final class ImportService
         $record['import_status'] = 'full';
         $people = $this->castRecordsToUpsert($data['credits']['cast'] ?? [], $record);
 
-        SqliteStore::transaction(function () use ($record, $people): void {
+        MysqliStore::transaction(function () use ($record, $people): void {
             $this->repo->tv->upsert($record);
             if ($people) $this->repo->people->upsertMany($people);
         });
@@ -113,7 +113,7 @@ final class ImportService
         $person = $this->normalizePerson($data);
         $media = $this->syncPersonCreditMedia($person);
 
-        SqliteStore::transaction(function () use ($person, $media): void {
+        MysqliStore::transaction(function () use ($person, $media): void {
             if (!empty($media['movies'])) $this->repo->movies->upsertMany($media['movies']);
             if (!empty($media['tv'])) $this->repo->tv->upsertMany($media['tv']);
             $this->repo->people->upsert($person);
@@ -453,7 +453,7 @@ final class ImportService
 
     /**
      * Make sure actor credits have local slugs and prepare lightweight media records.
-     * Returns records for one batched SQLite transaction instead of writing each credit one by one.
+     * Returns records for one batched MySQL transaction instead of writing each credit one by one.
      */
     private function syncPersonCreditMedia(array &$person): array
     {

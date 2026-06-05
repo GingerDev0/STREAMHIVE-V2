@@ -40,8 +40,8 @@ try {
     $router->dispatch($_SERVER['REQUEST_METHOD'], parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?: '/');
 } catch (Throwable $e) {
     http_response_code(500);
-    if (str_contains($e->getMessage(), 'SQLite')) {
-        echo '<!doctype html><meta charset="utf-8"><title>SQLite not enabled</title><body style="font-family:system-ui;background:#09090b;color:#fff;padding:40px"><h1>SQLite is not enabled</h1><p>Enable <code>pdo_sqlite</code> and <code>sqlite3</code> in PHP, then restart Apache/PHP.</p><pre style="white-space:pre-wrap;color:#fbbf24">' . htmlspecialchars($e->getMessage(), ENT_QUOTES, 'UTF-8') . '</pre></body>';
+    if ($e instanceof \mysqli_sql_exception || str_contains($e->getMessage(), 'MySQL') || str_contains($e->getMessage(), 'MySQLi')) {
+        echo '<!doctype html><meta charset="utf-8"><title>MySQL connection error</title><body style="font-family:system-ui;background:#09090b;color:#fff;padding:40px"><h1>MySQL connection error</h1><p>Check the <code>DB_*</code> values in <code>.env</code> and make sure the PHP <code>mysqli</code> extension is enabled.</p><pre style="white-space:pre-wrap;color:#fbbf24">' . htmlspecialchars($e->getMessage(), ENT_QUOTES, 'UTF-8') . '</pre></body>';
         return;
     }
     throw $e;

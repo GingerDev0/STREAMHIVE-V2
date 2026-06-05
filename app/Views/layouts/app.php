@@ -8,7 +8,8 @@ $canonicalUrl = (string)($canonicalUrl ?? current_url());
 $ogTitle = (string)($ogTitle ?? $pageTitle);
 $ogDescription = meta_excerpt((string)($ogDescription ?? $pageDescription), 200);
 $ogType = (string)($ogType ?? 'website');
-$ogImage = (string)($ogImage ?? absolute_url(asset('img/placeholder.jpg')));
+$siteLogo = asset('img/logo.png');
+$ogImage = (string)($ogImage ?? absolute_url($siteLogo));
 $robots = (string)($robots ?? 'index, follow');
 ?>
 <!doctype html>
@@ -46,8 +47,7 @@ $robots = (string)($robots ?? 'index, follow');
 <nav class="navbar navbar-expand-lg navbar-dark v2-nav sticky-top">
   <div class="container-fluid px-3 px-lg-4">
     <a class="navbar-brand v2-brand" href="/">
-      <span class="v2-brand-mark"><i class="fa-solid fa-bolt"></i></span>
-      <span><strong>StreamHIVE</strong><small>V2</small></span>
+      <span class="v2-brand-mark"><img src="<?= e($siteLogo) ?>" alt="StreamHIVE logo"></span>
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"><span class="navbar-toggler-icon"></span></button>
     <div class="collapse navbar-collapse" id="mainNav">
@@ -74,8 +74,7 @@ $robots = (string)($robots ?? 'index, follow');
   <div class="pro-footer-shell">
     <div class="pro-footer-inner">
       <a class="pro-footer-brand" href="/" aria-label="StreamHIVE home">
-        <span class="pro-footer-brand-mark"><i class="fa-solid fa-film"></i></span>
-        <span><strong>StreamHIVE</strong><small>V2</small></span>
+        <span class="pro-footer-brand-mark"><img src="<?= e($siteLogo) ?>" alt="StreamHIVE logo"></span>
       </a>
 
       <div class="pro-footer-copy">

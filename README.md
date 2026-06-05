@@ -4,13 +4,13 @@
   <a href="https://streamhive.uk/"><img src="https://img.shields.io/badge/Demo-StreamHIVE-7c3aed?style=for-the-badge" alt="StreamHIVE Demo"></a>
   <a href="https://github.com/GingerDev0/StreamHIVE-V2"><img src="https://img.shields.io/badge/GitHub-StreamHIVE--V2-111827?style=for-the-badge&logo=github" alt="GitHub Repository"></a>
   <img src="https://img.shields.io/badge/PHP-8.1%2B-777bb4?style=for-the-badge&logo=php&logoColor=white" alt="PHP 8.1+">
-  <img src="https://img.shields.io/badge/Storage-SQLite-003b57?style=for-the-badge&logo=sqlite&logoColor=white" alt="SQLite">
+  <img src="https://img.shields.io/badge/Storage-MySQL-4479a1?style=for-the-badge&logo=mysql&logoColor=white" alt="MySQL">
   <img src="https://img.shields.io/badge/API-TMDB-01b4e4?style=for-the-badge" alt="TMDB API">
   <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="MIT License">
 </p>
 
 <p align="center">
-  <strong>A cinematic PHP movie, TV, episode, and actor database powered by TMDB and SQLite.</strong>
+  <strong>A cinematic PHP movie, TV, episode, and actor database powered by TMDB and MySQL.</strong>
 </p>
 
 <p align="center">
@@ -23,9 +23,9 @@
 
 ## Overview
 
-StreamHIVE V2 is a streaming-app style media database built with PHP, SQLite, TMDB data, Apache routes, AJAX browsing, local profile storage, and a fast local import cache.
+StreamHIVE V2 is a streaming-app style media database built with PHP, MySQL, TMDB data, Apache routes, AJAX browsing, local profile storage, and a fast local import cache.
 
-The app fetches missing or incomplete movie, TV, episode, season, and actor records from TMDB on demand, stores them locally in SQLite, and then serves detail/listing pages from the local cache for speed.
+The app fetches missing or incomplete movie, TV, episode, season, and actor records from TMDB on demand, stores them locally in MySQL, and then serves detail/listing pages from the local cache for speed.
 
 > This product uses the TMDB API but is not endorsed or certified by TMDB.
 
@@ -44,14 +44,14 @@ The app fetches missing or incomplete movie, TV, episode, season, and actor reco
 | Area | Details |
 |---|---|
 | **Browsing** | Movie, TV, season, episode, actor, search, profile, and admin pages. |
-| **Storage** | SQLite-first cache with automatic TMDB imports, upgrades, and backfills. |
+| **Storage** | MySQL-backed cache with automatic TMDB imports, schema creation, indexes, and backfills. |
 | **Search** | Live navbar search, full search pages, filters, sorting, genre/year/age-rating/rating support, and AJAX pagination. |
 | **Detail pages** | Metadata, cast, ratings, genres, runtime, seasons, episodes, recommendations, and collection support. |
 | **Collections** | Full-width **Movies In This Collection** carousel with collection backdrop and index-style movie cards. |
 | **Recommendations** | “More like this” panels ranked by similar titles first, then shared genres. |
 | **Player** | MultiEmbed support using TMDB IDs first, with IMDb IDs as fallback where available. |
 | **Profile** | Browser-local bookmarks and recently viewed history using `localStorage`. |
-| **Admin** | Import tools, prefetched full-import actions, SQLite stats, and movie/TV/actor management. |
+| **Admin** | Import tools, prefetched full-import actions, MySQL stats, and movie/TV/actor management. |
 | **SEO** | Open Graph and Twitter card metadata. |
 | **Slugs** | Clean collision-safe slugs for duplicate titles and actor names. |
 
@@ -63,8 +63,8 @@ The app fetches missing or incomplete movie, TV, episode, season, and actor reco
 |---|---|
 | PHP | `8.1` or newer |
 | Server | Apache with `mod_rewrite`, or PHP's built-in server for local development |
-| Database | SQLite |
-| PHP extensions | `curl`, `pdo_sqlite`, `sqlite3` |
+| Database | MySQL or MariaDB |
+| PHP extensions | `curl`, `mysqli` |
 | API credentials | TMDB v4 Read Access Token, or TMDB v3 API key |
 
 ---
@@ -75,13 +75,33 @@ The app fetches missing or incomplete movie, TV, episode, season, and actor reco
 2. Point your web root to `public/`.
 3. If you cannot change the web root, keep the included root `.htaccess`; it routes requests into `public/`.
 4. Copy `.env.example` to `.env`.
-5. Add your TMDB credentials and change the admin token.
-6. Make `storage/` writable by PHP.
-7. Open the site in your browser.
+5. Add your TMDB credentials, MySQL credentials, and change the admin token.
+6. Create the MySQL database/user and grant access.
+7. Make `storage/` writable by PHP if you are migrating old JSON storage.
+8. Open the site in your browser.
 
 ```bash
 cp .env.example .env
 chmod -R 775 storage
+```
+
+Example MySQL setup:
+
+```sql
+CREATE DATABASE IF NOT EXISTS `stream_hive`
+  CHARACTER SET utf8mb4
+  COLLATE utf8mb4_unicode_ci;
+
+CREATE USER IF NOT EXISTS 'stream_hive'@'localhost'
+  IDENTIFIED BY 'change-this-password';
+
+CREATE USER IF NOT EXISTS 'stream_hive'@'127.0.0.1'
+  IDENTIFIED BY 'change-this-password';
+
+GRANT ALL PRIVILEGES ON `stream_hive`.* TO 'stream_hive'@'localhost';
+GRANT ALL PRIVILEGES ON `stream_hive`.* TO 'stream_hive'@'127.0.0.1';
+
+FLUSH PRIVILEGES;
 ```
 
 ---
@@ -98,11 +118,11 @@ APP_ENV=local
 APP_DEBUG=true
 ADMIN_TOKEN=change-this-token
 
-SQLITE_PATH=
-
-SQLITE_JOURNAL_MODE=MEMORY
-SQLITE_SYNCHRONOUS=NORMAL
-SQLITE_BUSY_TIMEOUT_MS=10000
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=stream_hive
+DB_USERNAME=stream_hive
+DB_PASSWORD=change-this-password
 ```
 
 | Setting | Description |
@@ -112,10 +132,11 @@ SQLITE_BUSY_TIMEOUT_MS=10000
 | `APP_ENV` | Use `local` for development and `production` for live sites. |
 | `APP_DEBUG` | Use `true` locally and `false` in production. |
 | `ADMIN_TOKEN` | Query-string token for admin routes. Change this before deployment. |
-| `SQLITE_PATH` | Leave blank to use `storage/database.sqlite`, or provide an absolute path. |
-| `SQLITE_JOURNAL_MODE` | `MEMORY` avoids slow sidecar writes on some shared hosts. |
-| `SQLITE_SYNCHRONOUS` | `NORMAL` is faster; `FULL` is safer but slower. |
-| `SQLITE_BUSY_TIMEOUT_MS` | SQLite wait time when the database is busy. |
+| `DB_HOST` | MySQL host. Use `127.0.0.1` for most XAMPP/local installs. |
+| `DB_PORT` | MySQL port. Default is `3306`. |
+| `DB_DATABASE` | MySQL database name. |
+| `DB_USERNAME` | MySQL database user. |
+| `DB_PASSWORD` | MySQL database password. Do not commit real credentials. |
 
 ---
 
@@ -188,21 +209,19 @@ For a public production site, replace the query-string token with proper authent
 
 ---
 
-## SQLite storage
+## MySQL storage
 
-By default, StreamHIVE creates this database:
+StreamHIVE uses MySQL through PHP's `mysqli` extension. The application creates its runtime tables automatically on first boot:
 
 ```text
-storage/database.sqlite
+records
+schema_meta
+tmdb_cache
 ```
 
-You can override it in `.env`:
+The `records` table stores the full TMDB payload as JSON plus indexed derived columns for filtering and search.
 
-```ini
-SQLITE_PATH=/absolute/path/to/database.sqlite
-```
-
-SQLite schema and derived search/filter columns are created automatically. Existing rows are backfilled when needed.
+MySQL schema, derived search/filter columns, full-text search indexes, and composite performance indexes are created automatically. Existing rows are backfilled when needed.
 
 | Optimization | Purpose |
 |---|---|
@@ -211,12 +230,8 @@ SQLite schema and derived search/filter columns are created automatically. Exist
 | Indexed slug checks | Collision-safe slugs with quick lookups. |
 | SQL pagination | Pages query only the rows needed for the current page. |
 | Verified imports | Missing content is fetched, saved, verified as readable, then redirected. |
-
-To manually backfill rating buckets on an existing SQLite database, run:
-
-```bash
-php scripts/backfill-rating-buckets.php storage/database.sqlite
-```
+| Full-text search | Uses `FULLTEXT` on `search_text` when available, with `LIKE` fallback. |
+| Composite indexes | Speeds up listing filters, live search, import status checks, and random hero picks. |
 
 ---
 
@@ -276,7 +291,7 @@ When a visitor opens a movie, TV show, episode, season, or actor that is missing
 | 1 | Visitor opens missing or partial content. |
 | 2 | StreamHIVE shows the fetching modal. |
 | 3 | The record is imported or upgraded from TMDB. |
-| 4 | The data is written to SQLite. |
+| 4 | The data is written to MySQL. |
 | 5 | StreamHIVE verifies the record is readable. |
 | 6 | The visitor is automatically navigated to the completed page. |
 
@@ -315,10 +330,10 @@ Fully imported local records open immediately.
 
 ## Migrating old JSON storage
 
-If you have older JSON folders such as `storage/movies`, `storage/tv`, or `storage/people`, the app can migrate them into SQLite.
+If you have older JSON folders such as `storage/movies`, `storage/tv`, or `storage/people`, the app can migrate them into MySQL.
 
 ```bash
-php scripts/migrate-json-to-sqlite.php
+php scripts/migrate-json-to-mysql.php
 ```
 
 After confirming the admin dashboard shows the imported records, the JSON files can be removed or kept as a backup.
@@ -334,11 +349,6 @@ Do not commit:
 | File / folder | Reason |
 |---|---|
 | `.env` | Contains private credentials. |
-| `storage/database.sqlite` | Runtime database. |
-| `database.sqlite` | Runtime database. |
-| `*.sqlite-wal` | SQLite sidecar file. |
-| `*.sqlite-shm` | SQLite sidecar file. |
-| `*.sqlite-journal` | SQLite sidecar file. |
 | `storage/cache` | Runtime cache/import files. |
 | `storage/movies` | Legacy/runtime imported content. |
 | `storage/tv` | Legacy/runtime imported content. |
@@ -414,7 +424,7 @@ SOFTWARE.
 | Metadata and images | TMDB API |
 | Player embed format | MultiEmbed |
 | UI libraries | Bootstrap 5.3.3, Font Awesome, Splide |
-| Storage | SQLite |
+| Storage | MySQL / MariaDB |
 | License | MIT |
 | Created by | [GingerDev](https://github.com/GingerDev0) |
 

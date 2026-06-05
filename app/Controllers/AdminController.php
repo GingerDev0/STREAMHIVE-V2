@@ -8,7 +8,7 @@ use App\Core\Config;
 use App\Core\View;
 use App\Models\Repository;
 use App\Services\ImportService;
-use App\Services\SqliteStore;
+use App\Services\MysqliStore;
 
 final class AdminController
 {
@@ -243,7 +243,7 @@ final class AdminController
 
     private function storageStats(): array
     {
-        $db = SqliteStore::stats();
+        $db = MysqliStore::stats();
         $stats = [];
         foreach (['movies', 'tv', 'people'] as $bucket) {
             $rows = (int)($db['buckets'][$bucket] ?? 0);
@@ -252,7 +252,7 @@ final class AdminController
                 'rows' => $rows,
                 'capacity' => max(1, $rows),
                 'percent' => $rows > 0 ? 100 : 0,
-                'database_path' => $db['path'] ?? storage_path('database.sqlite'),
+                'database_path' => $db['path'] ?? 'stream_hive',
                 'size_bytes' => $db['size_bytes'] ?? 0,
             ];
         }

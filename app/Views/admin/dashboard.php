@@ -108,7 +108,7 @@
   </div>
   <div class="col-xl-4">
     <section class="admin-panel h-100">
-      <div class="admin-section-head"><div><span class="admin-kicker"><i class="fa-solid fa-database"></i> SQLite</span><h2>Storage Health</h2></div></div>
+      <div class="admin-section-head"><div><span class="admin-kicker"><i class="fa-solid fa-database"></i> MySQL</span><h2>Storage Health</h2></div></div>
       <div class="d-flex flex-column gap-3">
         <?php foreach ($storageStats as $name => $stat): ?>
           <div class="admin-storage-card">
@@ -117,11 +117,11 @@
               <span class="admin-muted small"><?= e((string)$stat['rows']) ?> records</span>
             </div>
             <div class="admin-progress"><span style="width: <?= e((string)$stat['percent']) ?>%"></span></div>
-            <div class="admin-muted small mt-2"><?= e(format_bytes((int)($stat['size_bytes'] ?? 0))) ?> SQLite database</div>
+            <div class="admin-muted small mt-2">MySQL database: <?= e((string)($stat['database_path'] ?? 'stream_hive')) ?></div>
           </div>
         <?php endforeach; ?>
       </div>
-      <div class="admin-note mt-3"><i class="fa-solid fa-circle-info me-2"></i>SQLite is now the primary local database. Existing JSON shards are imported automatically the first time the app starts.</div>
+      <div class="admin-note mt-3"><i class="fa-solid fa-circle-info me-2"></i>MySQL is now the primary local database. Existing JSON shards are imported automatically the first time the app starts.</div>
     </section>
   </div>
 </div>

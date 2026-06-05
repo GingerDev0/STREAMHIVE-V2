@@ -8,7 +8,7 @@ use App\Core\View;
 use App\Models\Repository;
 use App\Services\TmdbClient;
 use App\Services\ImportService;
-use App\Services\SqliteStore;
+use App\Services\MysqliStore;
 
 final class MediaController
 {
@@ -169,8 +169,8 @@ final class MediaController
                 if ($record) $record = $this->importer->ensureFull($record, 'movie');
                 if (!$record || !is_released_media($record)) return ['ok' => false, 'ready' => false, 'message' => 'This movie could not be added right now.'];
                 $finalSlug = (string)($record['slug'] ?? $slug);
-                if (!SqliteStore::waitUntilRecordReadable('movies', $finalSlug)) {
-                    return ['ok' => false, 'ready' => false, 'message' => 'The movie was saved, but SQLite is still finishing the write. Please try again.'];
+                if (!MysqliStore::waitUntilRecordReadable('movies', $finalSlug)) {
+                    return ['ok' => false, 'ready' => false, 'message' => 'The movie was saved, but MySQL is still finishing the write. Please try again.'];
                 }
                 return ['ok' => true, 'ready' => true, 'url' => url('movies/' . $finalSlug)];
             }
@@ -201,8 +201,8 @@ final class MediaController
                     ? url('tv/' . ($record['slug'] ?? $slug) . '/s' . str_pad((string)$season, 2, '0', STR_PAD_LEFT) . '/e' . str_pad((string)$episode, 2, '0', STR_PAD_LEFT))
                     : ($type === 'season' ? url('tv/' . ($record['slug'] ?? $slug) . '/s' . str_pad((string)$season, 2, '0', STR_PAD_LEFT)) : url('tv/' . ($record['slug'] ?? $slug)));
                 $finalSlug = (string)($record['slug'] ?? $slug);
-                if (!SqliteStore::waitUntilRecordReadable('tv', $finalSlug)) {
-                    return ['ok' => false, 'ready' => false, 'message' => 'The TV show was saved, but SQLite is still finishing the write. Please try again.'];
+                if (!MysqliStore::waitUntilRecordReadable('tv', $finalSlug)) {
+                    return ['ok' => false, 'ready' => false, 'message' => 'The TV show was saved, but MySQL is still finishing the write. Please try again.'];
                 }
                 return ['ok' => true, 'ready' => true, 'url' => $targetUrl];
             }
@@ -215,8 +215,8 @@ final class MediaController
                 if ($record) $record = $this->importer->ensureFull($record, 'person');
                 if (!$record) return ['ok' => false, 'ready' => false, 'message' => 'This actor could not be added right now.'];
                 $finalSlug = (string)($record['slug'] ?? $slug);
-                if (!SqliteStore::waitUntilRecordReadable('people', $finalSlug)) {
-                    return ['ok' => false, 'ready' => false, 'message' => 'The actor was saved, but SQLite is still finishing the write. Please try again.'];
+                if (!MysqliStore::waitUntilRecordReadable('people', $finalSlug)) {
+                    return ['ok' => false, 'ready' => false, 'message' => 'The actor was saved, but MySQL is still finishing the write. Please try again.'];
                 }
                 return ['ok' => true, 'ready' => true, 'url' => url('actors/' . $finalSlug)];
             }
@@ -231,7 +231,7 @@ final class MediaController
     public function liveSearch(array $params): string
     {
         $query = trim((string)($_GET['q'] ?? ''));
-        $items = SqliteStore::liveSearch($query, 6);
+        $items = MysqliStore::liveSearch($query, 6);
         $results = [];
 
         foreach ($items as $item) {
@@ -300,8 +300,8 @@ final class MediaController
 
         // Coming This Year is the one place future-dated movies/TV should still be visible.
         // Normal listings, search, detail pages, carousels, collections, and episodes remain released-only.
-        $movies = $this->comingItems(SqliteStore::upcomingInYear('movies', $year), 'movie', $year);
-        $tvShows = $this->comingItems(SqliteStore::upcomingInYear('tv', $year), 'tv', $year);
+        $movies = $this->comingItems(MysqliStore::upcomingInYear('movies', $year), 'movie', $year);
+        $tvShows = $this->comingItems(MysqliStore::upcomingInYear('tv', $year), 'tv', $year);
 
         return View::render('pages/coming', [
             'title' => 'Coming This Year',
@@ -347,7 +347,7 @@ final class MediaController
             'person' => ['people'],
             default => ['movies', 'tv'],
         };
-        $pagination = SqliteStore::queryBuckets($buckets, [
+        $pagination = MysqliStore::queryBuckets($buckets, [
             'query' => $query,
             'genre' => $genre,
             'rating' => $rating,
@@ -495,7 +495,7 @@ final class MediaController
                 $this->importer->prefetchResults($tv['results'] ?? [], 'tv', 20);
             }
         } catch (\Throwable) {
-            // Keep the page working from existing local SQLite data if TMDB is unavailable.
+            // Keep the page working from existing local MySQL data if TMDB is unavailable.
         }
     }
 
@@ -529,7 +529,7 @@ final class MediaController
         try {
             $this->importer->prefetchPopular($type, $page, min(20, $perPage));
         } catch (\Throwable) {
-            // Listing pages still work from existing local SQLite data if TMDB is unavailable.
+            // Listing pages still work from existing local MySQL data if TMDB is unavailable.
         }
     }
 
@@ -542,7 +542,7 @@ final class MediaController
             if ($type !== 'movie' && $type !== 'person') $this->importer->prefetchSearch($query, 'tv', $page, $limit);
             if ($type === 'person') $this->importer->prefetchSearch($query, 'person', $page, $limit);
         } catch (\Throwable) {
-            // Search falls back to existing local SQLite data if TMDB is unavailable.
+            // Search falls back to existing local MySQL data if TMDB is unavailable.
         }
     }
 
@@ -562,7 +562,11 @@ final class MediaController
         $currentSlug = (string)($current['slug'] ?? '');
         $currentTitle = (string)($current['title'] ?? $current['name'] ?? '');
         $currentGenres = array_map('strtolower', $current['genres'] ?? []);
-        $items = $type === 'movie' ? $this->repo->movies->all() : $this->repo->tv->all();
+        $bucket = $type === 'movie' ? 'movies' : 'tv';
+        $items = MysqliStore::relatedCandidates($bucket, $currentGenres, $currentId ?: $currentTmdbId, $currentSlug, max(80, $limit * 12));
+        if (!$items) {
+            $items = $type === 'movie' ? $this->repo->movies->all() : $this->repo->tv->all();
+        }
 
         $scored = [];
         foreach ($items as $item) {
