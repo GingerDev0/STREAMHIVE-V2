@@ -1,41 +1,58 @@
 # StreamHIVE V2
 
-![StreamHIVE V2 preview](public/assets/img/logo.png)
+<p align="center">
+  <img src="public/assets/img/logo.png" alt="StreamHIVE V2 logo" width="420">
+</p>
 
-**StreamHIVE V2** is a live TMDB-powered movie and TV discovery app built in PHP. It delivers a polished streaming-service interface with cinematic detail pages, live search, actor profiles, recommendations, watchlist-style browser profiles, upcoming-release discovery, and configurable embed-player routing.
+<p align="center">
+  <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-e50914?style=for-the-badge"></a>
+  <img alt="PHP 8.1+" src="https://img.shields.io/badge/PHP-8.1%2B-777bb4?style=for-the-badge&logo=php&logoColor=white">
+  <img alt="HTML5" src="https://img.shields.io/badge/HTML5-frontend-e34f26?style=for-the-badge&logo=html5&logoColor=white">
+  <img alt="CSS3" src="https://img.shields.io/badge/CSS3-responsive-1572b6?style=for-the-badge&logo=css3&logoColor=white">
+  <img alt="JavaScript" src="https://img.shields.io/badge/JavaScript-UI-f7df1e?style=for-the-badge&logo=javascript&logoColor=111">
+  <img alt="TMDB Powered" src="https://img.shields.io/badge/TMDB-powered-01b4e4?style=for-the-badge">
+  <img alt="No database required" src="https://img.shields.io/badge/database-not_required-111?style=for-the-badge">
+</p>
 
-This version is intentionally **live-only**. It does not require MySQL, SQLite, admin imports, or a local media catalogue. Pages resolve against TMDB at request time, keeping the codebase lightweight and easy to deploy.
+**StreamHIVE V2** is a live TMDB-powered movie and TV discovery app built with PHP. It delivers a polished streaming-service interface with cinematic detail pages, live search, actor profiles, recommendations, local browser profiles, upcoming-release discovery, and configurable embed-player routing.
+
+This version is intentionally **live-only**. It does not require MySQL, SQLite, admin imports, or a local catalogue. Pages resolve against TMDB at request time, keeping the codebase lightweight, portable, and straightforward to deploy.
 
 > This product uses the TMDB API but is not endorsed, certified, or otherwise approved by TMDB.
 
----
+## Screenshots
+
+| Home | Discovery |
+|---|---|
+| ![StreamHIVE home screen](docs/screenshots/home.png) | ![StreamHIVE discovery filters](docs/screenshots/discover.png) |
+
+| Upcoming modal |
+|---|
+| ![StreamHIVE upcoming modal with trailer](docs/screenshots/upcoming-modal.png) |
 
 ## Highlights
 
-- **Live TMDB data** for movies, TV shows, seasons, episodes, actors, cast, crew, collections, recommendations, ratings, posters, and backdrops.
-- **No database required**. No schema, no imports, no catalogue maintenance.
-- **Premium streaming UI** with dark cinematic layouts, poster grids, backdrop heroes, responsive cards, and Font Awesome icons.
-- **Movie and TV detail pages** with inline player panels, metadata, genres, cast and crew, collections, seasons, episodes, and related titles.
-- **Coming This Year** page with English-language upcoming movie and TV results, client-side pagination, and click-to-open detail modals.
-- **Live search and discovery** across movies, shows, actors, genres, years, ratings, and user score filters.
-- **Browser-local profile features** using `localStorage` for saved titles and recently viewed content.
-- **SEO-friendly routes** with clean URLs and year-aware movie slugs for duplicate titles.
-- **Configurable embed provider** with built-in presets and custom URL template support.
-
----
+- Live TMDB data for movies, TV shows, seasons, episodes, actors, cast, crew, collections, recommendations, ratings, posters, and backdrops.
+- No database required for catalogue data.
+- Premium dark UI with responsive cards, cinematic heroes, backdrop layers, Font Awesome icons, and Bootstrap modals.
+- Movie and TV detail pages with inline player panels, metadata, genres, cast, crew, collections, seasons, episodes, and related titles.
+- Upcoming releases page with English-language movie and TV results, runtime caching, pagination, detail modals, and embedded trailers.
+- Search and discovery across titles, actors, genres, years, ratings, and score filters.
+- Browser-local profile features using `localStorage` for saved titles and recently viewed content.
+- Configurable embed provider with built-in presets and custom URL template support.
+- Renameable public site branding through `SITE_NAME` in `.env`.
 
 ## Tech Stack
 
-| Layer | Details |
+| Layer | Technology |
 |---|---|
 | Runtime | PHP 8.1+ |
 | Routing | Custom lightweight PHP router |
-| Data source | TMDB API |
-| Frontend | Server-rendered PHP views, Bootstrap, jQuery, Splide, Font Awesome |
-| Persistence | None for catalogue data; browser `localStorage` for profile data |
-| Web server | Apache/XAMPP with `mod_rewrite`, or PHP built-in server |
-
----
+| Data | TMDB API |
+| Frontend | Server-rendered PHP views, HTML, CSS, JavaScript, jQuery |
+| UI | Bootstrap, Font Awesome, Splide |
+| Persistence | Browser `localStorage` for profile data |
+| Server | Apache/XAMPP with `mod_rewrite`, or PHP built-in server |
 
 ## Requirements
 
@@ -48,8 +65,6 @@ This version is intentionally **live-only**. It does not require MySQL, SQLite, 
 
 No database server is required.
 
----
-
 ## Quick Start
 
 Clone the repository:
@@ -59,13 +74,13 @@ git clone https://github.com/GingerDev0/STREAMHIVE-V2.git
 cd STREAMHIVE-V2
 ```
 
-Create your local environment file:
+Create your runtime environment file:
 
 ```bash
 cp .env.example .env
 ```
 
-Add your TMDB credentials:
+Fill in your values:
 
 ```ini
 TMDB_BEARER_TOKEN=
@@ -78,9 +93,7 @@ PLAYER_MOVIE_URL=
 PLAYER_EPISODE_URL=
 ```
 
-`TMDB_BEARER_TOKEN` is preferred. Keep `.env` private and never commit real credentials.
-
----
+`TMDB_BEARER_TOKEN` is preferred. Keep `.env` private and never commit real credentials. The app requires a real `.env` at runtime and will stop with a clear setup message if only `.env.example` exists.
 
 ## Running Locally
 
@@ -112,8 +125,6 @@ Open:
 http://127.0.0.1:8000/
 ```
 
----
-
 ## Core Routes
 
 | Route | Description |
@@ -127,20 +138,17 @@ http://127.0.0.1:8000/
 | `/tv/{slug}/s01/e01` | Episode detail |
 | `/actors` | Actor discovery |
 | `/actors/{slug}` | Actor profile |
-| `/actor/{slug}` | Actor profile alias |
 | `/coming-this-year` | Upcoming English-language movies and TV for the current year |
 | `/s` | Search and filter page |
-| `/s/{query}` | Search page with path query |
 | `/profile` | Browser-local saved and recent titles |
 | `/ajax/live-search` | Navbar live-search endpoint |
-
----
+| `/ajax/upcoming-trailer` | Trailer lookup endpoint for upcoming modal |
 
 ## Feature Overview
 
-### Discovery
+### Live Discovery
 
-StreamHIVE V2 resolves listings directly from TMDB discover/search endpoints. Users can browse movies, TV shows, actors, genres, release years, age ratings, score filters, and live search results without needing an imported local catalogue.
+StreamHIVE V2 resolves listings directly from TMDB discover/search endpoints. Users can browse movies, TV shows, actors, genres, release years, age ratings, score filters, and live search results without maintaining an imported local catalogue.
 
 ### Detail Pages
 
@@ -148,61 +156,15 @@ Movie, TV, season, episode, and actor pages are assembled from live TMDB respons
 
 ### Coming This Year
 
-The upcoming page fetches every available TMDB discover page for the remaining current-year date range, filters to English-original titles, removes duplicates, and renders tabbed movie/TV grids. A short-lived runtime cache avoids repeating the full TMDB page sweep on every request. Each card opens a high-layer Bootstrap modal with poster, backdrop, rating, release date, genres, and overview.
+The upcoming page fetches available TMDB discover pages for the remaining current-year date range, filters to English-original titles, removes duplicates, and renders tabbed movie/TV grids. Cards open a high-layer modal with poster, release date, rating, genres, overview, and a fitted trailer embed where available.
 
-### Profile
+### Local Profile
 
 Saved titles and recent history are stored in the browser with `localStorage`. No account system or server-side profile storage is required.
 
 ### Player Routing
 
-The app builds configurable movie and episode embed URLs from TMDB and IMDb identifiers. The default provider is MultiEmbed-compatible, with optional presets and fully custom URL templates.
-
----
-
-## URL Strategy
-
-Movie slugs include the release year when TMDB provides one. This reduces collisions when multiple movies share a title:
-
-```text
-Scary Movie (2000) -> /movies/scary-movie-2000
-Scary Movie (2026) -> /movies/scary-movie-2026
-```
-
-TV and episode routes use the show slug plus season and episode numbers:
-
-```text
-/tv/from
-/tv/from/s01
-/tv/from/s01/e01
-```
-
-The controller resolves slugs back to the closest TMDB result at request time.
-
----
-
-## Data Model
-
-TMDB is the source of truth. The app fetches live data for:
-
-- Movies and TV shows
-- Seasons and episodes
-- Actors and filmographies
-- Cast and crew
-- Recommendations and similar titles
-- Movie collections
-- Posters, profile images, and backdrops
-- Ratings, runtimes, certifications, dates, genres, and external IDs
-
-The app does not:
-
-- Create a database schema
-- Persist movie or TV records
-- Maintain a permanent local API cache
-- Run admin imports
-- Host or distribute video files
-
----
+The app builds configurable movie and episode embed URLs from TMDB and IMDb identifiers. Use a built-in provider preset or define fully custom URL templates in `.env`.
 
 ## Environment Variables
 
@@ -210,7 +172,7 @@ The app does not:
 |---|---:|---|
 | `TMDB_BEARER_TOKEN` | Recommended | TMDB v4 Read Access Token |
 | `TMDB_API_KEY` | Optional | TMDB v3 API key fallback |
-| `SITE_NAME` | Optional | Public website name used in titles, metadata, and sharing |
+| `SITE_NAME` | Optional | Public website name used in titles, metadata, logo alt text, and sharing |
 | `PLAYER_PROVIDER` | Optional | Built-in provider: `multiembed`, `vidsrc-to`, `vidsrc-cc`, or `embed-su` |
 | `PLAYER_MOVIE_URL` | Optional | Custom movie embed URL template |
 | `PLAYER_EPISODE_URL` | Optional | Custom episode embed URL template |
@@ -226,56 +188,52 @@ Custom player templates support:
 | `{season}` | Episode season number |
 | `{episode}` | Episode number |
 
----
-
 ## Project Structure
 
 ```text
 app/
-  Controllers/   Request handlers for pages and AJAX endpoints
+  Controllers/   Page and AJAX request handlers
   Core/          Router, config loader, and view renderer
-  Helpers/       URL, slug, image, rating, player, and formatting helpers
+  Helpers/       URL, slug, image, player, rating, and formatting helpers
   Models/        Repository compatibility layer
   Services/      TMDB client and live catalogue abstractions
   Views/         Layouts, pages, and reusable partials
+
+docs/
+  screenshots/   README screenshots
 
 public/
   assets/        CSS, JavaScript, images, favicon, and metadata image
   index.php      Front controller
 
-.env.example     Safe environment template
+.env.example     Safe runtime configuration template
 .htaccess        Apache rewrite entry point
 README.md        Project documentation
 LICENSE          MIT license
 ```
 
-Important files:
+## Important Files
 
 | File | Purpose |
 |---|---|
 | `public/index.php` | Route table and front controller |
+| `app/bootstrap.php` | Autoloading, helpers, `.env` guard, and debug bootstrapping |
 | `app/Controllers/MediaController.php` | Movie, TV, season, episode, listing, search, and upcoming logic |
 | `app/Controllers/ActorController.php` | Actor pages and filmographies |
 | `app/Services/TmdbClient.php` | TMDB API wrapper and batched request helper |
-| `app/Services/LiveCatalog.php` | Live-only compatibility layer |
-| `app/Helpers/helpers.php` | Shared formatting, slug, image, rating, and player helpers |
-| `public/assets/js/app.js` | Client-side search, pagination, modals, profile state, and UI behavior |
-| `public/assets/css/app.css` | Full visual system and responsive styling |
-
----
+| `app/Helpers/helpers.php` | Shared formatting, slug, image, rating, site-name, and player helpers |
+| `public/assets/js/app.js` | Search, modals, profile state, trailer embeds, and UI behavior |
+| `public/assets/css/app.css` | Visual system and responsive styling |
 
 ## Deployment Checklist
 
-Before deploying publicly:
-
 - Keep `.env` private.
+- Confirm `.env` exists on the server and is not just `.env.example`.
 - Confirm TMDB credentials are valid and not committed.
 - Confirm rewrite rules route all requests through `public/index.php`.
 - Confirm outbound HTTPS requests from PHP are allowed.
 - Review third-party embed providers for legal and terms-of-service compliance.
 - Rotate credentials immediately if `.env` is ever exposed.
-
----
 
 ## Security And Content Notes
 
@@ -290,9 +248,11 @@ Do not commit:
 - Logs
 - Editor or OS files
 
----
-
 ## Troubleshooting
+
+### The app says `.env` is missing
+
+Copy `.env.example` to `.env` and fill in your values. The app intentionally refuses to boot without a real `.env` file.
 
 ### Pages return 404
 
@@ -314,23 +274,15 @@ Do not commit:
 - Remote image requests may be blocked by the network or browser.
 - Some grids intentionally filter out titles without usable posters.
 
-### Recommendations show fewer than expected
-
-TMDB may return fewer usable released recommendations with posters. StreamHIVE filters future, undated, duplicate, and posterless results where appropriate.
-
----
-
 ## Credits
 
 | Credit | Source |
 |---|---|
 | Metadata and imagery | TMDB API |
 | Icons | Font Awesome |
-| Carousel UI | Splide |
 | UI framework | Bootstrap |
+| Carousel UI | Splide |
 | Original project | GingerDev0 / StreamHIVE V2 |
-
----
 
 ## License
 
