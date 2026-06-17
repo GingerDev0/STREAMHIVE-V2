@@ -103,12 +103,14 @@
       <div class="coming-info-body">
         <div class="coming-info-poster"><img src="/assets/img/placeholder.jpg" alt="" data-coming-info-poster></div>
         <div class="coming-info-copy">
-          <div class="coming-info-meta">
-            <span data-coming-info-date></span>
-            <span data-coming-info-rating></span>
+          <div class="coming-info-details">
+            <div class="coming-info-meta">
+              <span data-coming-info-date></span>
+              <span data-coming-info-rating></span>
+            </div>
+            <p data-coming-info-overview></p>
+            <div class="coming-info-genres" data-coming-info-genres></div>
           </div>
-          <p data-coming-info-overview></p>
-          <div class="coming-info-genres" data-coming-info-genres></div>
           <div class="coming-info-trailer" data-coming-info-trailer hidden>
             <div class="coming-info-trailer-head">
               <span><i class="fa-brands fa-youtube"></i> Trailer</span>
