@@ -26,7 +26,23 @@ function app_normalize_attribution_markup(string $markup): string
     return trim((string) preg_replace('/\s+/', ' ', $markup));
 }
 
-App\Core\Config::load(app_path('.env'));
+$envFile = app_path('.env');
+$envExampleFile = app_path('.env.example');
+$envFileRealPath = is_file($envFile) ? realpath($envFile) : false;
+$envExampleRealPath = is_file($envExampleFile) ? realpath($envExampleFile) : false;
+
+if (!$envFileRealPath || ($envExampleRealPath && $envFileRealPath === $envExampleRealPath)) {
+    $message = 'Missing runtime configuration. Copy .env.example to .env and fill in your values before running the site.';
+    if (PHP_SAPI === 'cli') {
+        throw new RuntimeException($message);
+    }
+    http_response_code(500);
+    header('Content-Type: text/plain; charset=utf-8');
+    echo $message;
+    exit;
+}
+
+App\Core\Config::load($envFile);
 
 if (App\Core\Config::bool('APP_DEBUG', false)) {
     ini_set('display_errors', '1');
