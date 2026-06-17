@@ -989,7 +989,7 @@ aside.glass{border-radius:1.65rem!important}.v2-sticky-side aside,.col-lg-4 asid
 .coming-genres{display:block;margin-top:.42rem;font-size:.74rem;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .coming-empty{border-radius:1.35rem;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.10);color:#fff;}
 .coming-empty i{font-size:2rem;color:#e50914;}
-.coming-info-modal .modal-dialog{max-width:min(58rem,calc(100vw - 1.5rem));}
+.coming-info-modal .modal-dialog{max-width:min(76rem,calc(100vw - 1.5rem));}
 .modal.coming-info-modal{z-index:2147482001!important;}
 .modal-backdrop.coming-info-backdrop-layer{z-index:2147482000!important;}
 .coming-info-modal-content{position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.14);border-radius:.9rem;background:#09090b;color:#fff;box-shadow:0 2rem 5rem rgba(0,0,0,.72);}
@@ -1017,6 +1017,25 @@ aside.glass{border-radius:1.65rem!important}.v2-sticky-side aside,.col-lg-4 asid
 .coming-info-trailer-frame{position:relative;aspect-ratio:16/9;width:100%;overflow:hidden;border-radius:.6rem;background:#000;border:1px solid rgba(255,255,255,.13);box-shadow:0 1rem 2.4rem rgba(0,0,0,.45);}
 .coming-info-trailer-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block;}
 .coming-info-trailer-loading{position:absolute;inset:0;display:grid;place-items:center;color:#fff;background:rgba(0,0,0,.72);}
+@media (min-width:992px){
+  .coming-info-copy:has(.coming-info-trailer.has-trailer){
+    display:grid;
+    grid-template-columns:minmax(0,1fr) minmax(22rem,32rem);
+    column-gap:1.4rem;
+    align-items:end;
+    padding-right:1rem;
+  }
+  .coming-info-copy:has(.coming-info-trailer.has-trailer) > :not(.coming-info-trailer){
+    grid-column:1;
+  }
+  .coming-info-copy:has(.coming-info-trailer.has-trailer) .coming-info-trailer{
+    grid-column:2;
+    grid-row:1 / span 6;
+    align-self:center;
+    margin-top:0;
+    max-width:none;
+  }
+}
 @media (max-width:1399.98px){.coming-grid{grid-template-columns:repeat(5,minmax(0,1fr));}}
 @media (max-width:1199.98px){.coming-grid{grid-template-columns:repeat(4,minmax(0,1fr));}}
 @media (max-width:991.98px){.coming-grid{grid-template-columns:repeat(3,minmax(0,1fr));}.coming-pager-bar{align-items:stretch;flex-direction:column}.coming-pager-actions{margin-left:0;justify-content:center}}
