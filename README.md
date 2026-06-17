@@ -71,8 +71,7 @@ Add your TMDB credentials:
 TMDB_BEARER_TOKEN=
 TMDB_API_KEY=
 
-APP_ENV=local
-APP_DEBUG=true
+SITE_NAME=StreamHIVE
 
 PLAYER_PROVIDER=multiembed
 PLAYER_MOVIE_URL=
@@ -211,8 +210,7 @@ The app does not:
 |---|---:|---|
 | `TMDB_BEARER_TOKEN` | Recommended | TMDB v4 Read Access Token |
 | `TMDB_API_KEY` | Optional | TMDB v3 API key fallback |
-| `APP_ENV` | Optional | `local` or `production` |
-| `APP_DEBUG` | Optional | Enable PHP error output locally |
+| `SITE_NAME` | Optional | Public website name used in titles, metadata, and sharing |
 | `PLAYER_PROVIDER` | Optional | Built-in provider: `multiembed`, `vidsrc-to`, `vidsrc-cc`, or `embed-su` |
 | `PLAYER_MOVIE_URL` | Optional | Custom movie embed URL template |
 | `PLAYER_EPISODE_URL` | Optional | Custom episode embed URL template |
@@ -270,8 +268,6 @@ Important files:
 
 Before deploying publicly:
 
-- Set `APP_ENV=production`.
-- Set `APP_DEBUG=false`.
 - Keep `.env` private.
 - Confirm TMDB credentials are valid and not committed.
 - Confirm rewrite rules route all requests through `public/index.php`.
