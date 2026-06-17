@@ -576,6 +576,7 @@ document.documentElement.classList.add('js-ready');
     const backdrop = String($card.data('backdrop') || poster);
     const overview = String($card.data('overview') || 'No synopsis has been added yet.');
     const genres = String($card.data('genres') || '').split(',').map(function (genre) { return genre.trim(); }).filter(Boolean);
+    const genreIcons = $card.data('genre-icons') || {};
     const rating = String($card.data('rating') || '').trim();
     const mediaType = String($card.data('media-type') || '');
     const tmdbId = $card.data('tmdb-id');
@@ -593,8 +594,9 @@ document.documentElement.classList.add('js-ready');
     setComingChip('[data-coming-info-rating]', 'fa-star', rating);
     $('[data-coming-info-genres]').html(genres.map(function (genre) {
       const safeGenre = $('<div>').text(genre).html();
+      const safeIcon = $('<div>').text(genreIcons[genre] || 'fa-tag').html();
       const genreUrl = '/s?genre=' + encodeURIComponent(genre) + (mediaType ? '&type=' + encodeURIComponent(mediaType) : '');
-      return '<a href="' + genreUrl + '"><i class="fa-solid fa-tag"></i><span>' + safeGenre + '</span></a>';
+      return '<a href="' + genreUrl + '"><i class="fa-solid ' + safeIcon + '"></i><span>' + safeGenre + '</span></a>';
     }).join('')).toggle(genres.length > 0);
     loadComingTrailer(mediaType, tmdbId, title);
 

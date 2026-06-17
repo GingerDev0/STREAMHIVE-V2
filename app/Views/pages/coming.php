@@ -46,6 +46,8 @@
             $backdrop = tmdb_img($item['backdrop_path'] ?? ($item['poster_path'] ?? null), !empty($item['backdrop_path']) ? 'w1280' : 'w780');
             $rating = round((float)($item['vote_average'] ?? 0), 1);
             $genres = array_values(array_filter(array_map('strval', $item['genres'] ?? [])));
+            $genreIcons = [];
+            foreach ($genres as $genre) $genreIcons[$genre] = genre_icon($genre);
             $overview = trim((string)($item['overview'] ?? ''));
             $typeLabel = $tabType === 'tv' ? 'TV Show' : 'Movie';
             $tmdbId = (int)($item['tmdb_id'] ?? $item['id'] ?? 0);
@@ -59,6 +61,7 @@
               data-date="<?= e($prettyDate) ?>"
               data-rating="<?= e($rating > 0 ? (string)$rating : '') ?>"
               data-genres="<?= e(implode(', ', $genres)) ?>"
+              data-genre-icons="<?= e(json_encode($genreIcons, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?: '{}') ?>"
               data-overview="<?= e($overview) ?>"
               data-poster="<?= e($poster) ?>"
               data-backdrop="<?= e($backdrop) ?>">
