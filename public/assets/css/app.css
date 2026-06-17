@@ -4609,20 +4609,22 @@ body.modal-open #contentFetchModal.fetch-modal:not(.show){
 }
 body.modal-open .modal-backdrop:not(.fetch-modal-backdrop){
   pointer-events:none!important;
-  z-index:2147481000!important;
+  background:#000!important;
+  opacity:.72!important;
+  z-index:2147482400!important;
 }
 body.modal-open .modal.coming-info-modal.show{
   display:block!important;
   pointer-events:auto!important;
-  z-index:2147483000!important;
+  z-index:2147482500!important;
 }
 .modal.coming-info-modal.show .modal-dialog,
 .modal.coming-info-modal.show .coming-info-modal-content{
   position:relative!important;
   pointer-events:auto!important;
-  z-index:2147483000!important;
+  z-index:2147482500!important;
 }
 .modal.coming-info-modal.show .coming-info-close{
   pointer-events:auto!important;
-  z-index:2147483001!important;
+  z-index:2147482501!important;
 }
