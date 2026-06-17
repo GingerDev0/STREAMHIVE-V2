@@ -1017,22 +1017,22 @@ aside.glass{border-radius:1.65rem!important}.v2-sticky-side aside,.col-lg-4 asid
 .coming-info-copy p::-webkit-scrollbar-track{background:rgba(255,255,255,.10);border-radius:999px;}
 .coming-info-copy p::-webkit-scrollbar-thumb{background:rgba(229,9,20,.78);border-radius:999px;}
 .coming-info-genres{display:flex;gap:.45rem;flex-wrap:wrap;margin-top:1rem;}
-.coming-info-trailer{margin-top:1.05rem;max-width:min(100%,38rem);padding:.85rem;border-radius:1.15rem;background:linear-gradient(145deg,rgba(255,255,255,.11),rgba(255,255,255,.035));border:1px solid rgba(255,255,255,.14);box-shadow:0 1rem 2.6rem rgba(0,0,0,.32);}
+.coming-info-trailer{margin-top:1.05rem;max-width:min(100%,38rem);padding:.65rem;border-radius:.95rem;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.10);box-shadow:inset 0 1px 0 rgba(255,255,255,.06);}
 .coming-info-trailer[hidden]{display:none!important;}
 .coming-info-trailer-head{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:.5rem;}
 .coming-info-trailer-head span{display:inline-flex;align-items:center;gap:.45rem;color:#fff;font-size:.78rem;font-weight:950;text-transform:uppercase;letter-spacing:.08em;}
 .coming-info-trailer-head i{color:#e50914;}
 .coming-info-trailer-head a{color:rgba(255,255,255,.72);font-size:.78rem;font-weight:850;text-decoration:none;}
 .coming-info-trailer-head a:hover{color:#fff;}
-.coming-info-trailer-frame{position:relative;aspect-ratio:16/9;width:100%;overflow:hidden;border-radius:.75rem;background:#000;border:1px solid rgba(255,255,255,.13);box-shadow:inset 0 0 0 1px rgba(255,255,255,.06),0 1rem 2.4rem rgba(0,0,0,.45);}
+.coming-info-trailer-frame{position:relative;aspect-ratio:16/9;width:100%;overflow:hidden;border-radius:.65rem;background:#000;border:1px solid rgba(255,255,255,.12);box-shadow:0 .85rem 1.8rem rgba(0,0,0,.34),inset 0 0 0 1px rgba(255,255,255,.06);}
 .coming-info-trailer-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block;}
 .coming-info-trailer-loading{position:absolute;inset:0;display:grid;place-items:center;color:#fff;background:rgba(0,0,0,.72);}
 @media (min-width:992px){
   .coming-info-copy:has(.coming-info-trailer.has-trailer){
     display:grid;
-    grid-template-columns:minmax(0,1fr) minmax(22rem,32rem);
+    grid-template-columns:minmax(0,1fr) minmax(21rem,30rem);
     grid-template-rows:minmax(0,1fr);
-    column-gap:1.4rem;
+    column-gap:1.55rem;
     align-items:center;
     padding-right:1rem;
   }
