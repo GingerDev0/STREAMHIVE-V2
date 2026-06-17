@@ -94,7 +94,7 @@
     <div class="modal-content coming-info-modal-content">
       <div class="coming-info-modal-header">
         <div class="coming-info-header">
-          <span class="coming-info-type" data-coming-info-type>Movie</span>
+          <span class="coming-info-type"><i class="fa-solid fa-film" data-coming-info-type-icon></i><span data-coming-info-type>Movie</span></span>
           <h2 id="comingInfoTitle" data-coming-info-title>Title</h2>
         </div>
         <button type="button" class="coming-info-close" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>

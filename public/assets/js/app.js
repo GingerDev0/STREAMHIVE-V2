@@ -576,6 +576,9 @@ document.documentElement.classList.add('js-ready');
     $('[data-coming-info-backdrop]').css('background-image', 'url("' + backdrop.replace(/"/g, '%22') + '")');
     $('[data-coming-info-overview]').text(overview);
     setText('[data-coming-info-type]', $card.data('type'), 'Movie');
+    $('[data-coming-info-type-icon]')
+      .removeClass('fa-film fa-tv')
+      .addClass(mediaType === 'tv' ? 'fa-tv' : 'fa-film');
     setText('[data-coming-info-date]', $card.data('date'), '');
     setText('[data-coming-info-rating]', rating ? 'TMDB ' + rating : '', '');
     $('[data-coming-info-genres]').html(genres.map(function (genre) {
