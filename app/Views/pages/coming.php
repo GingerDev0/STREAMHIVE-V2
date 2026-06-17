@@ -92,15 +92,17 @@
 <div class="modal fade coming-info-modal" id="comingInfoModal" tabindex="-1" aria-hidden="true" aria-labelledby="comingInfoTitle" data-bs-backdrop="false">
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content coming-info-modal-content">
-      <button type="button" class="coming-info-close" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+      <div class="coming-info-modal-header">
+        <div class="coming-info-header">
+          <span class="coming-info-type" data-coming-info-type>Movie</span>
+          <h2 id="comingInfoTitle" data-coming-info-title>Title</h2>
+        </div>
+        <button type="button" class="coming-info-close" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+      </div>
       <div class="coming-info-backdrop" data-coming-info-backdrop></div>
       <div class="coming-info-body">
         <div class="coming-info-poster"><img src="/assets/img/placeholder.jpg" alt="" data-coming-info-poster></div>
         <div class="coming-info-copy">
-          <div class="coming-info-header">
-            <span class="coming-info-type" data-coming-info-type>Movie</span>
-            <h2 id="comingInfoTitle" data-coming-info-title>Title</h2>
-          </div>
           <div class="coming-info-meta">
             <span data-coming-info-date></span>
             <span data-coming-info-rating></span>
