@@ -24,10 +24,12 @@ final class TmdbClient
     public function searchTv(string $query, int $page = 1): array { return $this->get('/search/tv', ['query' => $query, 'include_adult' => 'false', 'page' => max(1, $page)]); }
     public function searchPerson(string $query, int $page = 1): array { return $this->get('/search/person', ['query' => $query, 'include_adult' => 'false', 'page' => max(1, $page)]); }
     public function movie(int $id): array { return $this->get("/movie/{$id}", ['append_to_response' => 'credits,external_ids,videos,images,release_dates']); }
+    public function movieVideos(int $id): array { return $this->get("/movie/{$id}/videos")['results'] ?? []; }
     public function movieRecommendations(int $id, int $page = 1): array { return $this->get("/movie/{$id}/recommendations", ['page' => max(1, $page)]); }
     public function movieSimilar(int $id, int $page = 1): array { return $this->get("/movie/{$id}/similar", ['page' => max(1, $page)]); }
     public function collection(int $id): array { return $this->get("/collection/{$id}"); }
     public function tv(int $id): array { return $this->get("/tv/{$id}", ['append_to_response' => 'credits,external_ids,videos,images,content_ratings']); }
+    public function tvVideos(int $id): array { return $this->get("/tv/{$id}/videos")['results'] ?? []; }
     public function tvRecommendations(int $id, int $page = 1): array { return $this->get("/tv/{$id}/recommendations", ['page' => max(1, $page)]); }
     public function tvSimilar(int $id, int $page = 1): array { return $this->get("/tv/{$id}/similar", ['page' => max(1, $page)]); }
     public function person(int $id): array { return $this->get("/person/{$id}", ['append_to_response' => 'combined_credits,external_ids']); }

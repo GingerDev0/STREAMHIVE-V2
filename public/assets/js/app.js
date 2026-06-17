@@ -522,6 +522,40 @@ document.documentElement.classList.add('js-ready');
     $target.text(text).toggle(text !== '');
   };
 
+  const resetComingTrailer = function () {
+    $('[data-coming-info-trailer]').attr('hidden', true).removeClass('is-loading has-trailer');
+    $('[data-coming-info-trailer-frame]').empty();
+    $('[data-coming-info-trailer-link]').attr('href', '#');
+  };
+
+  const loadComingTrailer = function (type, tmdbId, title) {
+    tmdbId = parseInt(tmdbId, 10) || 0;
+    if (!tmdbId || (type !== 'movie' && type !== 'tv')) return;
+
+    const $trailer = $('[data-coming-info-trailer]');
+    const $frame = $('[data-coming-info-trailer-frame]');
+    const $link = $('[data-coming-info-trailer-link]');
+    $trailer.removeAttr('hidden').addClass('is-loading').removeClass('has-trailer');
+    $frame.html('<div class="coming-info-trailer-loading"><i class="fa-solid fa-spinner fa-spin"></i></div>');
+
+    $.getJSON('/ajax/upcoming-trailer', { type: type, id: tmdbId })
+      .done(function (payload) {
+        const trailer = payload && payload.trailer ? payload.trailer : null;
+        if (!trailer || !trailer.embed_url) {
+          resetComingTrailer();
+          return;
+        }
+
+        const safeTitle = $('<div>').text((trailer.name || title || 'Trailer')).html();
+        $frame.html('<iframe src="' + trailer.embed_url + '" title="' + safeTitle + '" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>');
+        $link.attr('href', trailer.watch_url || trailer.embed_url);
+        $trailer.removeClass('is-loading').addClass('has-trailer').removeAttr('hidden');
+      })
+      .fail(function () {
+        resetComingTrailer();
+      });
+  };
+
   const openComingModal = function (card) {
     const $card = $(card);
     const modalEl = document.getElementById('comingInfoModal');
@@ -533,7 +567,10 @@ document.documentElement.classList.add('js-ready');
     const overview = String($card.data('overview') || 'No synopsis has been added yet.');
     const genres = String($card.data('genres') || '').split(',').map(function (genre) { return genre.trim(); }).filter(Boolean);
     const rating = String($card.data('rating') || '').trim();
+    const mediaType = String($card.data('media-type') || '');
+    const tmdbId = $card.data('tmdb-id');
 
+    resetComingTrailer();
     $('[data-coming-info-title]').text(title);
     $('[data-coming-info-poster]').attr('src', poster).attr('alt', title + ' poster');
     $('[data-coming-info-backdrop]').css('background-image', 'url("' + backdrop.replace(/"/g, '%22') + '")');
@@ -544,6 +581,7 @@ document.documentElement.classList.add('js-ready');
     $('[data-coming-info-genres]').html(genres.map(function (genre) {
       return '<span>' + $('<div>').text(genre).html() + '</span>';
     }).join('')).toggle(genres.length > 0);
+    loadComingTrailer(mediaType, tmdbId, title);
 
     if (window.bootstrap && window.bootstrap.Modal) {
       bootstrap.Modal.getOrCreateInstance(modalEl, { backdrop: false }).show();

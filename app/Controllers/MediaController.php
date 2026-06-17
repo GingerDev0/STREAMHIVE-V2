@@ -551,6 +551,67 @@ final class MediaController
         ]);
     }
 
+    public function upcomingTrailer(array $params): string
+    {
+        $type = (string)($_GET['type'] ?? '');
+        $tmdbId = (int)($_GET['id'] ?? 0);
+        if (!in_array($type, ['movie', 'tv'], true) || $tmdbId < 1) {
+            return $this->jsonResponse(['ok' => false, 'trailer' => null]);
+        }
+
+        try {
+            $tmdb = new TmdbClient();
+            $videos = $type === 'tv' ? $tmdb->tvVideos($tmdbId) : $tmdb->movieVideos($tmdbId);
+        } catch (\Throwable) {
+            return $this->jsonResponse(['ok' => false, 'trailer' => null]);
+        }
+
+        $trailer = $this->bestYoutubeTrailer($videos);
+
+        return $this->jsonResponse([
+            'ok' => $trailer !== null,
+            'trailer' => $trailer,
+        ]);
+    }
+
+    private function bestYoutubeTrailer(array $videos): ?array
+    {
+        $candidates = array_values(array_filter($videos, static function (array $video): bool {
+            return strtolower((string)($video['site'] ?? '')) === 'youtube'
+                && trim((string)($video['key'] ?? '')) !== ''
+                && in_array((string)($video['type'] ?? ''), ['Trailer', 'Teaser', 'Clip'], true);
+        }));
+
+        if (!$candidates) return null;
+
+        usort($candidates, static function (array $a, array $b): int {
+            $rank = static function (array $video): int {
+                $official = !empty($video['official']) ? 0 : 10;
+                return $official + match ((string)($video['type'] ?? '')) {
+                    'Trailer' => 0,
+                    'Teaser' => 1,
+                    default => 2,
+                };
+            };
+
+            $rankCompare = $rank($a) <=> $rank($b);
+            if ($rankCompare !== 0) return $rankCompare;
+
+            return strcmp((string)($b['published_at'] ?? ''), (string)($a['published_at'] ?? ''));
+        });
+
+        $video = $candidates[0];
+        $key = trim((string)($video['key'] ?? ''));
+        if ($key === '') return null;
+
+        return [
+            'name' => (string)($video['name'] ?? 'Trailer'),
+            'key' => $key,
+            'embed_url' => 'https://www.youtube-nocookie.com/embed/' . rawurlencode($key) . '?rel=0&modestbranding=1',
+            'watch_url' => 'https://www.youtube.com/watch?v=' . rawurlencode($key),
+        ];
+    }
+
     private function jsonResponse(array $payload): string
     {
         header('Content-Type: application/json; charset=utf-8');

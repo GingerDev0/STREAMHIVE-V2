@@ -48,9 +48,12 @@
             $genres = array_values(array_filter(array_map('strval', $item['genres'] ?? [])));
             $overview = trim((string)($item['overview'] ?? ''));
             $typeLabel = $tabType === 'tv' ? 'TV Show' : 'Movie';
+            $tmdbId = (int)($item['tmdb_id'] ?? $item['id'] ?? 0);
           ?>
             <article class="coming-card" data-coming-item data-coming-modal
               role="button" tabindex="0" aria-label="View details for <?= e($title) ?>"
+              data-tmdb-id="<?= e((string)$tmdbId) ?>"
+              data-media-type="<?= e($tabType) ?>"
               data-title="<?= e($title) ?>"
               data-type="<?= e($typeLabel) ?>"
               data-date="<?= e($prettyDate) ?>"
@@ -102,6 +105,13 @@
           </div>
           <p data-coming-info-overview></p>
           <div class="coming-info-genres" data-coming-info-genres></div>
+          <div class="coming-info-trailer" data-coming-info-trailer hidden>
+            <div class="coming-info-trailer-head">
+              <span><i class="fa-brands fa-youtube"></i> Trailer</span>
+              <a href="#" target="_blank" rel="noopener noreferrer" data-coming-info-trailer-link>Open on YouTube</a>
+            </div>
+            <div class="coming-info-trailer-frame" data-coming-info-trailer-frame></div>
+          </div>
         </div>
       </div>
     </div>
