@@ -86,7 +86,7 @@
   <?php endforeach; ?>
 </section>
 
-<div class="modal fade coming-info-modal" id="comingInfoModal" tabindex="-1" aria-hidden="true" aria-labelledby="comingInfoTitle">
+<div class="modal fade coming-info-modal" id="comingInfoModal" tabindex="-1" aria-hidden="true" aria-labelledby="comingInfoTitle" data-bs-backdrop="false">
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content coming-info-modal-content">
       <button type="button" class="coming-info-close" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>

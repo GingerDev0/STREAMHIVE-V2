@@ -546,7 +546,7 @@ document.documentElement.classList.add('js-ready');
     }).join('')).toggle(genres.length > 0);
 
     if (window.bootstrap && window.bootstrap.Modal) {
-      bootstrap.Modal.getOrCreateInstance(modalEl).show();
+      bootstrap.Modal.getOrCreateInstance(modalEl, { backdrop: false }).show();
     }
   };
 
@@ -567,7 +567,7 @@ document.documentElement.classList.add('js-ready');
   });
 
   $('#comingInfoModal').on('shown.bs.modal', function () {
-    $('.modal-backdrop').last().addClass('coming-info-backdrop-layer');
+    $('.modal-backdrop:not(.fetch-modal-backdrop)').remove();
   }).on('hidden.bs.modal', function () {
     $('.modal-backdrop.coming-info-backdrop-layer').removeClass('coming-info-backdrop-layer');
   });

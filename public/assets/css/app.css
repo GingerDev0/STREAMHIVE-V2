@@ -4618,6 +4618,10 @@ body.modal-open .modal.coming-info-modal.show{
   pointer-events:auto!important;
   z-index:2147482500!important;
 }
+body:has(.modal.coming-info-modal.show) .modal-backdrop:not(.fetch-modal-backdrop){
+  display:none!important;
+  pointer-events:none!important;
+}
 .modal.coming-info-modal.show .modal-dialog,
 .modal.coming-info-modal.show .coming-info-modal-content{
   position:relative!important;
