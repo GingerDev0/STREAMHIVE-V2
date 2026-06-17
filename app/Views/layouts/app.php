@@ -26,7 +26,7 @@ $browseNavItems = [
 ];
 $navItems = [
     ['href' => '/', 'label' => 'Home', 'icon' => 'fa-house', 'match' => 'exact'],
-    ['href' => '/coming-this-year', 'label' => 'Coming', 'icon' => 'fa-calendar-days', 'match' => 'exact'],
+    ['href' => '/coming-this-year', 'label' => 'Upcoming', 'icon' => 'fa-calendar-days', 'match' => 'exact'],
     ['href' => '/profile', 'label' => 'My Profile', 'icon' => 'fa-user-astronaut', 'match' => 'prefix'],
 ];
 $isNavActive = static function (array $item) use ($currentPath): bool {
