@@ -1,6 +1,6 @@
 # StreamHIVE V2
 
-![StreamHIVE V2 preview](public/assets/img/meta.png)
+![StreamHIVE V2 preview](public/assets/img/logo.png)
 
 **StreamHIVE V2** is a live TMDB-powered movie and TV discovery app built in PHP. It delivers a polished streaming-service interface with cinematic detail pages, live search, actor profiles, recommendations, watchlist-style browser profiles, upcoming-release discovery, and configurable embed-player routing.
 
