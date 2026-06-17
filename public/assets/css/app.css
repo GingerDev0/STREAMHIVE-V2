@@ -4632,3 +4632,8 @@ body:has(.modal.coming-info-modal.show) .modal-backdrop:not(.fetch-modal-backdro
   pointer-events:auto!important;
   z-index:2147482501!important;
 }
+body.coming-modal-scroll-locked{
+  overflow:hidden!important;
+  overscroll-behavior:none!important;
+  touch-action:none!important;
+}

@@ -550,6 +550,29 @@ document.documentElement.classList.add('js-ready');
     }
   };
 
+  let comingModalScrollY = 0;
+  const lockComingPageScroll = function () {
+    comingModalScrollY = window.scrollY || window.pageYOffset || 0;
+    $('body').css({
+      position: 'fixed',
+      top: '-' + comingModalScrollY + 'px',
+      left: '0',
+      right: '0',
+      width: '100%'
+    }).addClass('coming-modal-scroll-locked');
+  };
+
+  const unlockComingPageScroll = function () {
+    $('body').removeClass('coming-modal-scroll-locked').css({
+      position: '',
+      top: '',
+      left: '',
+      right: '',
+      width: ''
+    });
+    window.scrollTo(0, comingModalScrollY || 0);
+  };
+
   $(document).on('click', '.coming-tab[data-coming-tab]', function () {
     activateComingTab($(this).data('coming-tab'));
   });
@@ -566,10 +589,13 @@ document.documentElement.classList.add('js-ready');
     openComingModal(this);
   });
 
-  $('#comingInfoModal').on('shown.bs.modal', function () {
+  $('#comingInfoModal').on('show.bs.modal', function () {
+    lockComingPageScroll();
+  }).on('shown.bs.modal', function () {
     $('.modal-backdrop:not(.fetch-modal-backdrop)').remove();
   }).on('hidden.bs.modal', function () {
     $('.modal-backdrop.coming-info-backdrop-layer').removeClass('coming-info-backdrop-layer');
+    unlockComingPageScroll();
   });
 
   $(document).on('click', '.coming-page-btn[data-coming-page][data-page]', function () {
