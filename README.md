@@ -1,114 +1,56 @@
 # StreamHIVE V2
 
-<p align="center">
-  <a href="https://streamhive.uk/"><img src="https://img.shields.io/badge/Demo-StreamHIVE-7c3aed?style=for-the-badge" alt="StreamHIVE Demo"></a>
-  <a href="https://github.com/GingerDev0/StreamHIVE-V2"><img src="https://img.shields.io/badge/GitHub-StreamHIVE--V2-111827?style=for-the-badge&logo=github" alt="GitHub Repository"></a>
-  <img src="https://img.shields.io/badge/PHP-8.1%2B-777bb4?style=for-the-badge&logo=php&logoColor=white" alt="PHP 8.1+">
-  <img src="https://img.shields.io/badge/Storage-MySQL-4479a1?style=for-the-badge&logo=mysql&logoColor=white" alt="MySQL">
-  <img src="https://img.shields.io/badge/API-TMDB-01b4e4?style=for-the-badge" alt="TMDB API">
-  <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="MIT License">
-</p>
+StreamHIVE V2 is a PHP movie and TV discovery interface with a premium streaming-service style UI, powered by live TMDB data.
 
-<p align="center">
-  <strong>A cinematic PHP movie, TV, episode, and actor database powered by TMDB and MySQL.</strong>
-</p>
+This build is **live-only**: it does not use SQL, does not store movie or TV records in a database, and does not maintain a local media catalogue. Pages resolve and render from TMDB at request time.
 
-<p align="center">
-  <a href="https://streamhive.uk/"><strong>View the StreamHIVE demo</strong></a>
-  ·
-  <a href="https://github.com/GingerDev0/StreamHIVE-V2"><strong>GitHub repository</strong></a>
-</p>
+> This product uses the TMDB API but is not endorsed, certified, or otherwise approved by TMDB.
 
 ---
 
-## Overview
+## Highlights
 
-StreamHIVE V2 is a streaming-app style media database built with PHP, MySQL, TMDB data, Apache routes, AJAX browsing, local profile storage, and a fast local import cache.
-
-The app fetches missing or incomplete movie, TV, episode, season, and actor records from TMDB on demand, stores them locally in MySQL, and then serves detail/listing pages from the local cache for speed.
-
-> This product uses the TMDB API but is not endorsed or certified by TMDB.
-
----
-
-## Demo
-
-| Name | URL |
-|---|---|
-| **StreamHIVE** | [https://streamhive.uk/](https://streamhive.uk/) |
-
----
-
-## Features
-
-| Area | Details |
-|---|---|
-| **Browsing** | Movie, TV, season, episode, actor, search, profile, and admin pages. |
-| **Storage** | MySQL-backed cache with automatic TMDB imports, schema creation, indexes, and backfills. |
-| **Search** | Live navbar search, full search pages, filters, sorting, genre/year/age-rating/rating support, and AJAX pagination. |
-| **Detail pages** | Metadata, cast, ratings, genres, runtime, seasons, episodes, recommendations, and collection support. |
-| **Collections** | Full-width **Movies In This Collection** carousel with collection backdrop and index-style movie cards. |
-| **Recommendations** | “More like this” panels ranked by similar titles first, then shared genres. |
-| **Player** | MultiEmbed support using TMDB IDs first, with IMDb IDs as fallback where available. |
-| **Profile** | Browser-local bookmarks and recently viewed history using `localStorage`. |
-| **Admin** | Import tools, prefetched full-import actions, MySQL stats, and movie/TV/actor management. |
-| **SEO** | Open Graph and Twitter card metadata. |
-| **Slugs** | Clean collision-safe slugs for duplicate titles and actor names. |
+- Live TMDB movie, TV, season, episode, actor, collection, cast, crew, and recommendation data.
+- No MySQL, no import cache, no app-side movie/TV persistence.
+- Clean SEO-friendly routes without `.php`.
+- Year-aware movie slugs for duplicate titles.
+- Premium dark streaming-service UI with TMDB posters/backdrops and Font Awesome icons.
+- Movie pages with inline player, Cast & Crew, Collection, and More like this tabs.
+- TV pages with Seasons, Cast & Crew, and More like this tabs.
+- Season pages with Episodes, Cast & Crew, and More like this tabs.
+- Episode pages with inline player, Next Episode, Cast & Crew, and More like this.
+- Actor profiles, live search, genre browsing, coming-this-year, profile bookmarks, and recent history.
 
 ---
 
 ## Requirements
 
-| Requirement | Version / Notes |
+| Requirement | Notes |
 |---|---|
-| PHP | `8.1` or newer |
-| Server | Apache with `mod_rewrite`, or PHP's built-in server for local development |
-| Database | MySQL or MariaDB |
-| PHP extensions | `curl`, `mysqli` |
-| API credentials | TMDB v4 Read Access Token, or TMDB v3 API key |
+| PHP | PHP 8.1+ recommended |
+| Web server | Apache with `mod_rewrite`, XAMPP, or PHP built-in server |
+| PHP extensions | `curl` recommended for TMDB requests |
+| TMDB credentials | v4 Read Access Token preferred, v3 API key supported |
+| Database | Not required |
 
 ---
 
-## Installation
+## Setup
 
-1. Clone or upload the repository to your server.
-2. Point your web root to `public/`.
-3. If you cannot change the web root, keep the included root `.htaccess`; it routes requests into `public/`.
-4. Copy `.env.example` to `.env`.
-5. Add your TMDB credentials, MySQL credentials, and change the admin token.
-6. Create the MySQL database/user and grant access.
-7. Make `storage/` writable by PHP for small runtime settings.
-8. Open the site in your browser.
+Clone the project:
+
+```bash
+git clone https://github.com/GingerDev0/StreamHIVE-V2.git
+cd StreamHIVE-V2
+```
+
+Copy the environment template:
 
 ```bash
 cp .env.example .env
-chmod -R 775 storage
 ```
 
-Example MySQL setup:
-
-```sql
-CREATE DATABASE IF NOT EXISTS `stream_hive`
-  CHARACTER SET utf8mb4
-  COLLATE utf8mb4_unicode_ci;
-
-CREATE USER IF NOT EXISTS 'stream_hive'@'localhost'
-  IDENTIFIED BY 'change-this-password';
-
-CREATE USER IF NOT EXISTS 'stream_hive'@'127.0.0.1'
-  IDENTIFIED BY 'change-this-password';
-
-GRANT ALL PRIVILEGES ON `stream_hive`.* TO 'stream_hive'@'localhost';
-GRANT ALL PRIVILEGES ON `stream_hive`.* TO 'stream_hive'@'127.0.0.1';
-
-FLUSH PRIVILEGES;
-```
-
----
-
-## Environment file
-
-Create a `.env` file in the project root:
+Add your TMDB credentials:
 
 ```ini
 TMDB_BEARER_TOKEN=your_tmdb_v4_read_access_token_here
@@ -116,269 +58,278 @@ TMDB_API_KEY=your_tmdb_v3_api_key_here
 
 APP_ENV=local
 APP_DEBUG=true
-ADMIN_TOKEN=change-this-token
 
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=stream_hive
-DB_USERNAME=stream_hive
-DB_PASSWORD=change-this-password
+PLAYER_PROVIDER=multiembed
+PLAYER_MOVIE_URL=
+PLAYER_EPISODE_URL=
 ```
 
-| Setting | Description |
-|---|---|
-| `TMDB_BEARER_TOKEN` | Preferred TMDB v4 Read Access Token. Paste the token without the word `Bearer`. |
-| `TMDB_API_KEY` | Optional TMDB v3 API key fallback. |
-| `APP_ENV` | Use `local` for development and `production` for live sites. |
-| `APP_DEBUG` | Use `true` locally and `false` in production. |
-| `ADMIN_TOKEN` | Query-string token for admin routes. Change this before deployment. |
-| `DB_HOST` | MySQL host. Use `127.0.0.1` for most XAMPP/local installs. |
-| `DB_PORT` | MySQL port. Default is `3306`. |
-| `DB_DATABASE` | MySQL database name. |
-| `DB_USERNAME` | MySQL database user. |
-| `DB_PASSWORD` | MySQL database password. Do not commit real credentials. |
+`TMDB_BEARER_TOKEN` is preferred. Keep `.env` private and never commit real credentials.
 
 ---
 
-## TMDB credentials
+## Running Locally
 
-1. Create or log in to a TMDB account.
-2. Open account settings.
-3. Go to the API section.
-4. Create or request API access.
-5. Copy the v4 API Read Access Token into `TMDB_BEARER_TOKEN`.
-6. Optionally copy the v3 API key into `TMDB_API_KEY` as a fallback.
+### XAMPP / Apache
 
----
+Recommended local path:
 
-## Local development
+```text
+C:\xampp\htdocs
+```
 
-From the project root:
+The root `.htaccess` routes requests into `public/`, and `public/index.php` is the front controller. Make sure Apache rewrite support is enabled, then open:
+
+```text
+http://127.0.0.1/
+```
+
+### PHP Built-In Server
 
 ```bash
-php -S localhost:8000 -t public
+php -S 127.0.0.1:8000 -t public
 ```
 
 Then open:
 
 ```text
-http://localhost:8000
+http://127.0.0.1:8000/
 ```
 
 ---
 
-## Main routes
+## Routes
 
 | Route | Description |
 |---|---|
 | `/` | Home page |
 | `/movies` | Movie listing |
-| `/movies/movie-name` | Movie detail page |
+| `/movies/{slug}` | Movie detail |
 | `/tv` | TV listing |
-| `/tv/tv-show-name` | TV show detail page |
-| `/tv/tv-show-name/s01` | Season detail page |
-| `/tv/tv-show-name/s01/e01` | Episode detail page |
+| `/tv/{slug}` | TV show detail |
+| `/tv/{slug}/s01` | Season detail |
+| `/tv/{slug}/s01/e01` | Episode detail |
 | `/actors` | Actor listing |
-| `/actors/actor-name` | Actor detail page |
-| `/actor/actor-name` | Actor detail alias |
-| `/coming-this-year` | Upcoming movies and TV shows for the year |
+| `/actors/{slug}` | Actor profile |
+| `/actor/{slug}` | Actor profile alias |
+| `/coming-this-year` | Future-dated movies and TV for the current year |
 | `/s` | Search page |
-| `/s/search-query` | Search by path |
-| `/s?q=search-query` | Search by query string |
-| `/profile` | Local bookmarks and recently viewed items |
-
-`/coming-this-year` is the exception to the global released-only filter, so upcoming movies and TV shows can still be listed there.
+| `/s/{query}` | Search page with path query |
+| `/profile` | Browser-local bookmarks and recent history |
+| `/ajax/live-search` | Navbar live search endpoint |
 
 ---
 
-## Admin routes
+## URL Strategy
 
-Use your `ADMIN_TOKEN` query-string value:
-
-| Route | Description |
-|---|---|
-| `/admin?token=change-this-token` | Admin dashboard |
-| `/admin/import?token=change-this-token` | Import tools |
-| `/admin/manage/movies?token=change-this-token` | Manage movies |
-| `/admin/manage/tv?token=change-this-token` | Manage TV shows |
-| `/admin/manage/actors?token=change-this-token` | Manage actors |
-
-The admin area includes stats, imports, prefetched full-import actions, filters, sorting, previews, pagination, and delete actions.
-
-For a public production site, replace the query-string token with proper authentication.
-
----
-
-## MySQL storage
-
-StreamHIVE uses MySQL through PHP's `mysqli` extension. The application creates its runtime tables automatically on first boot:
+Movie slugs include the release year when TMDB provides a release date. This avoids collisions when multiple movies share the same title:
 
 ```text
-records
-tmdb_cache
+Scary Movie (2000) -> /movies/scary-movie-2000
+Scary Movie (2026) -> /movies/scary-movie-2026
 ```
 
-The `records` table stores imported media records plus indexed derived columns for filtering and search.
+TV and episode routes use the show slug plus season/episode numbers:
 
-MySQL schema, derived search/filter columns, and composite performance indexes are created automatically.
+```text
+/tv/from
+/tv/from/s01
+/tv/from/s01/e01
+```
 
-| Optimization | Purpose |
+The resolver maps these slugs back to the correct TMDB result.
+
+---
+
+## Data Behavior
+
+TMDB is the source of truth.
+
+The app fetches metadata live for:
+
+- Movies and TV shows
+- Seasons and episodes
+- Cast and crew
+- Actors and filmographies
+- Recommendations and similar titles
+- Movie collections
+- Posters, profile images, and backdrops
+- Ratings, runtimes, release dates, genres, certifications, and external IDs
+
+The app does **not**:
+
+- Create a MySQL schema
+- Persist movie or TV records
+- Store a local catalogue
+- Run an admin import workflow
+
+Profile bookmarks and recently viewed items are browser-local and use `localStorage`.
+
+---
+
+## Page Behavior
+
+| Page | Main content |
 |---|---|
-| Transactions | Faster batch upserts. |
-| Prepared statements | Reused database statements. |
-| Indexed slug checks | Collision-safe slugs with quick lookups. |
-| SQL pagination | Pages query only the rows needed for the current page. |
-| Verified imports | Missing content is fetched, saved, verified as readable, then redirected. |
-| Composite indexes | Speeds up listing filters, live search, import status checks, and random hero picks. |
+| Movie detail | Centered title hero, poster, metadata, genres, overview, inline player, Cast & Crew, Collection when available, More like this |
+| TV detail | Centered title hero, poster, metadata, genres, overview, Seasons, Cast & Crew, More like this |
+| Season detail | Season hero, Episodes, Cast & Crew, More like this |
+| Episode detail | Centered title hero, inline player, Next Episode, Cast & Crew, More like this |
+| Actor detail | Profile, biography, known-for/filmography links |
+
+More like this tabs render up to 12 released items with usable posters. TMDB may return fewer than 12 for some titles.
+
+Public detail pages hide unreleased or undated media where appropriate. `/coming-this-year` is the future-content exception.
 
 ---
 
-## Content visibility rules
+## Player Behavior
 
-Across public browsing and detail pages, StreamHIVE hides media that should not appear in the main catalogue yet.
+The app builds MultiEmbed-compatible URLs with TMDB IDs first.
 
-| Media type | Hidden when missing date | Hidden when future dated | Exception |
-|---|---:|---:|---|
-| Movies | Yes | Yes | `/coming-this-year` allows upcoming movies |
-| TV shows | Yes | Yes | `/coming-this-year` allows upcoming TV shows |
-| Seasons | Yes | Yes | None |
-| Episodes | Yes | Yes | None |
-| Actors | No | No | Actors are not filtered by release dates |
+The player can be changed in `.env` with `PLAYER_PROVIDER`, or overridden entirely with `PLAYER_MOVIE_URL` and `PLAYER_EPISODE_URL` templates. Built-in presets include `multiembed`, `vidsrc-to`, `vidsrc-cc`, and `embed-su`.
 
----
-
-## Movie collections
-
-Movie detail pages can show a full-width **Movies In This Collection** section when TMDB returns collection data for the movie.
-
-| Collection feature | Behaviour |
-|---|---|
-| Placement | Appears above the cast/recommended row. |
-| Background | Uses the TMDB collection backdrop. |
-| Cards | Uses the same movie card format as index/listing pages. |
-| Carousel | Uses Splide with normal scrolling and no elastic re-centering. |
-| Arrows | Previous and next buttons sit at the far left and far right of the section. |
-| Filtering | Future-dated and undated movies are excluded. |
-
----
-
-## Player embeds
-
-Movies use MultiEmbed with the TMDB ID first:
+Movie:
 
 ```text
 https://multiembed.mov/?video_id={tmdb_id}&tmdb=1
 ```
 
-Episodes use:
+Episode:
 
 ```text
 https://multiembed.mov/?video_id={tv_tmdb_id}&tmdb=1&s={season}&e={episode}
 ```
 
-If a TMDB ID is unavailable, the app can fall back to IMDb ID URLs.
+The app does not host video files. If you deploy or modify this project, you are responsible for ensuring that any embeds, sources, or links you enable comply with applicable law and third-party terms.
 
 ---
 
-## Auto-import and fetching modal
+## Project Structure
 
-When a visitor opens a movie, TV show, episode, season, or actor that is missing locally, the app shows a non-dismissible **Fetching content** modal.
+```text
+app/
+  Controllers/
+  Core/
+  Helpers/
+  Models/
+  Services/
+  Views/
 
-| Step | What happens |
+public/
+  assets/
+  index.php
+
+.env.example
+.htaccess
+README.md
+LICENSE
+```
+
+Important files:
+
+| File | Purpose |
 |---|---|
-| 1 | Visitor opens missing or partial content. |
-| 2 | StreamHIVE shows the fetching modal. |
-| 3 | The record is imported or upgraded from TMDB. |
-| 4 | The data is written to MySQL. |
-| 5 | StreamHIVE verifies the record is readable. |
-| 6 | The visitor is automatically navigated to the completed page. |
-
-Fully imported local records open immediately.
+| `public/index.php` | Route table and front controller |
+| `app/Controllers/MediaController.php` | Movie, TV, season, episode, search, listing, and recommendation logic |
+| `app/Controllers/ActorController.php` | Actor profiles and filmographies |
+| `app/Services/TmdbClient.php` | TMDB API client |
+| `app/Helpers/helpers.php` | URL, slug, image, runtime, rating, genre, and payload helpers |
+| `app/Views/partials/related-sidebar.php` | More like this card grid |
 
 ---
 
-## Search and filtering
+## UI Notes
 
-| Feature | Supported |
-|---|---:|
-| Search by title/name | Yes |
-| Movies, TV, actors, or combined search | Yes |
-| Genre filters | Yes |
-| Year filters | Yes |
-| Age-rating and separate rating filters | Yes |
-| Rating filters | Yes, separate from age rating, in `0.5` bands from `0+` to `10+`. Raw TMDB decimals such as `5.666` are placed into the correct half-point bucket. |
-| Sort order | Yes |
-| Top and bottom pagination | Yes |
-| AJAX listing/search updates | Yes |
-| Navbar live search capped to 6 local results | Yes |
+The UI is a dark, premium streaming layout with:
+
+- TMDB backdrop-driven hero sections
+- Centered hero titles on movie, TV, and episode pages
+- Inline player panels
+- Tabbed detail sections
+- Compact related-style cards
+- Cast & Crew cards styled to match More like this cards
+- Font Awesome metadata, genre, action, tab, and navigation icons
+- Responsive desktop, tablet, and mobile layouts
 
 ---
 
-## Profile page
+## Environment Variables
 
-`/profile` is stored in the visitor's browser with `localStorage`.
+| Variable | Required | Description |
+|---|---:|---|
+| `TMDB_BEARER_TOKEN` | Recommended | TMDB v4 Read Access Token |
+| `TMDB_API_KEY` | Optional fallback | TMDB v3 API key |
+| `APP_ENV` | Optional | `local` or `production` |
+| `APP_DEBUG` | Optional | `true` locally, `false` in production |
+| `PLAYER_PROVIDER` | Optional | Built-in player preset: `multiembed`, `vidsrc-to`, `vidsrc-cc`, or `embed-su` |
+| `PLAYER_MOVIE_URL` | Optional | Custom movie embed template. Leave blank to use the preset |
+| `PLAYER_EPISODE_URL` | Optional | Custom episode embed template. Leave blank to use the preset |
 
-| Profile area | Details |
+Player URL templates support these placeholders:
+
+| Placeholder | Meaning |
 |---|---|
-| Bookmarks | Saved movies, TV shows, and actors. |
-| Recently viewed | One history entry per item. Opening the same item again moves it to the front. |
-| Accounts | No account system required. |
+| `{video_id}` | TMDB ID when available, otherwise IMDb ID |
+| `{tmdb_id}` | TMDB ID only |
+| `{imdb_id}` | IMDb ID only |
+| `{tmdb_flag}` | `1` when `{video_id}` is TMDB, `0` when it is IMDb |
+| `{season}` | Episode season number |
+| `{episode}` | Episode number |
 
 ---
 
-## GitHub packaging notes
+## Deployment Notes
 
-This repository should include source files, `.env.example`, `.gitignore`, `.htaccess` files, and `.gitkeep` files for empty storage folders.
+Before deploying publicly:
+
+- Set `APP_ENV=production`.
+- Set `APP_DEBUG=false`.
+- Keep TMDB credentials private.
+- Confirm rewrite rules route requests through `public/index.php`.
+- Review any third-party player/embed behavior for legal and terms-of-service compliance.
+- Add real authentication if you reintroduce admin-only features.
+
+---
+
+## Troubleshooting
+
+### Page returns 404
+
+- The TMDB item could not be resolved from the slug.
+- The item is unreleased or missing a valid release/air date.
+- Apache rewrite rules are disabled.
+- Requests are not reaching `public/index.php`.
+
+### Images are missing
+
+- TMDB has no usable poster/backdrop/profile image for that item.
+- Remote TMDB image requests are blocked.
+- The item was filtered out because it has no usable poster.
+
+### Recommendations show fewer than 12 items
+
+- TMDB returned fewer usable released recommendations with posters.
+
+### TMDB requests fail
+
+- Check `.env`.
+- Check TMDB credentials.
+- Confirm PHP can make outbound HTTPS requests.
+- Confirm `curl` is enabled if your environment requires it.
+
+---
+
+## Git Hygiene
 
 Do not commit:
 
-| File / folder | Reason |
-|---|---|
-| `.env` | Contains private credentials. |
-| `storage/` runtime settings | Admin-managed site settings generated at runtime. |
+- `.env`
+- Local credentials
+- Runtime caches
+- Editor or OS noise
 
----
-
-## License
-
-This project is licensed under the MIT License.
-
-```text
-MIT License
-
-Copyright (c) 2026 GingerDev
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell  
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:  
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.  
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE  
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER  
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,  
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE  
-SOFTWARE.
-```
-
----
-
-## Production notes
-
-| Task | Recommendation |
-|---|---|
-| Environment | Set `APP_ENV=production`. |
-| Debugging | Set `APP_DEBUG=false`. |
-| Admin security | Change `ADMIN_TOKEN` to a strong secret or replace token auth with real authentication. |
-| Rewrites | Ensure Apache rewrite rules are enabled. |
-| Storage | Ensure `storage/` is writable for admin-managed settings and not publicly browseable. |
-| Secrets | Keep TMDB credentials private. |
+The included `.gitignore` excludes common environment files, runtime database leftovers, storage cache folders, logs, and editor files.
 
 ---
 
@@ -386,16 +337,13 @@ SOFTWARE.
 
 | Credit | Source |
 |---|---|
-| Metadata and images | TMDB API |
-| Player embed format | MultiEmbed |
-| UI libraries | Bootstrap 5.3.3, Font Awesome, Splide |
-| Storage | MySQL / MariaDB |
-| License | MIT |
-| Created by | [GingerDev](https://github.com/GingerDev0) |
+| Metadata and imagery | TMDB API |
+| Icons | Font Awesome |
+| Player URL format | MultiEmbed-compatible TMDB embed URLs |
+| Original project | GingerDev0 / StreamHIVE V2 |
 
 ---
 
-<p align="center">
-  <strong>StreamHIVE V2</strong><br>
-  <a href="https://streamhive.uk/">Demo</a> · <a href="https://github.com/GingerDev0/StreamHIVE-V2">Repository</a>
-</p>
+## License
+
+This project is licensed under the MIT License. See `LICENSE` for details.

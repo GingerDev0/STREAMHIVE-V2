@@ -11,7 +11,7 @@ $heroBackground = $heroMovies[0] ?? ($moviesTrending[0] ?? $moviesRecent[0] ?? n
         <ul class="splide__list">
           <?php foreach ($heroMovies as $movie):
             $movieTitle = (string)($movie['title'] ?? $movie['name'] ?? 'Untitled movie');
-            $movieSlug = (string)($movie['slug'] ?? slugify($movieTitle));
+            $movieSlug = media_slug($movie + ['title' => $movieTitle], 'movie');
             $movieUrl = url('movies/' . $movieSlug);
             $moviePoster = tmdb_img($movie['poster_path'] ?? ($movie['backdrop_path'] ?? null), 'w500');
             $movieBackdrop = tmdb_img($movie['backdrop_path'] ?? ($movie['poster_path'] ?? null), 'w1280');

@@ -16,7 +16,6 @@ spl_autoload_register(function (string $class): void {
 require_once __DIR__ . '/Helpers/helpers.php';
 
 function app_path(string $path = ''): string { return dirname(__DIR__) . ($path ? '/' . ltrim($path, '/') : ''); }
-function storage_path(string $path = ''): string { return app_path('storage' . ($path ? '/' . ltrim($path, '/') : '')); }
 function public_path(string $path = ''): string { return app_path('public' . ($path ? '/' . ltrim($path, '/') : '')); }
 
 

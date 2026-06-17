@@ -5,18 +5,13 @@ declare(strict_types=1);
 namespace App\Controllers;
 
 use App\Core\View;
-use App\Models\Repository;
-use App\Services\ImportService;
 use App\Services\TmdbClient;
-use App\Services\MysqliStore;
-use App\Services\SiteSettings;
 
 final class HomeController
 {
     public function index(): string
     {
         $tmdb = new TmdbClient();
-        $importer = new ImportService(new Repository(), $tmdb);
         $safe = static function (callable $cb): array {
             try { return $cb(); }
             catch (\Throwable) { return []; }
@@ -28,28 +23,8 @@ final class HomeController
         $tvRecent = array_values(array_filter($safe(fn() => $tmdb->recentTv()['results'] ?? []), 'is_released_media'));
         $tvTrending = array_values(array_filter($safe(fn() => $tmdb->trending('tv')['results'] ?? []), 'is_released_media'));
 
-        // Eagerly save everything displayed on the homepage, so cards point to permanent local slugs before users click.
-        $safe(fn() => ['count' => $importer->prefetchResults(array_slice($moviesRecent, 0, 12), 'movie', 12)]);
-        $safe(fn() => ['count' => $importer->prefetchResults(array_slice($moviesTrending, 0, 12), 'movie', 12)]);
-        $safe(fn() => ['count' => $importer->prefetchResults(array_slice($tvRecent, 0, 12), 'tv', 12)]);
-        $safe(fn() => ['count' => $importer->prefetchResults(array_slice($tvTrending, 0, 12), 'tv', 12)]);
-
-        $repo = new Repository();
-        $moviesRecent = $this->hydrateFromLocal($moviesRecent, 'movie', $repo);
-        $moviesTrending = $this->hydrateFromLocal($moviesTrending, 'movie', $repo);
-        $moviesTopRated = $this->hydrateFromLocal($moviesTopRated, 'movie', $repo);
-        $tvRecent = $this->hydrateFromLocal($tvRecent, 'tv', $repo);
-        $tvTrending = $this->hydrateFromLocal($tvTrending, 'tv', $repo);
-
-        $heroMovies = $safe(fn() => MysqliStore::heroCarouselMovies(10));
-        if (count($heroMovies) < 10) {
-            $heroCandidates = $this->discoverHeroCandidates($tmdb, $safe);
-            if ($heroCandidates) {
-                $safe(fn() => ['count' => $importer->prefetchResults($heroCandidates, 'movie', count($heroCandidates))]);
-                $heroCandidates = $this->hydrateFromLocal($heroCandidates, 'movie', $repo);
-                $heroMovies = $safe(fn() => MysqliStore::heroCarouselMovies(10));
-            }
-        }
+        $heroMovies = [];
+        $heroCandidates = $this->discoverHeroCandidates($tmdb, $safe);
 
         if (count($heroMovies) < 10) {
             $heroMovies = $this->mergeHeroMovies(
@@ -64,7 +39,7 @@ final class HomeController
             'ogTitle' => 'StreamHIVE | Trending Movies and TV Shows',
             'ogDescription' => 'Discover trending movies and TV shows in a bold cinematic interface.',
             'canonicalUrl' => absolute_url('/'),
-            'homeAlertSettings' => SiteSettings::all(),
+            'homeAlertSettings' => [],
         ]);
     }
 
@@ -164,16 +139,4 @@ final class HomeController
         return $releaseDate >= $cutoff && $releaseDate <= $today->format('Y-m-d');
     }
 
-    private function hydrateFromLocal(array $items, string $type, Repository $repo): array
-    {
-        $store = $type === 'movie' ? $repo->movies : $repo->tv;
-        return array_values(array_map(static function (array $item) use ($store): array {
-            $id = (int)($item['id'] ?? 0);
-            if ($id > 0) {
-                $local = $store->find($id);
-                if ($local) return $local;
-            }
-            return $item;
-        }, $items));
-    }
 }

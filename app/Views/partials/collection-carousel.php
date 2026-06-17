@@ -28,13 +28,13 @@ $collectionBackdrop = tmdb_img($collectionMovies[0]['collection_backdrop_path'] 
             <?php
               $type = 'movie';
               $movieTitle = (string)($movie['title'] ?? $movie['name'] ?? 'Untitled movie');
-              $movieSlug = (string)($movie['slug'] ?? slugify($movieTitle));
+              $movieSlug = media_slug($movie + ['title' => $movieTitle], 'movie');
               $movieUrl = url('movies/' . $movieSlug);
               $moviePoster = tmdb_img($movie['poster_path'] ?? null, 'w500');
               $movieYear = substr((string)($movie['release_date'] ?? ''), 0, 4);
               $movieRating = round((float)($movie['vote_average'] ?? 0), 1);
               $movieMediaPayload = media_storage_payload($movie, 'movie', $movieUrl, $movieTitle);
-              $fetchAttr = (($movie['import_status'] ?? '') === 'full' && !empty($movie['cast'])) ? '0' : '1';
+              $fetchAttr = '0';
             ?>
             <li class="splide__slide">
               <a class="home-poster-card js-media-link" href="<?= e($movieUrl) ?>" aria-label="Open <?= e($movieTitle) ?>" data-fetch-content="<?= e($fetchAttr) ?>" data-media='<?= $movieMediaPayload ?>'>

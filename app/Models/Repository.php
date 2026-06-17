@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Services\MysqliStore;
+use App\Services\LiveCatalog;
 
 final class Repository
 {
-    public MysqliStore $movies;
-    public MysqliStore $tv;
-    public MysqliStore $people;
+    public LiveCatalog $movies;
+    public LiveCatalog $tv;
+    public LiveCatalog $people;
 
     public function __construct()
     {
-        $this->movies = new MysqliStore('movies');
-        $this->tv = new MysqliStore('tv');
-        $this->people = new MysqliStore('people');
+        $this->movies = new LiveCatalog('movies');
+        $this->tv = new LiveCatalog('tv');
+        $this->people = new LiveCatalog('people');
     }
 
     public function bySlug(string $type, string $slug): ?array
@@ -24,7 +24,7 @@ final class Repository
         return $this->store($type)->findBy('slug', $slug);
     }
 
-    public function store(string $type): MysqliStore
+    public function store(string $type): LiveCatalog
     {
         return match ($type) {
             'movie', 'movies' => $this->movies,

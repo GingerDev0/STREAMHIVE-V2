@@ -1,7 +1,19 @@
 # Local environment / secrets
 .env
 .env.local
+.env.*.local
 *.local
+
+# Dependencies installed locally
+vendor/
+node_modules/
+
+# Build/test output
+coverage/
+dist/
+build/
+.phpunit.cache/
+.phpunit.result.cache
 
 # SQLite runtime databases
 *.sqlite
@@ -19,17 +31,7 @@ database.sqlite
 database.sqlite-*
 
 # Runtime/cache data
-storage/cache/*
-storage/indexes/*
-storage/movies/*
-storage/tv/*
-storage/people/*
-!storage/.gitkeep
-!storage/cache/.gitkeep
-!storage/indexes/.gitkeep
-!storage/movies/.gitkeep
-!storage/tv/.gitkeep
-!storage/people/.gitkeep
+storage/
 
 # OS/editor noise
 .DS_Store
@@ -37,3 +39,6 @@ Thumbs.db
 .idea/
 .vscode/
 *.log
+*.tmp
+*.bak
+*.swp

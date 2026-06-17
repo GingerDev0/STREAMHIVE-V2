@@ -39,11 +39,38 @@ function slugify(string $text): string {
     $text = strtolower($text);
     return $text ?: 'item';
 }
-function media_url(array $item): string {
-    if (($item['media_type'] ?? '') === 'tv') return url('tv/' . $item['slug']);
-    return url('movies/' . $item['slug']);
+function movie_slug(string $title, ?string $releaseDate = null): string {
+    $slug = slugify($title);
+    $year = format_year($releaseDate);
+    return $year !== '' ? $slug . '-' . $year : $slug;
 }
-function actor_url(array $person): string { return url('actors/' . $person['slug']); }
+function media_slug(array $item, ?string $type = null): string {
+    $type ??= (($item['media_type'] ?? '') === 'tv' ? 'tv' : (($item['media_type'] ?? '') === 'person' ? 'person' : 'movie'));
+    $title = (string)($item['title'] ?? $item['name'] ?? 'untitled');
+
+    if ($type === 'movie') {
+        $releaseDate = (string)($item['release_date'] ?? '');
+        $expected = movie_slug($title, $releaseDate);
+        $existing = trim((string)($item['slug'] ?? ''));
+
+        if ($existing !== '' && ($releaseDate === '' || $existing !== slugify($title))) {
+            return $existing;
+        }
+
+        return $expected;
+    }
+
+    return (string)($item['slug'] ?? slugify($title));
+}
+function media_url(array $item): string {
+    $slug = media_slug($item);
+    if (($item['media_type'] ?? '') === 'tv') return url('tv/' . $slug);
+    return url('movies/' . $slug);
+}
+function actor_url(array $person): string {
+    $slug = (string)($person['slug'] ?? slugify((string)($person['name'] ?? 'actor')));
+    return url('actors/' . $slug);
+}
 
 
 function share_button(string $title, string $url, string $label = 'Share'): string {
@@ -53,31 +80,69 @@ function share_button(string $title, string $url, string $label = 'Share'): stri
 }
 
 
+function player_template_value(string $template, array $values): string {
+    return strtr($template, array_combine(
+        array_map(static fn(string $key): string => '{' . $key . '}', array_keys($values)),
+        array_values($values)
+    ) ?: []);
+}
+
+function player_templates(string $provider): array {
+    return match (strtolower(trim($provider))) {
+        'vidsrc-to', 'vidsrcto' => [
+            'movie' => 'https://vidsrc.to/embed/movie/{tmdb_id}',
+            'episode' => 'https://vidsrc.to/embed/tv/{tmdb_id}/{season}/{episode}',
+        ],
+        'vidsrc-cc', 'vidsrccc' => [
+            'movie' => 'https://vidsrc.cc/v2/embed/movie/{tmdb_id}',
+            'episode' => 'https://vidsrc.cc/v2/embed/tv/{tmdb_id}/{season}/{episode}',
+        ],
+        'embed-su', 'embedsu' => [
+            'movie' => 'https://embed.su/embed/movie/{tmdb_id}',
+            'episode' => 'https://embed.su/embed/tv/{tmdb_id}/{season}/{episode}',
+        ],
+        default => [
+            'movie' => 'https://multiembed.mov/?video_id={video_id}&tmdb={tmdb_flag}',
+            'episode' => 'https://multiembed.mov/?video_id={video_id}&tmdb={tmdb_flag}&s={season}&e={episode}',
+        ],
+    };
+}
+
 function multiembed_player_url(array $item, string $type = 'movie', ?int $season = null, ?int $episode = null): string {
     $tmdbId = (int)($item['tmdb_id'] ?? $item['id'] ?? 0);
     $imdbId = trim((string)($item['imdb_id'] ?? ''));
 
-    // Prefer TMDB IDs because the local database always stores them, while IMDb IDs can be missing,
-    // especially for TV shows/episodes. Fall back to IMDb only when TMDB is unavailable.
+    $provider = (string)\App\Core\Config::get('PLAYER_PROVIDER', 'multiembed');
+    $templates = player_templates($provider);
+    $movieTemplate = trim((string)\App\Core\Config::get('PLAYER_MOVIE_URL', '')) ?: $templates['movie'];
+    $episodeTemplate = trim((string)\App\Core\Config::get('PLAYER_EPISODE_URL', '')) ?: $templates['episode'];
+
     if ($tmdbId > 0) {
-        $params = [
-            'video_id' => (string)$tmdbId,
-            'tmdb' => '1',
-        ];
+        $videoId = (string)$tmdbId;
+        $tmdbFlag = '1';
     } elseif ($imdbId !== '') {
-        $params = ['video_id' => $imdbId];
+        $videoId = $imdbId;
+        $tmdbFlag = '0';
     } else {
         return '';
     }
 
+    $season = max(1, (int)$season);
+    $episode = max(1, (int)$episode);
+    $values = [
+        'video_id' => rawurlencode($videoId),
+        'tmdb_id' => $tmdbId > 0 ? (string)$tmdbId : '',
+        'imdb_id' => rawurlencode($imdbId),
+        'tmdb_flag' => $tmdbFlag,
+        'season' => (string)$season,
+        'episode' => (string)$episode,
+    ];
+
     if ($type === 'episode') {
-        $season = max(1, (int)$season);
-        $episode = max(1, (int)$episode);
-        $params['s'] = (string)$season;
-        $params['e'] = (string)$episode;
+        return player_template_value($episodeTemplate, $values);
     }
 
-    return 'https://multiembed.mov/?' . http_build_query($params, '', '&', PHP_QUERY_RFC3986);
+    return player_template_value($movieTemplate, $values);
 }
 
 
@@ -249,7 +314,7 @@ function media_storage_payload(array $item, string $type, ?string $href = null, 
     $title = $titleOverride ?: (string)($item['title'] ?? $item['name'] ?? 'Untitled');
     $date = (string)($item['release_date'] ?? $item['first_air_date'] ?? '');
     $year = format_year($date);
-    $slug = (string)($item['slug'] ?? slugify($title));
+    $slug = media_slug($item + ['title' => $title], $type);
     $href = $href ?: ($type === 'person' ? url('actors/' . $slug) : ($type === 'tv' ? url('tv/' . $slug) : url('movies/' . $slug)));
     $posterSource = $type === 'person' ? ($item['profile_path'] ?? null) : ($item['poster_path'] ?? null);
     $poster = $posterOverride ?: tmdb_img($posterSource);

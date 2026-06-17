@@ -11,19 +11,43 @@ $episodeCode = 'S' . str_pad((string)$season,2,'0',STR_PAD_LEFT) . 'E' . str_pad
 $episodeMediaTitle = ($show['title'] ?? 'Show') . ' - ' . $episodeTitle . ' (' . $episodeCode . ')';
 $episodeMediaMeta = 'Episode · ' . $seasonLabel . ' · ' . $episodeLabel;
 $episodePlayerUrl = multiembed_player_url($show, 'episode', (int)$season, $episodeNumber);
+$visibleCast = array_values(array_filter($show['cast'] ?? [], static fn($actor) => has_media_poster(['poster_path' => $actor['profile_path'] ?? ''])));
+$crewSource = $show['crew'] ?? ($show['credits']['crew'] ?? []);
+$crewWantedJobs = ['Creator', 'Director', 'Writer', 'Screenplay', 'Story'];
+$crewByPerson = [];
+foreach ($crewSource as $person) {
+    $jobs = array_values(array_filter(array_map('strval', $person['jobs'] ?? [($person['job'] ?? '')]), static fn(string $job): bool => in_array($job, $crewWantedJobs, true)));
+    if (!$jobs || !has_media_poster(['poster_path' => $person['profile_path'] ?? ''])) continue;
+    $id = (int)($person['id'] ?? $person['tmdb_id'] ?? 0);
+    $key = $id > 0 ? (string)$id : strtolower((string)($person['name'] ?? ''));
+    if ($key === '') continue;
+    $person['jobs'] = $jobs;
+    $person['media_type'] = 'person';
+    $person['tmdb_id'] = $id ?: ($person['tmdb_id'] ?? null);
+    $person['slug'] = $person['slug'] ?? slugify((string)($person['name'] ?? 'crew'));
+    if (!isset($crewByPerson[$key])) {
+        $crewByPerson[$key] = $person;
+    } else {
+        $crewByPerson[$key]['jobs'] = array_values(array_unique(array_merge($crewByPerson[$key]['jobs'] ?? [], $jobs)));
+    }
+}
+$visibleCrew = array_values($crewByPerson);
+$castCrewCount = count($visibleCast) + count($visibleCrew);
+$hasNextEpisode = !empty($nextEpisode) && !empty($nextEpisode['episode']);
+$relatedCount = count(array_values(array_filter($related ?? [], static fn(array $show): bool => has_media_poster($show))));
+$defaultTab = 'cast';
 ?>
 <div class="js-page-media episode-page-media d-none" data-media="<?= media_storage_payload($show, 'episode', $episodeMediaUrl, $episodeMediaTitle, $episodeMediaMeta, tmdb_img($episode['still_path'] ?? ($show['poster_path'] ?? null), 'w500')) ?>"></div>
 
 <section class="v2-detail-hero episode-detail-hero has-inline-player">
   <div class="v2-detail-backdrop" style="background-image:url('<?= e(tmdb_img($backdrop, 'w1280')) ?>')"></div>
   <div class="v2-detail-grid">
+    <h1 class="v2-detail-title"><?= e($episodeTitle) ?></h1>
     <div class="v2-detail-poster-wrap">
       <img class="v2-detail-poster" src="<?= e(tmdb_img($poster)) ?>" alt="<?= e($show['title'] ?? 'Show') ?> poster">
     </div>
     <div class="v2-detail-copy">
       <a class="v2-back-link" href="<?= e(url('tv/'.$show['slug'])) ?>"><i class="fa-solid fa-arrow-left-long"></i> <?= e($show['title']) ?></a>
-      <span class="v2-kicker"><i class="fa-solid fa-tv"></i> <?= e($seasonLabel) ?> · <?= e($episodeLabel) ?></span>
-      <h1><?= e($episodeTitle) ?></h1>
       <div class="v2-chip-row mb-3">
         <span><i class="fa-solid fa-calendar"></i> <?= e(format_date($episode['air_date'] ?? '')) ?></span>
         <?php if (media_runtime($episode, 'episode') !== ''): ?><span><i class="fa-regular fa-clock"></i> <?= e(media_runtime($episode, 'episode')) ?></span><?php endif; ?>
@@ -50,7 +74,7 @@ $episodePlayerUrl = multiembed_player_url($show, 'episode', (int)$season, $episo
       </div>
     </aside>
 
-    <?php if (!empty($nextEpisode) && !empty($nextEpisode['episode'])): ?>
+    <?php if ($hasNextEpisode): ?>
     <?php
       $nextSeasonNumber = (int)($nextEpisode['season_number'] ?? 0);
       $nextEp = $nextEpisode['episode'];
@@ -83,17 +107,60 @@ $episodePlayerUrl = multiembed_player_url($show, 'episode', (int)$season, $episo
 
 
 
-<div class="row g-4 mt-4 align-items-start">
-  <section class="col-lg-8">
-
-    <div class="v2-section-head compact"><div><span class="v2-section-eyebrow"><i class="fa-solid fa-users"></i> Talent</span><h2>Cast</h2></div></div>
-    <div class="row g-3">
-    <?php foreach (($show['cast'] ?? []) as $actor): ?>
-      <div class="col-6 col-md-4 col-xl-3"><a class="card media-card v2-person-card text-decoration-none h-100 js-media-link" href="<?= e(actor_url($actor)) ?>" data-fetch-content="1" data-media="<?= media_storage_payload($actor, 'person', actor_url($actor)) ?>"><img class="card-img-top" src="<?= e(tmdb_img($actor['profile_path'] ?? null)) ?>" alt="<?= e($actor['name']) ?>"><div class="card-body"><div class="text-white fw-semibold"><?= e($actor['name']) ?></div><small class="text-white-50"><?= e($actor['character'] ?? '') ?></small></div></a></div>
-    <?php endforeach; ?>
+<section class="movie-detail-tabs-shell actor-credits-shell glass rounded-4 p-3 p-lg-4 mt-4">
+  <div class="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3 mb-4">
+    <div>
+      <span class="v2-section-eyebrow"><i class="fa-solid fa-layer-group"></i> Episode details</span>
+      <h2 class="mb-0 text-white fw-black">Details</h2>
     </div>
-  </section>
-  <div class="col-lg-4 v2-sticky-side">
-    <?php $type = 'tv'; require app_path('app/Views/partials/related-sidebar.php'); ?>
+    <div class="actor-tabs movie-detail-tabs" role="tablist" aria-label="Episode detail tabs">
+      <button class="actor-tab movie-detail-tab <?= $defaultTab === 'cast' ? 'active' : '' ?>" type="button" data-movie-detail-tab="cast" aria-selected="<?= $defaultTab === 'cast' ? 'true' : 'false' ?>"><i class="fa-solid fa-users"></i> Cast & Crew <span><?= e((string)$castCrewCount) ?></span></button>
+      <button class="actor-tab movie-detail-tab" type="button" data-movie-detail-tab="recommended" aria-selected="false"><i class="fa-solid fa-layer-group"></i> More like this <span><?= e((string)$relatedCount) ?></span></button>
+    </div>
   </div>
-</div>
+
+  <div class="movie-detail-panel movie-tab-surface movie-cast-panel <?= $defaultTab === 'cast' ? 'active' : '' ?>" data-movie-detail-panel="cast">
+    <div class="movie-tab-surface-bg" style="background-image:url('<?= e(tmdb_img($show['backdrop_path'] ?? ($show['poster_path'] ?? null), 'w1280')) ?>')"></div>
+    <div class="movie-tab-surface-overlay"></div>
+    <div class="movie-tab-surface-inner">
+      <div class="v2-section-head compact movie-tab-surface-head"><div><span class="v2-section-eyebrow"><i class="fa-solid fa-users"></i> Talent</span><h2>Cast & Crew</h2></div></div>
+      <?php if ($castCrewCount > 0): ?>
+      <div class="movie-cast-grid v2-related-list">
+        <?php foreach ($visibleCast as $index => $actor): ?>
+          <?php $actorName=(string)($actor['name'] ?? 'Unknown actor'); $actorCharacter=trim((string)($actor['character'] ?? '')); $actorUrl=actor_url($actor); ?>
+          <a class="v2-related-item v2-related-compact movie-cast-card text-decoration-none js-media-link" href="<?= e($actorUrl) ?>" data-fetch-content="1" data-media="<?= media_storage_payload($actor, 'person', $actorUrl) ?>">
+            <span class="v2-related-feature-bg" style="background-image:url('<?= e(tmdb_img($actor['profile_path'] ?? null, 'w500')) ?>')"></span>
+            <span class="v2-related-rank"><?= e(str_pad((string)($index + 1), 2, '0', STR_PAD_LEFT)) ?></span>
+            <span class="v2-related-poster-wrap movie-cast-avatar-wrap"><img class="v2-related-poster movie-cast-avatar" src="<?= e(tmdb_img($actor['profile_path'] ?? null, 'w185')) ?>" alt="<?= e($actorName) ?> profile"><span class="v2-related-play"><i class="fa-solid fa-user"></i></span></span>
+            <span class="v2-related-copy"><span class="v2-related-title"><?= e($actorName) ?></span><?php if ($actorCharacter !== ''): ?><span class="v2-related-meta"><span>as <?= e($actorCharacter) ?></span></span><?php endif; ?></span>
+            <span class="v2-related-arrow"><i class="fa-solid fa-chevron-right"></i></span>
+          </a>
+        <?php endforeach; ?>
+        <?php foreach ($visibleCrew as $crewIndex => $person): ?>
+          <?php $crewName=(string)($person['name'] ?? 'Unknown crew'); $crewJobs=implode(' / ', array_values(array_unique(array_map('strval', $person['jobs'] ?? [])))); $crewUrl=actor_url($person); $rank=count($visibleCast)+$crewIndex+1; ?>
+          <a class="v2-related-item v2-related-compact movie-cast-card movie-crew-card text-decoration-none js-media-link" href="<?= e($crewUrl) ?>" data-fetch-content="1" data-media="<?= media_storage_payload($person, 'person', $crewUrl) ?>">
+            <span class="v2-related-feature-bg" style="background-image:url('<?= e(tmdb_img($person['profile_path'] ?? null, 'w500')) ?>')"></span>
+            <span class="v2-related-rank"><?= e(str_pad((string)$rank, 2, '0', STR_PAD_LEFT)) ?></span>
+            <span class="v2-related-poster-wrap movie-cast-avatar-wrap"><img class="v2-related-poster movie-cast-avatar" src="<?= e(tmdb_img($person['profile_path'] ?? null, 'w185')) ?>" alt="<?= e($crewName) ?> profile"><span class="v2-related-play"><i class="fa-solid fa-pen-nib"></i></span></span>
+            <span class="v2-related-copy"><span class="v2-related-title"><?= e($crewName) ?></span><?php if ($crewJobs !== ''): ?><span class="v2-related-meta"><span><?= e($crewJobs) ?></span></span><?php endif; ?></span>
+            <span class="v2-related-arrow"><i class="fa-solid fa-chevron-right"></i></span>
+          </a>
+        <?php endforeach; ?>
+      </div>
+      <?php else: ?>
+      <div class="actor-empty-state text-center py-5"><i class="fa-solid fa-users mb-3"></i><h3>No cast or crew images yet</h3><p class="text-white-50 mb-0">TMDB does not have usable profile images for this cast or crew yet.</p></div>
+      <?php endif; ?>
+    </div>
+  </div>
+
+  <div class="movie-detail-panel movie-tab-surface movie-recommended-panel" data-movie-detail-panel="recommended">
+    <div class="movie-tab-surface-bg" style="background-image:url('<?= e(tmdb_img($show['backdrop_path'] ?? ($show['poster_path'] ?? null), 'w1280')) ?>')"></div>
+    <div class="movie-tab-surface-overlay"></div>
+    <div class="movie-tab-surface-inner">
+      <div class="v2-section-head compact movie-tab-surface-head"><div><span class="v2-section-eyebrow"><i class="fa-solid fa-layer-group"></i> Recommended</span><h2>More Like This</h2></div></div>
+      <div class="detail-recommended-section">
+        <?php $type = 'tv'; require app_path('app/Views/partials/related-sidebar.php'); ?>
+      </div>
+    </div>
+  </div>
+</section>

@@ -19,11 +19,13 @@ $genreNavItems = [
     'Science Fiction', 'Thriller', 'War', 'Western',
 ];
 $isGenreNavActive = $currentPath === '/s';
+$browseNavItems = [
+    ['href' => '/movies', 'label' => 'Movies', 'icon' => 'fa-film', 'description' => 'Browse the movie library', 'match' => 'prefix'],
+    ['href' => '/tv', 'label' => 'TV Shows', 'icon' => 'fa-tv', 'description' => 'Browse series and episodes', 'match' => 'prefix'],
+    ['href' => '/actors', 'label' => 'Actors', 'icon' => 'fa-user-group', 'description' => 'Find cast and filmographies', 'match' => 'prefixes', 'prefixes' => ['/actors', '/actor']],
+];
 $navItems = [
     ['href' => '/', 'label' => 'Home', 'icon' => 'fa-house', 'match' => 'exact'],
-    ['href' => '/movies', 'label' => 'Movies', 'icon' => 'fa-film', 'match' => 'prefix'],
-    ['href' => '/tv', 'label' => 'TV Shows', 'icon' => 'fa-tv', 'match' => 'prefix'],
-    ['href' => '/actors', 'label' => 'Actors', 'icon' => 'fa-user-group', 'match' => 'prefixes', 'prefixes' => ['/actors', '/actor']],
     ['href' => '/coming-this-year', 'label' => 'Coming', 'icon' => 'fa-calendar-days', 'match' => 'exact'],
     ['href' => '/profile', 'label' => 'My Profile', 'icon' => 'fa-user-astronaut', 'match' => 'prefix'],
 ];
@@ -35,6 +37,7 @@ $isNavActive = static function (array $item) use ($currentPath): bool {
         default => $currentPath === $href,
     };
 };
+$isBrowseNavActive = array_reduce($browseNavItems, static fn(bool $active, array $item): bool => $active || $isNavActive($item), false);
 ?>
 <!doctype html>
 <html lang="en">
@@ -78,7 +81,20 @@ $isNavActive = static function (array $item) use ($currentPath): bool {
       <ul class="navbar-nav mx-lg-auto mb-2 mb-lg-0 v2-nav-pills">
         <?php foreach ($navItems as $index => $navItem): $active = $isNavActive($navItem); ?>
         <li class="nav-item"><a class="nav-link<?= $active ? ' active' : '' ?>" href="<?= e((string)$navItem['href']) ?>"<?= $active ? ' aria-current="page"' : '' ?>><i class="fa-solid <?= e((string)$navItem['icon']) ?>"></i> <?= e((string)$navItem['label']) ?></a></li>
-        <?php if ($index === 2): ?>
+        <?php if ($index === 0): ?>
+        <li class="nav-item dropdown v2-genre-dropdown v2-browse-dropdown">
+          <a class="nav-link dropdown-toggle<?= $isBrowseNavActive ? ' active' : '' ?>" href="/movies" id="browseNavDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"<?= $isBrowseNavActive ? ' aria-current="page"' : '' ?>>
+            <i class="fa-solid fa-compass"></i> Browse
+          </a>
+          <div class="dropdown-menu v2-genre-menu v2-browse-menu dropdown-menu-dark" aria-labelledby="browseNavDropdown">
+            <?php foreach ($browseNavItems as $browseNavItem): ?>
+            <a class="dropdown-item<?= $isNavActive($browseNavItem) ? ' active' : '' ?>" href="<?= e((string)$browseNavItem['href']) ?>">
+              <i class="fa-solid <?= e((string)$browseNavItem['icon']) ?>"></i>
+              <span><strong><?= e((string)$browseNavItem['label']) ?></strong><small><?= e((string)$browseNavItem['description']) ?></small></span>
+            </a>
+            <?php endforeach; ?>
+          </div>
+        </li>
         <li class="nav-item dropdown v2-genre-dropdown">
           <a class="nav-link dropdown-toggle<?= $isGenreNavActive ? ' active' : '' ?>" href="/s" id="genreNavDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"<?= $isGenreNavActive ? ' aria-current="page"' : '' ?>>
             <i class="fa-solid fa-tags"></i> Genres

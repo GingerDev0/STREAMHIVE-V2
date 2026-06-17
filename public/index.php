@@ -6,7 +6,6 @@ use App\Core\Router;
 use App\Controllers\HomeController;
 use App\Controllers\MediaController;
 use App\Controllers\ActorController;
-use App\Controllers\AdminController;
 use App\Controllers\ProfileController;
 
 require dirname(__DIR__) . '/app/bootstrap.php';
@@ -30,19 +29,9 @@ $router->get('/tv/{slug}/s{season}/e{episode}', [MediaController::class, 'episod
 $router->get('/tv/{slug}/s{season}', [MediaController::class, 'season']);
 $router->get('/actors/{slug}', [ActorController::class, 'show']);
 $router->get('/actor/{slug}', [ActorController::class, 'show']);
-$router->match(['GET','POST'], '/admin', [AdminController::class, 'dashboard']);
-$router->match(['GET','POST'], '/admin/import', [AdminController::class, 'import']);
-$router->post('/admin/import-prefetched', [AdminController::class, 'importPrefetched']);
-$router->get('/admin/manage/{type}', [AdminController::class, 'manage']);
-$router->post('/admin/delete/{type}/{id}', [AdminController::class, 'delete']);
-
 try {
     $router->dispatch($_SERVER['REQUEST_METHOD'], parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?: '/');
 } catch (Throwable $e) {
     http_response_code(500);
-    if ($e instanceof \mysqli_sql_exception || str_contains($e->getMessage(), 'MySQL') || str_contains($e->getMessage(), 'MySQLi')) {
-        echo '<!doctype html><meta charset="utf-8"><title>MySQL connection error</title><body style="font-family:system-ui;background:#09090b;color:#fff;padding:40px"><h1>MySQL connection error</h1><p>Check the <code>DB_*</code> values in <code>.env</code> and make sure the PHP <code>mysqli</code> extension is enabled.</p><pre style="white-space:pre-wrap;color:#fbbf24">' . htmlspecialchars($e->getMessage(), ENT_QUOTES, 'UTF-8') . '</pre></body>';
-        return;
-    }
     throw $e;
 }

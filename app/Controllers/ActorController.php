@@ -7,6 +7,7 @@ namespace App\Controllers;
 use App\Core\View;
 use App\Models\Repository;
 use App\Services\ImportService;
+use App\Services\TmdbClient;
 
 final class ActorController
 {
@@ -51,7 +52,7 @@ final class ActorController
 
         return View::render('pages/actors', [
             'title' => 'Actors',
-            'metaDescription' => 'Browse saved actor pages and filmographies.',
+            'metaDescription' => 'Browse actor pages and filmographies from TMDB.',
             'ogTitle' => 'Actors | StreamHIVE',
             'ogDescription' => 'Browse actors and open filmography pages.',
             'canonicalUrl' => absolute_url('actors'),
@@ -70,8 +71,9 @@ final class ActorController
         $repo = new Repository();
         $importer = new ImportService($repo);
         $slug = (string)($params['slug'] ?? '');
-        $actor = $repo->bySlug('people', $slug);
         $tmdbId = isset($_GET['tmdb_id']) && ctype_digit((string)$_GET['tmdb_id']) ? (int)$_GET['tmdb_id'] : null;
+        if (!$tmdbId) $tmdbId = $this->resolvePersonIdFromSlug($slug);
+        $actor = $tmdbId ? $this->liveActor($tmdbId, $slug) : $repo->bySlug('people', $slug);
 
         $isFull = $actor
             && (($actor['import_status'] ?? '') === 'full')
@@ -81,11 +83,11 @@ final class ActorController
             return View::render('pages/fetching-content', [
                 'title' => 'Fetching actor | StreamHIVE',
                 'robots' => 'noindex, follow',
-                'metaDescription' => 'This actor page is being fetched and saved locally.',
+                'metaDescription' => 'This actor page is being fetched from TMDB.',
                 'fetchType' => 'person',
                 'fetchSlug' => $slug,
-                'fetchFallbackUrl' => url('actors/' . $slug . ($tmdbId ? ('?tmdb_id=' . $tmdbId) : '')),
-                'message' => 'This actor page is being fetched and saved locally. Please wait...',
+                'fetchFallbackUrl' => url('actors/' . $slug),
+                'message' => 'This actor page is being fetched from TMDB. Please wait...',
             ]);
         }
 
@@ -99,5 +101,59 @@ final class ActorController
             'canonicalUrl' => absolute_url('actors/' . ($actor['slug'] ?? '')),
             'actor' => $actor,
         ]);
+    }
+
+    private function liveActor(int $tmdbId, string $slug): ?array
+    {
+        try {
+            $actor = (new TmdbClient())->person($tmdbId);
+        } catch (\Throwable) {
+            return null;
+        }
+
+        $name = (string)($actor['name'] ?? $slug);
+        $actor['tmdb_id'] = (int)($actor['id'] ?? $tmdbId);
+        $actor['slug'] = slugify($name);
+        $actor['media_type'] = 'person';
+        $actor['import_status'] = 'full';
+
+        $credits = [];
+        foreach (($actor['combined_credits']['cast'] ?? []) as $credit) {
+            $type = (string)($credit['media_type'] ?? 'movie');
+            if (!in_array($type, ['movie', 'tv'], true)) continue;
+            $title = (string)($credit['title'] ?? $credit['name'] ?? '');
+            if ($title === '') continue;
+            $credit['title'] = $title;
+            $credit['tmdb_id'] = (int)($credit['id'] ?? 0);
+            $credit['slug'] = $type === 'movie'
+                ? movie_slug($title, (string)($credit['release_date'] ?? ''))
+                : slugify($title);
+            $credits[] = $credit;
+        }
+        $actor['credits'] = $credits;
+        $actor['known_for'] = array_slice($credits, 0, 8);
+
+        return $actor;
+    }
+
+    private function resolvePersonIdFromSlug(string $slug): int
+    {
+        $query = trim(str_replace('-', ' ', $slug));
+        if ($query === '') return 0;
+
+        try {
+            $results = (new TmdbClient())->searchPerson($query, 1)['results'] ?? [];
+        } catch (\Throwable) {
+            return 0;
+        }
+
+        foreach ($results as $result) {
+            $name = (string)($result['name'] ?? '');
+            if (slugify($name) === $slug) {
+                return (int)($result['id'] ?? 0);
+            }
+        }
+
+        return (int)($results[0]['id'] ?? 0);
     }
 }

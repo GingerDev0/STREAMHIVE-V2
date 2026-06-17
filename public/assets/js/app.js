@@ -161,7 +161,7 @@ document.documentElement.classList.add('js-ready');
     const markedNeedsFetch = options.markedNeedsFetch === true;
     const link = options.link || null;
 
-    showFetchModal(`This ${contentLabel(params.type)} is being fetched and saved locally. Please wait...`);
+    showFetchModal(`This ${contentLabel(params.type)} is being fetched from TMDB. Please wait...`);
 
     try {
       const statusResponse = await fetch(buildFetchUrl('/ajax/content-status', params), { headers: { Accept: 'application/json' } });
@@ -186,7 +186,7 @@ document.documentElement.classList.add('js-ready');
       }
       const failure = ensured.message || 'Opening the page now...';
       if (/SQLite is still finishing|still finishing the write|was saved/i.test(failure)) {
-        showFetchModal('Finalising the local database write...');
+        showFetchModal('Finalising the TMDB response...');
         setTimeout(() => runContentFetch(params, fallbackUrl, { markedNeedsFetch: true, link }), 700);
       } else if (/not available yet|not released yet/i.test(failure)) {
         setFetchError(failure);
@@ -393,7 +393,7 @@ document.documentElement.classList.add('js-ready');
 
 /* Actor profile tabs + jQuery pagination */
 (function ($) {
-  if (!$ || !$('.actor-credits-shell').length) return;
+  if (!$ || !$('.actor-tab[data-actor-tab]').length) return;
 
   const renderActorPage = function (type, page) {
     const $grid = $('[data-actor-grid="' + type + '"]');
@@ -452,6 +452,25 @@ document.documentElement.classList.add('js-ready');
   activateActorTab($('.actor-tab.active').data('actor-tab') || 'movie');
 })(window.jQuery);
 
+/* Movie detail tabs */
+(function ($) {
+  if (!$ || !$('.movie-detail-tabs-shell').length) return;
+
+  const activateMovieDetailTab = function (type) {
+    $('.movie-detail-tab').removeClass('active').attr('aria-selected', 'false');
+    $('.movie-detail-tab[data-movie-detail-tab="' + type + '"]').addClass('active').attr('aria-selected', 'true');
+    $('.movie-detail-panel').removeClass('active').hide();
+    $('[data-movie-detail-panel="' + type + '"]').addClass('active').fadeIn(140);
+  };
+
+  $(document).on('click', '.movie-detail-tab[data-movie-detail-tab]', function () {
+    activateMovieDetailTab($(this).data('movie-detail-tab'));
+  });
+
+  $('.movie-detail-panel').hide();
+  activateMovieDetailTab($('.movie-detail-tab.active').data('movie-detail-tab') || 'cast');
+})(window.jQuery);
+
 /* Coming this year tabs + jQuery pagination */
 (function ($) {
   if (!$ || !$('.coming-tabs-shell').length) return;
@@ -497,8 +516,60 @@ document.documentElement.classList.add('js-ready');
     renderComingPage(type, 1);
   };
 
+  const setText = function (selector, value, fallback) {
+    const text = String(value || fallback || '').trim();
+    const $target = $(selector);
+    $target.text(text).toggle(text !== '');
+  };
+
+  const openComingModal = function (card) {
+    const $card = $(card);
+    const modalEl = document.getElementById('comingInfoModal');
+    if (!modalEl) return;
+
+    const title = String($card.data('title') || 'Untitled');
+    const poster = String($card.data('poster') || '/assets/img/placeholder.jpg');
+    const backdrop = String($card.data('backdrop') || poster);
+    const overview = String($card.data('overview') || 'No synopsis has been added yet.');
+    const genres = String($card.data('genres') || '').split(',').map(function (genre) { return genre.trim(); }).filter(Boolean);
+    const rating = String($card.data('rating') || '').trim();
+
+    $('[data-coming-info-title]').text(title);
+    $('[data-coming-info-poster]').attr('src', poster).attr('alt', title + ' poster');
+    $('[data-coming-info-backdrop]').css('background-image', 'url("' + backdrop.replace(/"/g, '%22') + '")');
+    $('[data-coming-info-overview]').text(overview);
+    setText('[data-coming-info-type]', $card.data('type'), 'Movie');
+    setText('[data-coming-info-date]', $card.data('date'), '');
+    setText('[data-coming-info-rating]', rating ? 'TMDB ' + rating : '', '');
+    $('[data-coming-info-genres]').html(genres.map(function (genre) {
+      return '<span>' + $('<div>').text(genre).html() + '</span>';
+    }).join('')).toggle(genres.length > 0);
+
+    if (window.bootstrap && window.bootstrap.Modal) {
+      bootstrap.Modal.getOrCreateInstance(modalEl).show();
+    }
+  };
+
   $(document).on('click', '.coming-tab[data-coming-tab]', function () {
     activateComingTab($(this).data('coming-tab'));
+  });
+
+  $(document).on('click', '[data-coming-modal]', function (event) {
+    if ($(event.target).closest('a, button').length) return;
+    openComingModal(this);
+  });
+
+  $(document).on('keydown', '[data-coming-modal]', function (event) {
+    if (event.key !== 'Enter' && event.key !== ' ') return;
+    if ($(event.target).closest('a, button').length) return;
+    event.preventDefault();
+    openComingModal(this);
+  });
+
+  $('#comingInfoModal').on('shown.bs.modal', function () {
+    $('.modal-backdrop').last().addClass('coming-info-backdrop-layer');
+  }).on('hidden.bs.modal', function () {
+    $('.modal-backdrop.coming-info-backdrop-layer').removeClass('coming-info-backdrop-layer');
   });
 
   $(document).on('click', '.coming-page-btn[data-coming-page][data-page]', function () {

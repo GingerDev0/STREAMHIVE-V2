@@ -3,7 +3,7 @@
   <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
     <div>
       <h1 class="h2 mb-1">Actors</h1>
-      <p class="text-white-50 mb-0"><?= e((string)$total) ?> saved actor pages</p>
+      <p class="text-white-50 mb-0"><?= e((string)$total) ?> actor pages</p>
     </div>
     <a class="btn btn-outline-light" href="<?= e(url('s?type=person')) ?>"><i class="fa-solid fa-magnifying-glass me-1"></i> Search actors</a>
   </div>

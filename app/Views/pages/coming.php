@@ -43,14 +43,27 @@
             $date = media_release_date($item);
             $prettyDate = format_date($date);
             $poster = tmdb_img($item['poster_path'] ?? null, 'w500');
+            $backdrop = tmdb_img($item['backdrop_path'] ?? ($item['poster_path'] ?? null), !empty($item['backdrop_path']) ? 'w1280' : 'w780');
             $rating = round((float)($item['vote_average'] ?? 0), 1);
             $genres = array_values(array_filter(array_map('strval', $item['genres'] ?? [])));
+            $overview = trim((string)($item['overview'] ?? ''));
+            $typeLabel = $tabType === 'tv' ? 'TV Show' : 'Movie';
           ?>
-            <article class="coming-card" data-coming-item>
+            <article class="coming-card" data-coming-item data-coming-modal
+              role="button" tabindex="0" aria-label="View details for <?= e($title) ?>"
+              data-title="<?= e($title) ?>"
+              data-type="<?= e($typeLabel) ?>"
+              data-date="<?= e($prettyDate) ?>"
+              data-rating="<?= e($rating > 0 ? (string)$rating : '') ?>"
+              data-genres="<?= e(implode(', ', $genres)) ?>"
+              data-overview="<?= e($overview) ?>"
+              data-poster="<?= e($poster) ?>"
+              data-backdrop="<?= e($backdrop) ?>">
               <div class="coming-poster" aria-label="<?= e($title) ?> is not released yet">
                 <img src="<?= e($poster) ?>" alt="<?= e($title) ?> poster">
                 <span class="coming-poster-gradient"></span>
                 <span class="coming-soon-pill"><i class="fa-solid fa-lock"></i> Locked until release</span>
+                <span class="coming-info-pill"><i class="fa-solid fa-circle-info"></i> Details</span>
                 <?php if ($rating > 0): ?><span class="coming-rating"><i class="fa-solid fa-star"></i> <?= e((string)$rating) ?></span><?php endif; ?>
               </div>
               <div class="coming-copy">
@@ -72,3 +85,25 @@
     </div>
   <?php endforeach; ?>
 </section>
+
+<div class="modal fade coming-info-modal" id="comingInfoModal" tabindex="-1" aria-hidden="true" aria-labelledby="comingInfoTitle">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content coming-info-modal-content">
+      <button type="button" class="coming-info-close" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+      <div class="coming-info-backdrop" data-coming-info-backdrop></div>
+      <div class="coming-info-body">
+        <div class="coming-info-poster"><img src="/assets/img/placeholder.jpg" alt="" data-coming-info-poster></div>
+        <div class="coming-info-copy">
+          <span class="coming-info-type" data-coming-info-type>Movie</span>
+          <h2 id="comingInfoTitle" data-coming-info-title>Title</h2>
+          <div class="coming-info-meta">
+            <span data-coming-info-date></span>
+            <span data-coming-info-rating></span>
+          </div>
+          <p data-coming-info-overview></p>
+          <div class="coming-info-genres" data-coming-info-genres></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -2,7 +2,7 @@
 <div class="js-jquery-listing-shell jquery-listing-shell" data-jquery-listing="<?= e($type === 'movie' ? 'movies' : 'tv') ?>">
 <section class="glass rounded-4 p-4 mb-4 text-white">
   <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
-    <div><h1 class="h2 mb-1"><?= e($heading) ?></h1><p class="text-white-50 mb-0"><?= e((string)$total) ?> saved <?= $type === 'movie' ? 'movies' : 'TV shows' ?></p></div>
+    <div><h1 class="h2 mb-1"><?= e($heading) ?></h1><p class="text-white-50 mb-0"><?= e((string)$total) ?> live <?= $type === 'movie' ? 'movies' : 'TV shows' ?></p></div>
     <a class="btn btn-outline-light" href="<?= e(url('s')) ?>"><i class="fa-solid fa-magnifying-glass me-1"></i> Advanced search</a>
   </div>
   <form class="row g-2" method="get">

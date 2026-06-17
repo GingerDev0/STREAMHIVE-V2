@@ -1,11 +1,12 @@
 <?php require_once app_path('app/Helpers/helpers.php');
 $type = $type ?? (($item['media_type'] ?? '') === 'person' ? 'person' : (($item['media_type'] ?? '') === 'tv' ? 'tv' : 'movie'));
 $variant = $variant ?? 'poster';
-if (($type === 'movie' || $type === 'tv') && !has_media_poster($item)) {
+$allowMissingPoster = (bool)($allowMissingPoster ?? false);
+if (!$allowMissingPoster && ($type === 'movie' || $type === 'tv') && !has_media_poster($item)) {
     return;
 }
 $title = $item['title'] ?? $item['name'] ?? 'Untitled';
-$slug = $item['slug'] ?? slugify($title);
+$slug = media_slug($item + ['title' => $title], $type);
 $link = $type === 'person' ? url('actors/' . $slug) : ($type === 'tv' ? url('tv/' . $slug) : url('movies/' . $slug));
 $rating = round((float)($item['vote_average'] ?? 0), 1);
 $genres = array_values(array_filter(array_map('strval', $item['genres'] ?? [])));
