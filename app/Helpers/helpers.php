@@ -81,7 +81,7 @@ function site_name(): string {
 function share_button(string $title, string $url, string $label = 'Share'): string {
     $title = trim($title) !== '' ? $title : site_name();
     $url = absolute_url($url);
-    return '<button class="btn btn-outline-light btn-lg v2-share-open js-share-open" type="button" data-share-title="' . e($title) . '" data-share-url="' . e($url) . '"><i class="fa-solid fa-share-nodes me-2"></i>' . e($label) . '</button>';
+    return '<button class="btn btn-outline-light btn-lg streamhive-v2-share-open streamhive-js-share-open" type="button" data-share-title="' . e($title) . '" data-share-url="' . e($url) . '"><i class="fa-solid fa-share-nodes me-2"></i>' . e($label) . '</button>';
 }
 
 
@@ -303,7 +303,7 @@ function genre_icon(string $genre): string {
         default => 'fa-tag',
     };
 }
-function genre_links(array $genres, ?string $type = null, int $limit = 0, string $class = 'genre-link'): string {
+function genre_links(array $genres, ?string $type = null, int $limit = 0, string $class = 'streamhive-genre-link'): string {
     $genres = array_values(array_filter(array_map('strval', $genres), static fn($g) => trim($g) !== ''));
     if ($limit > 0) $genres = array_slice($genres, 0, $limit);
     if (!$genres) return '<span class="text-white-50">Genre TBA</span>';
@@ -311,7 +311,7 @@ function genre_links(array $genres, ?string $type = null, int $limit = 0, string
     foreach ($genres as $genre) {
         $links[] = '<a class="' . e($class) . '" href="' . e(genre_url($genre, $type)) . '"><i class="fa-solid ' . e(genre_icon($genre)) . '" aria-hidden="true"></i><span>' . e($genre) . '</span></a>';
     }
-    return implode('<span class="genre-separator">, </span>', $links);
+    return implode('<span class="streamhive-genre-separator">, </span>', $links);
 }
 
 

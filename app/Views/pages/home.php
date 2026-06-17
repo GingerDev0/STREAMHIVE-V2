@@ -2,11 +2,11 @@
 $heroMovies = array_values($heroMovies ?? []);
 $heroBackground = $heroMovies[0] ?? ($moviesTrending[0] ?? $moviesRecent[0] ?? null);
 ?>
-<section class="v2-detail-hero v2-home-hero-carousel mb-4" aria-label="Featured random movies">
-  <?php if ($heroBackground): ?><div class="v2-detail-backdrop v2-home-hero-backdrop" style="background-image:url('<?= e(tmdb_img($heroBackground['backdrop_path'] ?? ($heroBackground['poster_path'] ?? null), 'w1280')) ?>')"></div><?php endif; ?>
-  <div class="v2-home-hero-shell">
+<section class="streamhive-v2-detail-hero streamhive-v2-home-hero-carousel mb-4" aria-label="Featured random movies">
+  <?php if ($heroBackground): ?><div class="streamhive-v2-detail-backdrop streamhive-v2-home-hero-backdrop" style="background-image:url('<?= e(tmdb_img($heroBackground['backdrop_path'] ?? ($heroBackground['poster_path'] ?? null), 'w1280')) ?>')"></div><?php endif; ?>
+  <div class="streamhive-v2-home-hero-shell">
     <?php if ($heroMovies): ?>
-    <div class="splide v2-home-splide js-home-hero-splide" aria-label="Random movie spotlight carousel">
+    <div class="splide streamhive-v2-home-splide streamhive-js-home-hero-splide" aria-label="Random movie spotlight carousel">
       <div class="splide__track">
         <ul class="splide__list">
           <?php foreach ($heroMovies as $movie):
@@ -23,25 +23,25 @@ $heroBackground = $heroMovies[0] ?? ($moviesTrending[0] ?? $moviesRecent[0] ?? n
             $movieMediaPayload = media_storage_payload($movie, 'movie', $movieUrl, $movieTitle);
           ?>
           <li class="splide__slide">
-            <article class="v2-home-hero-slide" data-hero-backdrop="<?= e($movieBackdrop) ?>">
-              <div class="v2-detail-grid v2-home-hero-grid">
-                <a class="v2-detail-poster-wrap v2-home-hero-poster-link js-media-link" href="<?= e($movieUrl) ?>" data-fetch-content="1" data-media='<?= $movieMediaPayload ?>' aria-label="Watch <?= e($movieTitle) ?>">
-                  <img class="v2-detail-poster" src="<?= e($moviePoster) ?>" alt="<?= e($movieTitle) ?> poster">
-                  <span class="v2-play-float v2-home-hero-play"><i class="fa-solid fa-play"></i></span>
+            <article class="streamhive-v2-home-hero-slide" data-hero-backdrop="<?= e($movieBackdrop) ?>">
+              <div class="streamhive-v2-detail-grid streamhive-v2-home-hero-grid">
+                <a class="streamhive-v2-detail-poster-wrap streamhive-v2-home-hero-poster-link streamhive-js-media-link" href="<?= e($movieUrl) ?>" data-fetch-content="1" data-media='<?= $movieMediaPayload ?>' aria-label="Watch <?= e($movieTitle) ?>">
+                  <img class="streamhive-v2-detail-poster" src="<?= e($moviePoster) ?>" alt="<?= e($movieTitle) ?> poster">
+                  <span class="streamhive-v2-play-float streamhive-v2-home-hero-play"><i class="fa-solid fa-play"></i></span>
                 </a>
 
-                <div class="v2-detail-copy v2-home-hero-copy">
-                  <span class="v2-kicker"><i class="fa-solid fa-film"></i> Movie spotlight</span>
+                <div class="streamhive-v2-detail-copy streamhive-v2-home-hero-copy">
+                  <span class="streamhive-v2-kicker"><i class="fa-solid fa-film"></i> Movie spotlight</span>
                   <h2><?= e($movieTitle) ?></h2>
-                  <div class="v2-chip-row mb-3">
+                  <div class="streamhive-v2-chip-row mb-3">
                     <?php if ($movieDate): ?><span><i class="fa-solid fa-calendar"></i> <?= e($movieDate) ?></span><?php endif; ?>
                     <?php if ($movieRuntime): ?><span><i class="fa-regular fa-clock"></i> <?= e($movieRuntime) ?></span><?php endif; ?>
                     <?php if ($movieRating > 0): ?><span><i class="fa-solid fa-star"></i> <?= e((string)$movieRating) ?></span><?php endif; ?>
                   </div>
-                  <?php if ($movieGenres): ?><div class="v2-genre-row mb-3"><?= genre_links($movieGenres, 'movie', 3) ?></div><?php endif; ?>
-                  <p class="v2-lead v2-home-hero-overview"><?= e($movieOverview) ?></p>
-                  <div class="v2-hero-actions">
-                    <a class="btn btn-warning btn-lg js-media-link" href="<?= e($movieUrl) ?>" data-fetch-content="1" data-media='<?= $movieMediaPayload ?>'><i class="fa-solid fa-play me-2"></i>Watch Now</a>
+                  <?php if ($movieGenres): ?><div class="streamhive-v2-genre-row mb-3"><?= genre_links($movieGenres, 'movie', 3) ?></div><?php endif; ?>
+                  <p class="streamhive-v2-lead streamhive-v2-home-hero-overview"><?= e($movieOverview) ?></p>
+                  <div class="streamhive-v2-hero-actions">
+                    <a class="btn btn-warning btn-lg streamhive-js-media-link" href="<?= e($movieUrl) ?>" data-fetch-content="1" data-media='<?= $movieMediaPayload ?>'><i class="fa-solid fa-play me-2"></i>Watch Now</a>
                   </div>
                 </div>
               </div>
@@ -56,7 +56,7 @@ $heroBackground = $heroMovies[0] ?? ($moviesTrending[0] ?? $moviesRecent[0] ?? n
 </section>
 
 <?php if (!empty($homeAlertSettings['home_alert_enabled'])): ?>
-<div class="alert home-admin-alert">
+<div class="alert streamhive-home-admin-alert">
   <i class="fa-solid fa-info-circle"></i>
   <div>
     <div><?= e((string)($homeAlertSettings['home_alert_message'] ?? '')) ?></div>
@@ -68,11 +68,11 @@ $heroBackground = $heroMovies[0] ?? ($moviesTrending[0] ?? $moviesRecent[0] ?? n
 
 <?php foreach ([['Recent Movies',$moviesRecent,'movie','fa-fire'],['Trending Movies',$moviesTrending,'movie','fa-arrow-trend-up'],['Recent TV Shows',$tvRecent,'tv','fa-satellite-dish'],['Trending TV Shows',$tvTrending,'tv','fa-bolt']] as [$heading,$items,$type,$icon]): ?>
 <?php $items = array_values(array_filter($items, static fn(array $item): bool => has_media_poster($item))); ?>
-<section class="v2-section mb-5">
-  <div class="v2-section-head">
-    <div><span class="v2-section-eyebrow"><i class="fa-solid <?= e($icon) ?>"></i> <?= e($type === 'tv' ? 'Series' : 'Cinema') ?></span><h2><?= e($heading) ?></h2></div>
+<section class="streamhive-v2-section mb-5">
+  <div class="streamhive-v2-section-head">
+    <div><span class="streamhive-v2-section-eyebrow"><i class="fa-solid <?= e($icon) ?>"></i> <?= e($type === 'tv' ? 'Series' : 'Cinema') ?></span><h2><?= e($heading) ?></h2></div>
     <a href="<?= e($type === 'tv' ? url('tv') : url('movies')) ?>">View all <i class="fa-solid fa-arrow-right"></i></a>
   </div>
-  <div class="row row-cols-2 row-cols-md-3 row-cols-xl-6 g-2 g-lg-3 home-card-grid v2-home-grid"><?php foreach (array_slice($items, 0, 12) as $item) { $variant = 'home'; echo View::partial('partials/media-card', compact('item','type','variant')); } ?></div>
+  <div class="row row-cols-2 row-cols-md-3 row-cols-xl-6 g-2 g-lg-3 streamhive-home-card-grid streamhive-v2-home-grid"><?php foreach (array_slice($items, 0, 12) as $item) { $variant = 'home'; echo View::partial('partials/media-card', compact('item','type','variant')); } ?></div>
 </section>
 <?php endforeach; ?>

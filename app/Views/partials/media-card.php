@@ -10,7 +10,7 @@ $slug = media_slug($item + ['title' => $title], $type);
 $link = $type === 'person' ? url('actors/' . $slug) : ($type === 'tv' ? url('tv/' . $slug) : url('movies/' . $slug));
 $rating = round((float)($item['vote_average'] ?? 0), 1);
 $genres = array_values(array_filter(array_map('strval', $item['genres'] ?? [])));
-$genreText = genre_links($genres, $type, 2, 'genre-link genre-link-home');
+$genreText = genre_links($genres, $type, 2, 'streamhive-genre-link streamhive-genre-link-home');
 $ageRating = display_age_rating($item['age_rating'] ?? '', $type);
 $overview = trim((string)($item['overview'] ?? $item['biography'] ?? '')) ?: 'No overview available yet.';
 $importStatus = (string)($item['import_status'] ?? '');
@@ -32,7 +32,7 @@ $knownFor = array_values(array_unique(array_filter(array_map('strval', $knownFor
 $profile = tmdb_img($item['profile_path'] ?? null, 'w500');
 ?>
 <div class="col-6 col-md-3 col-xl-2">
-  <a class="card media-card h-100 text-decoration-none person-result-card js-media-link" href="<?= e($link) ?>" data-fetch-content="<?= e($fetchAttr) ?>" data-media="<?= media_storage_payload($item, $type, $link) ?>">
+  <a class="card streamhive-media-card h-100 text-decoration-none streamhive-person-result-card streamhive-js-media-link" href="<?= e($link) ?>" data-fetch-content="<?= e($fetchAttr) ?>" data-media="<?= media_storage_payload($item, $type, $link) ?>">
     <img src="<?= e($profile) ?>" class="card-img-top" alt="<?= e($title) ?> profile">
     <div class="card-body">
       <h3 class="h6 card-title text-white mb-1"><?= e($title) ?></h3>
@@ -47,35 +47,35 @@ $year = substr((string)($item['release_date'] ?? $item['first_air_date'] ?? ''),
 $homePoster = tmdb_img($item['poster_path'] ?? null, 'w500');
 ?>
 <div class="col">
-  <a class="home-poster-card js-media-link" href="<?= e($link) ?>" aria-label="Open <?= e($title) ?>" data-fetch-content="<?= e($fetchAttr) ?>" data-media="<?= media_storage_payload($item, $type, $link) ?>">
-    <img src="<?= e($homePoster) ?>" class="home-poster-card-img" alt="<?= e($title) ?> poster">
-    <button class="home-bookmark js-bookmark-btn" type="button" aria-label="Save <?= e($title) ?>" data-media="<?= media_storage_payload($item, $type, $link) ?>"><i class="fa-regular fa-bookmark"></i></button>
-    <span class="home-poster-play"><i class="fa-solid fa-play"></i></span>
-    <span class="home-card-sheen" aria-hidden="true"></span>
-    <span class="home-poster-gradient" aria-hidden="true"></span>
-    <span class="home-poster-content">
-      <span class="home-rating-badge"><?= e((string)$rating) ?></span>
-      <span class="home-poster-title"><?= e($title) ?></span>
-      <?php if ($year !== ''): ?><span class="home-poster-year"><?= e($year) ?></span><?php endif; ?>
+  <a class="streamhive-home-poster-card streamhive-js-media-link" href="<?= e($link) ?>" aria-label="Open <?= e($title) ?>" data-fetch-content="<?= e($fetchAttr) ?>" data-media="<?= media_storage_payload($item, $type, $link) ?>">
+    <img src="<?= e($homePoster) ?>" class="streamhive-home-poster-card-img" alt="<?= e($title) ?> poster">
+    <button class="streamhive-home-bookmark streamhive-js-bookmark-btn" type="button" aria-label="Save <?= e($title) ?>" data-media="<?= media_storage_payload($item, $type, $link) ?>"><i class="fa-regular fa-bookmark"></i></button>
+    <span class="streamhive-home-poster-play"><i class="fa-solid fa-play"></i></span>
+    <span class="streamhive-home-card-sheen" aria-hidden="true"></span>
+    <span class="streamhive-home-poster-gradient" aria-hidden="true"></span>
+    <span class="streamhive-home-poster-content">
+      <span class="streamhive-home-rating-badge"><?= e((string)$rating) ?></span>
+      <span class="streamhive-home-poster-title"><?= e($title) ?></span>
+      <?php if ($year !== ''): ?><span class="streamhive-home-poster-year"><?= e($year) ?></span><?php endif; ?>
     </span>
   </a>
 </div>
 <?php else: ?>
 <div class="col-6 col-md-3 col-xl-2">
-  <a class="card media-card listing-media-card h-100 text-decoration-none js-media-link" href="<?= e($link) ?>" data-fetch-content="<?= e($fetchAttr) ?>" data-media="<?= media_storage_payload($item, $type, $link) ?>">
-    <span class="listing-poster-wrap">
+  <a class="card streamhive-media-card streamhive-listing-media-card h-100 text-decoration-none streamhive-js-media-link" href="<?= e($link) ?>" data-fetch-content="<?= e($fetchAttr) ?>" data-media="<?= media_storage_payload($item, $type, $link) ?>">
+    <span class="streamhive-listing-poster-wrap">
       <img src="<?= e(tmdb_img($item['poster_path'] ?? null)) ?>" class="card-img-top" alt="<?= e($title) ?>">
-      <button class="listing-bookmark home-bookmark js-bookmark-btn" type="button" aria-label="Save <?= e($title) ?>" data-media="<?= media_storage_payload($item, $type, $link) ?>"><i class="fa-regular fa-bookmark"></i></button>
-      <span class="listing-play home-poster-play"><i class="fa-solid fa-play"></i></span>
-      <span class="listing-poster-gradient" aria-hidden="true"></span>
+      <button class="streamhive-listing-bookmark streamhive-home-bookmark streamhive-js-bookmark-btn" type="button" aria-label="Save <?= e($title) ?>" data-media="<?= media_storage_payload($item, $type, $link) ?>"><i class="fa-regular fa-bookmark"></i></button>
+      <span class="streamhive-listing-play streamhive-home-poster-play"><i class="fa-solid fa-play"></i></span>
+      <span class="streamhive-listing-poster-gradient" aria-hidden="true"></span>
     </span>
     <div class="card-body">
       <h3 class="h6 card-title text-white mb-1"><?= e($title) ?></h3>
       <?php $runtimeText = media_runtime($item, $type); ?>
-      <div class="small listing-card-meta text-white-50">
-        <span class="listing-card-rating"><i class="fa-solid fa-star"></i> <?= e((string)$rating) ?></span>
+      <div class="small streamhive-listing-card-meta text-white-50">
+        <span class="streamhive-listing-card-rating"><i class="fa-solid fa-star"></i> <?= e((string)$rating) ?></span>
         <?php if ($runtimeText !== ''): ?>
-          <span class="listing-card-runtime"><i class="fa-regular fa-clock"></i> <?= e($runtimeText) ?></span>
+          <span class="streamhive-listing-card-runtime"><i class="fa-regular fa-clock"></i> <?= e($runtimeText) ?></span>
         <?php endif; ?>
       </div>
     </div>

@@ -1,1 +1,1 @@
-<div class="glass rounded-4 p-5 text-white"><h1>Not found</h1><p>We could not find that page yet. Try searching for the title or head back home.</p><a class="btn btn-warning" href="/">Home</a></div>
+<div class="streamhive-glass rounded-4 p-5 text-white"><h1>Not found</h1><p>We could not find that page yet. Try searching for the title or head back home.</p><a class="btn btn-warning" href="/">Home</a></div>

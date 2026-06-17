@@ -1,6 +1,6 @@
 <?php require_once app_path('app/Helpers/helpers.php'); use App\Core\View; ?>
-<div class="js-jquery-listing-shell jquery-listing-shell" data-jquery-listing="<?= e($type === 'movie' ? 'movies' : 'tv') ?>">
-<section class="glass rounded-4 p-4 mb-4 text-white">
+<div class="streamhive-js-jquery-listing-shell streamhive-jquery-listing-shell" data-jquery-listing="<?= e($type === 'movie' ? 'movies' : 'tv') ?>">
+<section class="streamhive-glass rounded-4 p-4 mb-4 text-white">
   <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
     <div><h1 class="h2 mb-1"><?= e($heading) ?></h1><p class="text-white-50 mb-0"><?= e((string)$total) ?> live <?= $type === 'movie' ? 'movies' : 'TV shows' ?></p></div>
     <a class="btn btn-outline-light" href="<?= e(url('s')) ?>"><i class="fa-solid fa-magnifying-glass me-1"></i> Advanced search</a>
@@ -30,7 +30,7 @@
 
 <div class="row g-3">
 <?php foreach ($items as $item): $cardType = $item['media_type'] ?? $type; echo View::partial('partials/media-card', ['item'=>$item, 'type'=>$cardType]); endforeach; ?>
-<?php if (!$items): ?><div class="col-12"><div class="glass rounded-4 p-4 text-white">No results found.</div></div><?php endif; ?>
+<?php if (!$items): ?><div class="col-12"><div class="streamhive-glass rounded-4 p-4 text-white">No results found.</div></div><?php endif; ?>
 </div>
 
 <?= View::partial('partials/pagination', ['page' => $page, 'pages' => $pages, 'total' => $total, 'perPage' => $perPage ?? 24, 'itemLabel' => $type === 'movie' ? 'Movies' : 'TV Shows']) ?>

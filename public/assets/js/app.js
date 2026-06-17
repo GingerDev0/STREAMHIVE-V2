@@ -1,4 +1,4 @@
-document.documentElement.classList.add('js-ready');
+document.documentElement.classList.add('streamhive-js-ready');
 
 
 (() => {
@@ -54,27 +54,27 @@ document.documentElement.classList.add('js-ready');
   const hasBookmark = (item) => read('bookmarks').some((entry) => mediaKey(entry) === mediaKey(item));
 
   const setBookmarkButtonState = (button, saved) => {
-    button.classList.toggle('is-saved', saved);
+    button.classList.toggle('streamhive-is-saved', saved);
     button.setAttribute('aria-pressed', saved ? 'true' : 'false');
     const icon = button.querySelector('i');
     if (icon) {
       icon.classList.toggle('fa-solid', saved);
       icon.classList.toggle('fa-regular', !saved);
     }
-    if (button.classList.contains('detail-bookmark')) {
+    if (button.classList.contains('streamhive-detail-bookmark')) {
       const text = button.childNodes[button.childNodes.length - 1];
       if (text && text.nodeType === Node.TEXT_NODE) text.nodeValue = saved ? ' Saved to profile' : (button.textContent.includes('episode') ? ' Save episode' : ' Save to profile');
     }
   };
 
   const syncBookmarkButtons = () => {
-    document.querySelectorAll('.js-bookmark-btn[data-media]').forEach((button) => {
+    document.querySelectorAll('.streamhive-js-bookmark-btn[data-media]').forEach((button) => {
       setBookmarkButtonState(button, hasBookmark(parseMedia(button)));
     });
   };
 
   document.addEventListener('click', (event) => {
-    const button = event.target.closest('.js-bookmark-btn[data-media]');
+    const button = event.target.closest('.streamhive-js-bookmark-btn[data-media]');
     if (!button) return;
     event.preventDefault();
     event.stopPropagation();
@@ -86,8 +86,8 @@ document.documentElement.classList.add('js-ready');
   });
 
   document.addEventListener('click', (event) => {
-    const link = event.target.closest('.js-media-link[data-media]');
-    if (!link || event.target.closest('.js-bookmark-btn')) return;
+    const link = event.target.closest('.streamhive-js-media-link[data-media]');
+    if (!link || event.target.closest('.streamhive-js-bookmark-btn')) return;
     upsert('recent', parseMedia(link), 'viewedAt');
   });
 
@@ -127,13 +127,13 @@ document.documentElement.classList.add('js-ready');
     if (dialog) dialog.style.zIndex = '2147483002';
     const content = fetchModalElement.querySelector('.modal-content');
     if (content) content.style.zIndex = '2147483002';
-    if (!document.querySelector('.modal-backdrop.fetch-modal-backdrop')) {
+    if (!document.querySelector('.modal-backdrop.streamhive-fetch-modal-backdrop')) {
       const backdrop = document.createElement('div');
-      backdrop.className = 'modal-backdrop fade show fetch-modal-backdrop';
+      backdrop.className = 'modal-backdrop fade show streamhive-fetch-modal-backdrop';
       backdrop.style.zIndex = '2147483000';
       document.body.appendChild(backdrop);
     } else {
-      document.querySelectorAll('.modal-backdrop.fetch-modal-backdrop').forEach((backdrop) => {
+      document.querySelectorAll('.modal-backdrop.streamhive-fetch-modal-backdrop').forEach((backdrop) => {
         backdrop.style.zIndex = '2147483000';
       });
     }
@@ -202,7 +202,7 @@ document.documentElement.classList.add('js-ready');
 
   document.addEventListener('click', async (event) => {
     const link = event.target.closest('a[href]');
-    if (!link || event.defaultPrevented || event.target.closest('.js-bookmark-btn')) return;
+    if (!link || event.defaultPrevented || event.target.closest('.streamhive-js-bookmark-btn')) return;
     if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
     if (link.target && link.target !== '_self') return;
 
@@ -212,7 +212,7 @@ document.documentElement.classList.add('js-ready');
     const markedNeedsFetch = link.dataset.fetchContent === '1';
     const markedReady = link.dataset.fetchContent === '0';
     if (markedReady) return;
-    if (!markedNeedsFetch && !link.classList.contains('js-media-link')) return;
+    if (!markedNeedsFetch && !link.classList.contains('streamhive-js-media-link')) return;
 
     event.preventDefault();
     upsert('recent', parseMedia(link), 'viewedAt');
@@ -236,7 +236,7 @@ document.documentElement.classList.add('js-ready');
     if (params.slug) runContentFetch(params, autoFetch.dataset.fetchFallbackUrl || window.location.href, { markedNeedsFetch: true });
   }
 
-  const pageMedia = document.querySelector('.js-page-media[data-media]');
+  const pageMedia = document.querySelector('.streamhive-js-page-media[data-media]');
   if (pageMedia) upsert('recent', parseMedia(pageMedia), 'viewedAt');
 
 
@@ -245,15 +245,15 @@ document.documentElement.classList.add('js-ready');
   const renderCard = (item, section) => {
     const saved = hasBookmark(item);
     const meta = item.meta || [typeLabel(item.type), item.year].filter(Boolean).join(' · ');
-    return `<article class="profile-card">
-      <a href="${escapeHtml(item.url)}" class="profile-card-link js-media-link" data-media='${escapeHtml(JSON.stringify(item))}'>
+    return `<article class="streamhive-profile-card">
+      <a href="${escapeHtml(item.url)}" class="streamhive-profile-card-link streamhive-js-media-link" data-media='${escapeHtml(JSON.stringify(item))}'>
         <img src="${escapeHtml(item.poster)}" alt="${escapeHtml(item.title)} poster" loading="lazy">
-        <span class="profile-card-gradient"></span>
-        <span class="profile-type">${escapeHtml(typeLabel(item.type))}</span>
-        ${item.rating ? `<span class="profile-rating"><i class="fa-solid fa-star"></i> ${escapeHtml(item.rating)}</span>` : ''}
-        <span class="profile-card-copy"><strong>${escapeHtml(item.title)}</strong><small>${escapeHtml(meta)}</small></span>
+        <span class="streamhive-profile-card-gradient"></span>
+        <span class="streamhive-profile-type">${escapeHtml(typeLabel(item.type))}</span>
+        ${item.rating ? `<span class="streamhive-profile-rating"><i class="fa-solid fa-star"></i> ${escapeHtml(item.rating)}</span>` : ''}
+        <span class="streamhive-profile-card-copy"><strong>${escapeHtml(item.title)}</strong><small>${escapeHtml(meta)}</small></span>
       </a>
-      <button class="profile-remove ${section === 'bookmarks' ? 'js-bookmark-btn' : 'js-profile-remove'} ${saved ? 'is-saved' : ''}" type="button" data-section="${escapeHtml(section)}" data-media='${escapeHtml(JSON.stringify(item))}' aria-label="${section === 'bookmarks' ? 'Remove bookmark' : 'Remove item'}"><i class="${section === 'bookmarks' || saved ? 'fa-solid fa-bookmark' : 'fa-solid fa-xmark'}"></i></button>
+      <button class="streamhive-profile-remove ${section === 'bookmarks' ? 'streamhive-js-bookmark-btn' : 'streamhive-js-profile-remove'} ${saved ? 'streamhive-is-saved' : ''}" type="button" data-section="${escapeHtml(section)}" data-media='${escapeHtml(JSON.stringify(item))}' aria-label="${section === 'bookmarks' ? 'Remove bookmark' : 'Remove item'}"><i class="${section === 'bookmarks' || saved ? 'fa-solid fa-bookmark' : 'fa-solid fa-xmark'}"></i></button>
     </article>`;
   };
 
@@ -283,12 +283,12 @@ document.documentElement.classList.add('js-ready');
     }
     const visibleFrom = start + 1;
     const visibleTo = Math.min(total, end);
-    footer.innerHTML = `<div class="actor-pager-bar profile-pager-bar">
-      <div class="pager-showing"><span>Showing</span><strong>${visibleFrom}${visibleTo !== visibleFrom ? '&ndash;' + visibleTo : ''}</strong><span>of</span><strong>${total}</strong><span>${escapeHtml(profileLabel(bucket))}</span></div>
-      <div class="actor-pager-actions profile-pager-actions">
-        ${current > 1 ? `<button type="button" class="actor-page-btn profile-page-btn" data-profile-page="${section}:${bucket}" data-page="${current - 1}" aria-label="Previous page"><i class="fa-solid fa-angle-left"></i></button>` : ''}
-        <span class="actor-page-current">Page <strong>${current}</strong> of ${pages}</span>
-        ${current < pages ? `<button type="button" class="actor-page-btn profile-page-btn" data-profile-page="${section}:${bucket}" data-page="${current + 1}" aria-label="Next page"><i class="fa-solid fa-angle-right"></i></button>` : ''}
+    footer.innerHTML = `<div class="streamhive-actor-pager-bar streamhive-profile-pager-bar">
+      <div class="streamhive-pager-showing"><span>Showing</span><strong>${visibleFrom}${visibleTo !== visibleFrom ? '&ndash;' + visibleTo : ''}</strong><span>of</span><strong>${total}</strong><span>${escapeHtml(profileLabel(bucket))}</span></div>
+      <div class="streamhive-actor-pager-actions streamhive-profile-pager-actions">
+        ${current > 1 ? `<button type="button" class="streamhive-actor-page-btn streamhive-profile-page-btn" data-profile-page="${section}:${bucket}" data-page="${current - 1}" aria-label="Previous page"><i class="fa-solid fa-angle-left"></i></button>` : ''}
+        <span class="streamhive-actor-page-current">Page <strong>${current}</strong> of ${pages}</span>
+        ${current < pages ? `<button type="button" class="streamhive-actor-page-btn streamhive-profile-page-btn" data-profile-page="${section}:${bucket}" data-page="${current + 1}" aria-label="Next page"><i class="fa-solid fa-angle-right"></i></button>` : ''}
       </div>
     </div>`;
   };
@@ -307,17 +307,17 @@ document.documentElement.classList.add('js-ready');
     const start = (current - 1) * perPage;
     const end = start + perPage;
 
-    grid.classList.add('is-profile-loading');
+    grid.classList.add('streamhive-is-profile-loading');
     window.setTimeout(() => {
       grid.innerHTML = items.slice(start, end).map((item) => renderCard(item, section)).join('');
-      grid.classList.remove('is-profile-loading');
+      grid.classList.remove('streamhive-is-profile-loading');
       if (empty) empty.classList.toggle('d-none', items.length > 0);
       renderProfilePager(section, bucket, current, pages, items.length, start, end);
     }, 70);
   };
 
   const activeProfileBucket = (section) => {
-    const active = document.querySelector(`.profile-filter-tab.active[data-profile-kind="${section}"]`);
+    const active = document.querySelector(`.streamhive-profile-filter-tab.active[data-profile-kind="${section}"]`);
     return active?.dataset?.profileType || 'movie';
   };
 
@@ -337,11 +337,11 @@ document.documentElement.classList.add('js-ready');
   }
 
   document.addEventListener('click', (event) => {
-    const tab = event.target.closest('.profile-filter-tab[data-profile-kind][data-profile-type]');
+    const tab = event.target.closest('.streamhive-profile-filter-tab[data-profile-kind][data-profile-type]');
     if (!tab) return;
     const section = tab.dataset.profileKind || 'bookmarks';
     const bucket = tab.dataset.profileType || 'movie';
-    document.querySelectorAll(`.profile-filter-tab[data-profile-kind="${section}"]`).forEach((button) => {
+    document.querySelectorAll(`.streamhive-profile-filter-tab[data-profile-kind="${section}"]`).forEach((button) => {
       const active = button.dataset.profileType === bucket;
       button.classList.toggle('active', active);
       button.setAttribute('aria-selected', active ? 'true' : 'false');
@@ -356,7 +356,7 @@ document.documentElement.classList.add('js-ready');
   });
 
   document.addEventListener('click', (event) => {
-    const pager = event.target.closest('.profile-page-btn[data-profile-page][data-page]');
+    const pager = event.target.closest('.streamhive-profile-page-btn[data-profile-page][data-page]');
     if (!pager) return;
     const [section, bucket] = String(pager.dataset.profilePage || 'bookmarks:movie').split(':');
     const page = parseInt(pager.dataset.page || '1', 10) || 1;
@@ -368,7 +368,7 @@ document.documentElement.classList.add('js-ready');
   });
 
   document.addEventListener('click', (event) => {
-    const clear = event.target.closest('.js-profile-clear[data-clear]');
+    const clear = event.target.closest('.streamhive-js-profile-clear[data-clear]');
     if (!clear) return;
     write(clear.dataset.clear, []);
     syncBookmarkButtons();
@@ -376,7 +376,7 @@ document.documentElement.classList.add('js-ready');
   });
 
   document.addEventListener('click', (event) => {
-    const remove = event.target.closest('.js-profile-remove[data-section][data-media]');
+    const remove = event.target.closest('.streamhive-js-profile-remove[data-section][data-media]');
     if (!remove) return;
     const section = remove.dataset.section;
     const item = parseMedia(remove);
@@ -393,7 +393,7 @@ document.documentElement.classList.add('js-ready');
 
 /* Actor profile tabs + jQuery pagination */
 (function ($) {
-  if (!$ || !$('.actor-tab[data-actor-tab]').length) return;
+  if (!$ || !$('.streamhive-actor-tab[data-actor-tab]').length) return;
 
   const renderActorPage = function (type, page) {
     const $grid = $('[data-actor-grid="' + type + '"]');
@@ -417,30 +417,30 @@ document.documentElement.classList.add('js-ready');
 
     const visibleFrom = start + 1;
     const visibleTo = Math.min(total, end);
-    let html = '<div class="actor-pager-bar">';
+    let html = '<div class="streamhive-actor-pager-bar">';
     const label = type === 'tv' ? 'TV Shows' : (type === 'production' ? 'In Production' : 'Movies');
-    html += '<div class="pager-showing"><span>Showing</span><strong>' + visibleFrom + (visibleTo !== visibleFrom ? '&ndash;' + visibleTo : '') + '</strong><span>of</span><strong>' + total + '</strong><span>' + label + '</span></div>';
-    html += '<div class="actor-pager-actions">';
-    if (current > 1) html += '<button type="button" class="actor-page-btn" data-actor-page="' + type + '" data-page="' + (current - 1) + '" aria-label="Previous page"><i class="fa-solid fa-angle-left"></i></button>';
-    html += '<span class="actor-page-current">Page <strong>' + current + '</strong> of ' + pages + '</span>';
-    if (current < pages) html += '<button type="button" class="actor-page-btn" data-actor-page="' + type + '" data-page="' + (current + 1) + '" aria-label="Next page"><i class="fa-solid fa-angle-right"></i></button>';
+    html += '<div class="streamhive-pager-showing"><span>Showing</span><strong>' + visibleFrom + (visibleTo !== visibleFrom ? '&ndash;' + visibleTo : '') + '</strong><span>of</span><strong>' + total + '</strong><span>' + label + '</span></div>';
+    html += '<div class="streamhive-actor-pager-actions">';
+    if (current > 1) html += '<button type="button" class="streamhive-actor-page-btn" data-actor-page="' + type + '" data-page="' + (current - 1) + '" aria-label="Previous page"><i class="fa-solid fa-angle-left"></i></button>';
+    html += '<span class="streamhive-actor-page-current">Page <strong>' + current + '</strong> of ' + pages + '</span>';
+    if (current < pages) html += '<button type="button" class="streamhive-actor-page-btn" data-actor-page="' + type + '" data-page="' + (current + 1) + '" aria-label="Next page"><i class="fa-solid fa-angle-right"></i></button>';
     html += '</div></div>';
     $footer.html(html);
   };
 
   const activateActorTab = function (type) {
-    $('.actor-tab').removeClass('active').attr('aria-selected', 'false');
-    $('.actor-tab[data-actor-tab="' + type + '"]').addClass('active').attr('aria-selected', 'true');
-    $('.actor-credit-panel').removeClass('active').hide();
+    $('.streamhive-actor-tab').removeClass('active').attr('aria-selected', 'false');
+    $('.streamhive-actor-tab[data-actor-tab="' + type + '"]').addClass('active').attr('aria-selected', 'true');
+    $('.streamhive-actor-credit-panel').removeClass('active').hide();
     $('[data-actor-panel="' + type + '"]').addClass('active').fadeIn(140);
     renderActorPage(type, 1);
   };
 
-  $(document).on('click', '.actor-tab[data-actor-tab]', function () {
-    activateActorTab($(this).data('actor-tab'));
+  $(document).on('click', '.streamhive-actor-tab[data-actor-tab]', function () {
+    activateActorTab($(this).data('streamhive-actor-tab'));
   });
 
-  $(document).on('click', '.actor-page-btn[data-actor-page][data-page]', function () {
+  $(document).on('click', '.streamhive-actor-page-btn[data-actor-page][data-page]', function () {
     const type = $(this).data('actor-page');
     const page = parseInt($(this).data('page'), 10) || 1;
     renderActorPage(type, page);
@@ -448,32 +448,32 @@ document.documentElement.classList.add('js-ready');
     if ($panel.length) $('html, body').animate({ scrollTop: Math.max(0, $panel.offset().top - 120) }, 220);
   });
 
-  $('.actor-credit-panel').hide();
-  activateActorTab($('.actor-tab.active').data('actor-tab') || 'movie');
+  $('.streamhive-actor-credit-panel').hide();
+  activateActorTab($('.streamhive-actor-tab.active').data('streamhive-actor-tab') || 'movie');
 })(window.jQuery);
 
 /* Movie detail tabs */
 (function ($) {
-  if (!$ || !$('.movie-detail-tabs-shell').length) return;
+  if (!$ || !$('.streamhive-movie-detail-tabs-shell').length) return;
 
   const activateMovieDetailTab = function (type) {
-    $('.movie-detail-tab').removeClass('active').attr('aria-selected', 'false');
-    $('.movie-detail-tab[data-movie-detail-tab="' + type + '"]').addClass('active').attr('aria-selected', 'true');
-    $('.movie-detail-panel').removeClass('active').hide();
+    $('.streamhive-movie-detail-tab').removeClass('active').attr('aria-selected', 'false');
+    $('.streamhive-movie-detail-tab[data-movie-detail-tab="' + type + '"]').addClass('active').attr('aria-selected', 'true');
+    $('.streamhive-movie-detail-panel').removeClass('active').hide();
     $('[data-movie-detail-panel="' + type + '"]').addClass('active').fadeIn(140);
   };
 
-  $(document).on('click', '.movie-detail-tab[data-movie-detail-tab]', function () {
-    activateMovieDetailTab($(this).data('movie-detail-tab'));
+  $(document).on('click', '.streamhive-movie-detail-tab[data-movie-detail-tab]', function () {
+    activateMovieDetailTab($(this).data('streamhive-movie-detail-tab'));
   });
 
-  $('.movie-detail-panel').hide();
-  activateMovieDetailTab($('.movie-detail-tab.active').data('movie-detail-tab') || 'cast');
+  $('.streamhive-movie-detail-panel').hide();
+  activateMovieDetailTab($('.streamhive-movie-detail-tab.active').data('streamhive-movie-detail-tab') || 'cast');
 })(window.jQuery);
 
 /* Coming this year tabs + jQuery pagination */
 (function ($) {
-  if (!$ || !$('.coming-tabs-shell').length) return;
+  if (!$ || !$('.streamhive-coming-tabs-shell').length) return;
 
   const renderComingPage = function (type, page) {
     const $grid = $('[data-coming-grid="' + type + '"]');
@@ -498,20 +498,20 @@ document.documentElement.classList.add('js-ready');
     const visibleFrom = start + 1;
     const visibleTo = Math.min(total, end);
     const label = type === 'tv' ? 'TV Shows' : 'Movies';
-    let html = '<div class="actor-pager-bar coming-pager-bar">';
-    html += '<div class="pager-showing"><span>Showing</span><strong>' + visibleFrom + (visibleTo !== visibleFrom ? '&ndash;' + visibleTo : '') + '</strong><span>of</span><strong>' + total + '</strong><span>' + label + '</span></div>';
-    html += '<div class="actor-pager-actions coming-pager-actions">';
-    if (current > 1) html += '<button type="button" class="actor-page-btn coming-page-btn" data-coming-page="' + type + '" data-page="' + (current - 1) + '" aria-label="Previous page"><i class="fa-solid fa-angle-left"></i></button>';
-    html += '<span class="actor-page-current">Page <strong>' + current + '</strong> of ' + pages + '</span>';
-    if (current < pages) html += '<button type="button" class="actor-page-btn coming-page-btn" data-coming-page="' + type + '" data-page="' + (current + 1) + '" aria-label="Next page"><i class="fa-solid fa-angle-right"></i></button>';
+    let html = '<div class="streamhive-actor-pager-bar streamhive-coming-pager-bar">';
+    html += '<div class="streamhive-pager-showing"><span>Showing</span><strong>' + visibleFrom + (visibleTo !== visibleFrom ? '&ndash;' + visibleTo : '') + '</strong><span>of</span><strong>' + total + '</strong><span>' + label + '</span></div>';
+    html += '<div class="streamhive-actor-pager-actions streamhive-coming-pager-actions">';
+    if (current > 1) html += '<button type="button" class="streamhive-actor-page-btn streamhive-coming-page-btn" data-coming-page="' + type + '" data-page="' + (current - 1) + '" aria-label="Previous page"><i class="fa-solid fa-angle-left"></i></button>';
+    html += '<span class="streamhive-actor-page-current">Page <strong>' + current + '</strong> of ' + pages + '</span>';
+    if (current < pages) html += '<button type="button" class="streamhive-actor-page-btn streamhive-coming-page-btn" data-coming-page="' + type + '" data-page="' + (current + 1) + '" aria-label="Next page"><i class="fa-solid fa-angle-right"></i></button>';
     html += '</div></div>';
     $footer.html(html);
   };
 
   const activateComingTab = function (type) {
-    $('.coming-tab').removeClass('active').attr('aria-selected', 'false');
-    $('.coming-tab[data-coming-tab="' + type + '"]').addClass('active').attr('aria-selected', 'true');
-    $('.coming-panel').removeClass('active').hide();
+    $('.streamhive-coming-tab').removeClass('active').attr('aria-selected', 'false');
+    $('.streamhive-coming-tab[data-coming-tab="' + type + '"]').addClass('active').attr('aria-selected', 'true');
+    $('.streamhive-coming-panel').removeClass('active').hide();
     $('[data-coming-panel="' + type + '"]').addClass('active').fadeIn(140);
     renderComingPage(type, 1);
   };
@@ -533,7 +533,7 @@ document.documentElement.classList.add('js-ready');
   };
 
   const resetComingTrailer = function () {
-    $('[data-coming-info-trailer]').attr('hidden', true).removeClass('is-loading has-trailer');
+    $('[data-coming-info-trailer]').attr('hidden', true).removeClass('streamhive-is-loading streamhive-has-trailer');
     $('[data-coming-info-trailer-frame]').empty();
     $('[data-coming-info-trailer-link]').attr('href', '#');
   };
@@ -545,8 +545,8 @@ document.documentElement.classList.add('js-ready');
     const $trailer = $('[data-coming-info-trailer]');
     const $frame = $('[data-coming-info-trailer-frame]');
     const $link = $('[data-coming-info-trailer-link]');
-    $trailer.removeAttr('hidden').addClass('is-loading').removeClass('has-trailer');
-    $frame.html('<div class="coming-info-trailer-loading"><i class="fa-solid fa-spinner fa-spin"></i></div>');
+    $trailer.removeAttr('hidden').addClass('streamhive-is-loading').removeClass('streamhive-has-trailer');
+    $frame.html('<div class="streamhive-coming-info-trailer-loading"><i class="fa-solid fa-spinner fa-spin"></i></div>');
 
     $.getJSON('/ajax/upcoming-trailer', { type: type, id: tmdbId })
       .done(function (payload) {
@@ -559,7 +559,7 @@ document.documentElement.classList.add('js-ready');
         const safeTitle = $('<div>').text((trailer.name || title || 'Trailer')).html();
         $frame.html('<iframe src="' + trailer.embed_url + '" title="' + safeTitle + '" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>');
         $link.attr('href', trailer.watch_url || trailer.embed_url);
-        $trailer.removeClass('is-loading').addClass('has-trailer').removeAttr('hidden');
+        $trailer.removeClass('streamhive-is-loading').addClass('streamhive-has-trailer').removeAttr('hidden');
       })
       .fail(function () {
         resetComingTrailer();
@@ -614,11 +614,11 @@ document.documentElement.classList.add('js-ready');
       left: '0',
       right: '0',
       width: '100%'
-    }).addClass('coming-modal-scroll-locked');
+    }).addClass('streamhive-coming-modal-scroll-locked');
   };
 
   const unlockComingPageScroll = function () {
-    $('body').removeClass('coming-modal-scroll-locked').css({
+    $('body').removeClass('streamhive-coming-modal-scroll-locked').css({
       position: '',
       top: '',
       left: '',
@@ -628,8 +628,8 @@ document.documentElement.classList.add('js-ready');
     window.scrollTo(0, comingModalScrollY || 0);
   };
 
-  $(document).on('click', '.coming-tab[data-coming-tab]', function () {
-    activateComingTab($(this).data('coming-tab'));
+  $(document).on('click', '.streamhive-coming-tab[data-coming-tab]', function () {
+    activateComingTab($(this).data('streamhive-coming-tab'));
   });
 
   $(document).on('click', '[data-coming-modal]', function (event) {
@@ -647,13 +647,13 @@ document.documentElement.classList.add('js-ready');
   $('#comingInfoModal').on('show.bs.modal', function () {
     lockComingPageScroll();
   }).on('shown.bs.modal', function () {
-    $('.modal-backdrop:not(.fetch-modal-backdrop)').remove();
+    $('.modal-backdrop:not(.streamhive-fetch-modal-backdrop)').remove();
   }).on('hidden.bs.modal', function () {
-    $('.modal-backdrop.coming-info-backdrop-layer').removeClass('coming-info-backdrop-layer');
+    $('.modal-backdrop.streamhive-coming-info-backdrop-layer').removeClass('streamhive-coming-info-backdrop-layer');
     unlockComingPageScroll();
   });
 
-  $(document).on('click', '.coming-page-btn[data-coming-page][data-page]', function () {
+  $(document).on('click', '.streamhive-coming-page-btn[data-coming-page][data-page]', function () {
     const type = $(this).data('coming-page');
     const page = parseInt($(this).data('page'), 10) || 1;
     renderComingPage(type, page);
@@ -661,15 +661,15 @@ document.documentElement.classList.add('js-ready');
     if ($panel.length) $('html, body').animate({ scrollTop: Math.max(0, $panel.offset().top - 120) }, 220);
   });
 
-  $('.coming-panel').hide();
-  activateComingTab($('.coming-tab.active').data('coming-tab') || 'movie');
+  $('.streamhive-coming-panel').hide();
+  activateComingTab($('.streamhive-coming-tab.active').data('streamhive-coming-tab') || 'movie');
 })(window.jQuery);
 
 /* jQuery listings: AJAX filters + pagination for /movies, /tv and /s */
 (function ($) {
   if (!$) return;
 
-  const shellSelector = '.js-jquery-listing-shell[data-jquery-listing]';
+  const shellSelector = '.streamhive-js-jquery-listing-shell[data-jquery-listing]';
   const supportedPath = function () {
     const path = window.location.pathname.replace(/\/+$/, '') || '/';
     return path === '/movies' || path === '/tv' || path === '/s' || path.indexOf('/s/') === 0;
@@ -686,7 +686,7 @@ document.documentElement.classList.add('js-ready');
   };
 
   const setListingLoading = function ($shell, loading) {
-    $shell.toggleClass('is-loading', !!loading);
+    $shell.toggleClass('streamhive-is-loading', !!loading);
     $shell.attr('aria-busy', loading ? 'true' : 'false');
   };
 
@@ -754,7 +754,7 @@ document.documentElement.classList.add('js-ready');
     loadListing(url, true);
   });
 
-  $(document).on('click', shellSelector + ' .pager-shell a[href], ' + shellSelector + ' .pagination-mobile a[href]', function (event) {
+  $(document).on('click', shellSelector + ' .streamhive-pager-shell a[href], ' + shellSelector + ' .streamhive-pagination-mobile a[href]', function (event) {
     if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
     const href = this.getAttribute('href') || '';
     const url = new URL(href, window.location.href);
@@ -777,9 +777,9 @@ document.documentElement.classList.add('js-ready');
 (function ($) {
   if (!$) return;
 
-  const $form = $('.js-live-search-form').first();
-  const $input = $form.find('.js-live-search-input').first();
-  const $results = $form.find('.js-live-search-results').first();
+  const $form = $('.streamhive-js-live-search-form').first();
+  const $input = $form.find('.streamhive-js-live-search-input').first();
+  const $results = $form.find('.streamhive-js-live-search-results').first();
   if (!$form.length || !$input.length || !$results.length) return;
 
   const escapeHtml = function (value) {
@@ -794,13 +794,13 @@ document.documentElement.classList.add('js-ready');
   let lastQuery = '';
 
   const hideResults = function () {
-    $results.removeClass('is-open').empty();
+    $results.removeClass('streamhive-is-open').empty();
     $input.attr('aria-expanded', 'false');
     activeIndex = -1;
   };
 
   const setActive = function (index) {
-    const $items = $results.find('.v2-live-search-item');
+    const $items = $results.find('.streamhive-v2-live-search-item');
     if (!$items.length) return;
     activeIndex = Math.max(0, Math.min(index, $items.length - 1));
     $items.removeClass('is-active').attr('aria-selected', 'false');
@@ -814,27 +814,27 @@ document.documentElement.classList.add('js-ready');
     if (!query || query !== lastQuery) return;
 
     if (!items.length) {
-      $results.html('<div class="v2-live-search-empty">No local matches yet. Press Enter to search/discover.</div>');
-      $results.addClass('is-open');
+      $results.html('<div class="streamhive-v2-live-search-empty">No local matches yet. Press Enter to search/discover.</div>');
+      $results.addClass('streamhive-is-open');
       $input.attr('aria-expanded', 'true');
       activeIndex = -1;
       return;
     }
 
-    let html = '<div class="v2-live-search-list">';
+    let html = '<div class="streamhive-v2-live-search-list">';
     items.forEach(function (item, index) {
       const mediaJson = escapeHtml(JSON.stringify(item.media || {}));
       const rating = item.rating ? '<span><i class="fa-solid fa-star"></i> ' + escapeHtml(item.rating) + '</span>' : '';
-      html += '<a class="v2-live-search-item js-media-link" role="option" aria-selected="false" data-live-search-index="' + index + '" data-fetch-content="' + escapeHtml(item.fetch_content || '0') + '" data-media=\'' + mediaJson + '\' href="' + escapeHtml(item.url || '#') + '">';
-      html += '<span class="v2-live-search-poster"><img src="' + escapeHtml(item.poster || '/assets/img/placeholder.jpg') + '" alt="' + escapeHtml(item.title || 'Result') + ' poster" loading="lazy"></span>';
-      html += '<span class="v2-live-search-copy"><strong>' + escapeHtml(item.title || 'Untitled') + '</strong><small><span>' + escapeHtml(item.meta || item.type_label || 'Result') + '</span>' + rating + '</small></span>';
-      html += '<span class="v2-live-search-arrow"><i class="fa-solid fa-arrow-right"></i></span>';
+      html += '<a class="streamhive-v2-live-search-item streamhive-js-media-link" role="option" aria-selected="false" data-live-search-index="' + index + '" data-fetch-content="' + escapeHtml(item.fetch_content || '0') + '" data-media=\'' + mediaJson + '\' href="' + escapeHtml(item.url || '#') + '">';
+      html += '<span class="streamhive-v2-live-search-poster"><img src="' + escapeHtml(item.poster || '/assets/img/placeholder.jpg') + '" alt="' + escapeHtml(item.title || 'Result') + ' poster" loading="lazy"></span>';
+      html += '<span class="streamhive-v2-live-search-copy"><strong>' + escapeHtml(item.title || 'Untitled') + '</strong><small><span>' + escapeHtml(item.meta || item.type_label || 'Result') + '</span>' + rating + '</small></span>';
+      html += '<span class="streamhive-v2-live-search-arrow"><i class="fa-solid fa-arrow-right"></i></span>';
       html += '</a>';
     });
     html += '</div>';
-    html += '<a class="v2-live-search-all" href="' + escapeHtml(payload.search_url || ('/s?q=' + encodeURIComponent(query))) + '">View all results for <strong>' + escapeHtml(query) + '</strong></a>';
+    html += '<a class="streamhive-v2-live-search-all" href="' + escapeHtml(payload.search_url || ('/s?q=' + encodeURIComponent(query))) + '">View all results for <strong>' + escapeHtml(query) + '</strong></a>';
 
-    $results.html(html).addClass('is-open');
+    $results.html(html).addClass('streamhive-is-open');
     $input.attr('aria-expanded', 'true');
     activeIndex = -1;
   };
@@ -849,7 +849,7 @@ document.documentElement.classList.add('js-ready');
     }
 
     if (request && request.readyState !== 4) request.abort();
-    $results.html('<div class="v2-live-search-loading"><span></span> Searching...</div>').addClass('is-open');
+    $results.html('<div class="streamhive-v2-live-search-loading"><span></span> Searching...</div>').addClass('streamhive-is-open');
     $input.attr('aria-expanded', 'true');
 
     request = $.ajax({
@@ -871,14 +871,14 @@ document.documentElement.classList.add('js-ready');
 
   $input.on('focus', function () {
     if ($results.children().length && String($input.val() || '').trim().length >= 2) {
-      $results.addClass('is-open');
+      $results.addClass('streamhive-is-open');
       $input.attr('aria-expanded', 'true');
     }
   });
 
   $input.on('keydown', function (event) {
-    const $items = $results.find('.v2-live-search-item');
-    if (!$results.hasClass('is-open') || !$items.length) {
+    const $items = $results.find('.streamhive-v2-live-search-item');
+    if (!$results.hasClass('streamhive-is-open') || !$items.length) {
       if (event.key === 'Escape') hideResults();
       return;
     }
@@ -898,13 +898,13 @@ document.documentElement.classList.add('js-ready');
     }
   });
 
-  $(document).on('mousemove', '.v2-live-search-item', function () {
+  $(document).on('mousemove', '.streamhive-v2-live-search-item', function () {
     const index = parseInt($(this).data('live-search-index'), 10);
     if (!Number.isNaN(index)) setActive(index);
   });
 
   $(document).on('mousedown', function (event) {
-    if (!$(event.target).closest('.js-live-search-form').length) hideResults();
+    if (!$(event.target).closest('.streamhive-js-live-search-form').length) hideResults();
   });
 
   $form.on('submit', function () {
@@ -916,19 +916,19 @@ document.documentElement.classList.add('js-ready');
 (function ($) {
   if (!$) return;
 
-  const $backdrop = $('.js-share-backdrop').first();
-  const $bar = $('.js-share-bar').first();
+  const $backdrop = $('.streamhive-js-share-backdrop').first();
+  const $bar = $('.streamhive-js-share-bar').first();
   if (!$backdrop.length || !$bar.length) return;
 
-  const $urlInput = $backdrop.find('.js-share-url').first();
-  const $copy = $backdrop.find('.js-share-copy').first();
-  const $native = $backdrop.find('.js-share-native').first();
-  const $whatsapp = $backdrop.find('.js-share-whatsapp').first();
-  const $facebook = $backdrop.find('.js-share-facebook').first();
-  const $x = $backdrop.find('.js-share-x').first();
-  const $telegram = $backdrop.find('.js-share-telegram').first();
-  const $reddit = $backdrop.find('.js-share-reddit').first();
-  const $email = $backdrop.find('.js-share-email').first();
+  const $urlInput = $backdrop.find('.streamhive-js-share-url').first();
+  const $copy = $backdrop.find('.streamhive-js-share-copy').first();
+  const $native = $backdrop.find('.streamhive-js-share-native').first();
+  const $whatsapp = $backdrop.find('.streamhive-js-share-whatsapp').first();
+  const $facebook = $backdrop.find('.streamhive-js-share-facebook').first();
+  const $x = $backdrop.find('.streamhive-js-share-x').first();
+  const $telegram = $backdrop.find('.streamhive-js-share-telegram').first();
+  const $reddit = $backdrop.find('.streamhive-js-share-reddit').first();
+  const $email = $backdrop.find('.streamhive-js-share-email').first();
 
   const siteName = String(document.body?.dataset?.siteName || 'StreamHIVE').trim() || 'StreamHIVE';
   let shareTitle = document.title || siteName;
@@ -948,7 +948,7 @@ document.documentElement.classList.add('js-ready');
   };
 
   const closeShare = function () {
-    $backdrop.removeClass('is-open').attr('aria-hidden', 'true');
+    $backdrop.removeClass('streamhive-is-open').attr('aria-hidden', 'true');
     $('body').removeClass('share-bar-open');
   };
 
@@ -961,21 +961,21 @@ document.documentElement.classList.add('js-ready');
     const modalTitle = 'Share ' + (shareTitle || 'this page');
     $('#shareBarTitle').text(modalTitle);
     $copy.html('<i class="fa-regular fa-copy"></i> Copy').removeClass('is-copied');
-    $backdrop.addClass('is-open').attr('aria-hidden', 'false');
+    $backdrop.addClass('streamhive-is-open').attr('aria-hidden', 'false');
     $('body').addClass('share-bar-open');
     setTimeout(function () { $urlInput.trigger('focus').trigger('select'); }, 80);
   };
 
-  $(document).on('click', '.js-share-open', function (event) {
+  $(document).on('click', '.streamhive-js-share-open', function (event) {
     event.preventDefault();
     openShare(this);
   });
 
   $backdrop.on('mousedown touchstart', function (event) {
-    if (!$(event.target).closest('.js-share-bar').length) closeShare();
+    if (!$(event.target).closest('.streamhive-js-share-bar').length) closeShare();
   });
 
-  $backdrop.find('.js-share-close').on('click', function () { closeShare(); });
+  $backdrop.find('.streamhive-js-share-close').on('click', function () { closeShare(); });
 
   $native.on('click', function (event) {
     if (navigator.share) {
@@ -1003,7 +1003,7 @@ document.documentElement.classList.add('js-ready');
   });
 
   $(document).on('keydown', function (event) {
-    if (event.key === 'Escape' && $backdrop.hasClass('is-open')) closeShare();
+    if (event.key === 'Escape' && $backdrop.hasClass('streamhive-is-open')) closeShare();
   });
 })(window.jQuery);
 
@@ -1012,15 +1012,15 @@ document.documentElement.classList.add('js-ready');
 (function () {
   if (typeof window.Splide === 'undefined') return;
 
-  const hero = document.querySelector('.js-home-hero-splide');
+  const hero = document.querySelector('.streamhive-js-home-hero-splide');
   if (!hero) return;
 
-  const shell = hero.closest('.v2-home-hero-carousel');
-  const backdrop = shell ? shell.querySelector('.v2-home-hero-backdrop') : null;
+  const shell = hero.closest('.streamhive-v2-home-hero-carousel');
+  const backdrop = shell ? shell.querySelector('.streamhive-v2-home-hero-backdrop') : null;
 
   const updateBackdrop = function (splide) {
     const slide = splide.Components.Slides.getAt(splide.index);
-    const node = slide && slide.slide ? slide.slide.querySelector('.v2-home-hero-slide') : null;
+    const node = slide && slide.slide ? slide.slide.querySelector('.streamhive-v2-home-hero-slide') : null;
     const image = node ? node.getAttribute('data-hero-backdrop') : '';
     if (backdrop && image) backdrop.style.backgroundImage = "url('" + image.replace(/'/g, "%27") + "')";
   };
@@ -1054,7 +1054,7 @@ document.documentElement.classList.add('js-ready');
 (function () {
   if (typeof window.Splide === 'undefined') return;
 
-  document.querySelectorAll('.js-collection-splide').forEach(function (carousel) {
+  document.querySelectorAll('.streamhive-js-collection-splide').forEach(function (carousel) {
     if (carousel.classList.contains('is-mounted')) return;
 
     const splide = new Splide(carousel, {
@@ -1080,7 +1080,7 @@ document.documentElement.classList.add('js-ready');
       const list = carousel.querySelector('.splide__list');
       if (!track || !list) return;
       const isOverflowing = list.scrollWidth > track.clientWidth + 2;
-      carousel.classList.toggle('is-collection-overflowing', isOverflowing);
+      carousel.classList.toggle('streamhive-is-collection-overflowing', isOverflowing);
     };
 
     splide.on('mounted resized updated refresh', updateCollectionOverflow);

@@ -11,8 +11,8 @@ $summary = $query !== ''
     ? (string)$total . ' live ' . strtolower($itemLabel) . ' for "' . $query . '"'
     : (string)$total . ' live ' . strtolower($itemLabel);
 ?>
-<div class="js-jquery-listing-shell jquery-listing-shell" data-jquery-listing="search">
-<section class="glass rounded-4 p-4 mb-4 text-white">
+<div class="streamhive-js-jquery-listing-shell streamhive-jquery-listing-shell" data-jquery-listing="search">
+<section class="streamhive-glass rounded-4 p-4 mb-4 text-white">
   <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
     <div>
       <h1 class="h2 mb-1">Search</h1>
@@ -79,7 +79,7 @@ $summary = $query !== ''
 
 <div class="row g-3">
 <?php foreach ($items as $item): echo View::partial('partials/media-card', ['item' => $item, 'type' => $item['media_type'] ?? 'movie', 'allowMissingPoster' => true]); endforeach; ?>
-<?php if (!$items): ?><div class="col-12"><div class="glass rounded-4 p-4 text-white">No results found. Try a different title, type, genre, year, age rating, or TMDB rating filter.</div></div><?php endif; ?>
+<?php if (!$items): ?><div class="col-12"><div class="streamhive-glass rounded-4 p-4 text-white">No results found. Try a different title, type, genre, year, age rating, or TMDB rating filter.</div></div><?php endif; ?>
 </div>
 
 <?= View::partial('partials/pagination', ['page' => $page, 'pages' => $pages, 'total' => $total, 'perPage' => $perPage ?? 24, 'itemLabel' => $itemLabel]) ?>
