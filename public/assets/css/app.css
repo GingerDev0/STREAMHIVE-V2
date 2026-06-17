@@ -990,10 +990,10 @@ aside.glass{border-radius:1.65rem!important}.v2-sticky-side aside,.col-lg-4 asid
 .coming-empty{border-radius:1.35rem;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.10);color:#fff;}
 .coming-empty i{font-size:2rem;color:#e50914;}
 .coming-info-modal .modal-dialog{max-width:min(58rem,calc(100vw - 1.5rem));}
-.coming-info-modal{z-index:2147482001!important;}
+.modal.coming-info-modal{z-index:2147482001!important;}
 .modal-backdrop.coming-info-backdrop-layer{z-index:2147482000!important;}
 .coming-info-modal-content{position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.14);border-radius:.9rem;background:#09090b;color:#fff;box-shadow:0 2rem 5rem rgba(0,0,0,.72);}
-.coming-info-backdrop{position:absolute;inset:0;background-position:center;background-size:cover;opacity:.34;filter:saturate(1.05) contrast(1.05);}
+.coming-info-backdrop{position:absolute;inset:0;background-position:center;background-size:cover;opacity:.34;filter:saturate(1.05) contrast(1.05);pointer-events:none;}
 .coming-info-backdrop:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.98) 0%,rgba(0,0,0,.86) 48%,rgba(0,0,0,.58) 100%),linear-gradient(0deg,rgba(0,0,0,.98),rgba(0,0,0,.18));}
 .coming-info-close{position:absolute;right:.85rem;top:.85rem;z-index:4;width:2.4rem;height:2.4rem;border:0;border-radius:.5rem;background:rgba(0,0,0,.58);color:#fff;border:1px solid rgba(255,255,255,.14);}
 .coming-info-close:hover{background:var(--brand);color:#fff;}
@@ -2665,8 +2665,12 @@ main.v2-main{
 .modal-backdrop.fetch-modal-backdrop{
   z-index:2147483000!important;
 }
-body.modal-open #contentFetchModal.fetch-modal{
+body.modal-open #contentFetchModal.fetch-modal.show{
   display:block!important;
+}
+body.modal-open #contentFetchModal.fetch-modal:not(.show){
+  display:none!important;
+  pointer-events:none!important;
 }
 
 /* Share bar modal */
@@ -4593,4 +4597,32 @@ body.v2-body{
   border-radius:.5rem!important;
   object-fit:cover!important;
   object-position:center center!important;
+}
+
+/* Coming modal layering: keep regular Bootstrap backdrops below the info modal,
+   and prevent the hidden fetch modal from becoming a click shield. */
+body.modal-open #contentFetchModal.fetch-modal:not(.show){
+  display:none!important;
+  visibility:hidden!important;
+  pointer-events:none!important;
+  z-index:-1!important;
+}
+body.modal-open .modal-backdrop:not(.fetch-modal-backdrop){
+  pointer-events:none!important;
+  z-index:2147481000!important;
+}
+body.modal-open .modal.coming-info-modal.show{
+  display:block!important;
+  pointer-events:auto!important;
+  z-index:2147483000!important;
+}
+.modal.coming-info-modal.show .modal-dialog,
+.modal.coming-info-modal.show .coming-info-modal-content{
+  position:relative!important;
+  pointer-events:auto!important;
+  z-index:2147483000!important;
+}
+.modal.coming-info-modal.show .coming-info-close{
+  pointer-events:auto!important;
+  z-index:2147483001!important;
 }

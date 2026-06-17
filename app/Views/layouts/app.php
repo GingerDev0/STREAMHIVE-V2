@@ -66,7 +66,7 @@ $isBrowseNavActive = array_reduce($browseNavItems, static fn(bool $active, array
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css" rel="stylesheet">
-  <link href="<?= asset('css/app.css') ?>" rel="stylesheet">
+  <link href="<?= e(asset('css/app.css') . '?v=' . (string)@filemtime(public_path('assets/css/app.css'))) ?>" rel="stylesheet">
 </head>
 <body class="v2-body">
 <div class="v2-orb v2-orb-one"></div>
