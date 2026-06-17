@@ -97,8 +97,10 @@
       <div class="coming-info-body">
         <div class="coming-info-poster"><img src="/assets/img/placeholder.jpg" alt="" data-coming-info-poster></div>
         <div class="coming-info-copy">
-          <span class="coming-info-type" data-coming-info-type>Movie</span>
-          <h2 id="comingInfoTitle" data-coming-info-title>Title</h2>
+          <div class="coming-info-header">
+            <span class="coming-info-type" data-coming-info-type>Movie</span>
+            <h2 id="comingInfoTitle" data-coming-info-title>Title</h2>
+          </div>
           <div class="coming-info-meta">
             <span data-coming-info-date></span>
             <span data-coming-info-rating></span>

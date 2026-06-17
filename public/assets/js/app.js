@@ -579,7 +579,9 @@ document.documentElement.classList.add('js-ready');
     setText('[data-coming-info-date]', $card.data('date'), '');
     setText('[data-coming-info-rating]', rating ? 'TMDB ' + rating : '', '');
     $('[data-coming-info-genres]').html(genres.map(function (genre) {
-      return '<span>' + $('<div>').text(genre).html() + '</span>';
+      const safeGenre = $('<div>').text(genre).html();
+      const genreUrl = '/s?genre=' + encodeURIComponent(genre) + (mediaType ? '&type=' + encodeURIComponent(mediaType) : '');
+      return '<a href="' + genreUrl + '">' + safeGenre + '</a>';
     }).join('')).toggle(genres.length > 0);
     loadComingTrailer(mediaType, tmdbId, title);
 
