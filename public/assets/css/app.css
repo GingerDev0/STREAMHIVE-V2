@@ -1007,6 +1007,8 @@ aside.glass{border-radius:1.65rem!important}.v2-sticky-side aside,.col-lg-4 asid
 .coming-info-header h2{margin:0;min-width:0;color:#fff;font-size:clamp(1.25rem,2.4vw,2.1rem);line-height:1.02;font-weight:1000;}
 .coming-info-meta{display:flex;align-items:center;gap:.55rem;flex-wrap:wrap;margin-bottom:.85rem;}
 .coming-info-meta span,.coming-info-genres a{display:inline-flex;align-items:center;border-radius:.45rem;padding:.42rem .55rem;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.13);color:rgba(255,255,255,.86);font-size:.82rem;font-weight:850;}
+.coming-info-meta span,.coming-info-genres a{gap:.38rem;}
+.coming-info-meta i,.coming-info-genres i{color:#e50914;font-size:.78rem;}
 .coming-info-genres a{text-decoration:none;transition:background .18s ease,border-color .18s ease,color .18s ease;}
 .coming-info-genres a:hover{background:rgba(229,9,20,.9);border-color:rgba(229,9,20,.95);color:#fff;}
 .coming-info-copy p{margin:0;color:rgba(255,255,255,.76);line-height:1.65;max-width:46rem;}

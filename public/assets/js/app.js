@@ -522,6 +522,16 @@ document.documentElement.classList.add('js-ready');
     $target.text(text).toggle(text !== '');
   };
 
+  const setComingChip = function (selector, iconClass, value) {
+    const text = String(value || '').trim();
+    const $target = $(selector);
+    if (!text) {
+      $target.empty().hide();
+      return;
+    }
+    $target.html('<i class="fa-solid ' + iconClass + '"></i><span>' + $('<div>').text(text).html() + '</span>').show();
+  };
+
   const resetComingTrailer = function () {
     $('[data-coming-info-trailer]').attr('hidden', true).removeClass('is-loading has-trailer');
     $('[data-coming-info-trailer-frame]').empty();
@@ -579,12 +589,12 @@ document.documentElement.classList.add('js-ready');
     $('[data-coming-info-type-icon]')
       .removeClass('fa-film fa-tv')
       .addClass(mediaType === 'tv' ? 'fa-tv' : 'fa-film');
-    setText('[data-coming-info-date]', $card.data('date'), '');
-    setText('[data-coming-info-rating]', rating ? 'TMDB ' + rating : '', '');
+    setComingChip('[data-coming-info-date]', 'fa-calendar-days', $card.data('date'));
+    setComingChip('[data-coming-info-rating]', 'fa-star', rating);
     $('[data-coming-info-genres]').html(genres.map(function (genre) {
       const safeGenre = $('<div>').text(genre).html();
       const genreUrl = '/s?genre=' + encodeURIComponent(genre) + (mediaType ? '&type=' + encodeURIComponent(mediaType) : '');
-      return '<a href="' + genreUrl + '">' + safeGenre + '</a>';
+      return '<a href="' + genreUrl + '"><i class="fa-solid fa-tag"></i><span>' + safeGenre + '</span></a>';
     }).join('')).toggle(genres.length > 0);
     loadComingTrailer(mediaType, tmdbId, title);
 
