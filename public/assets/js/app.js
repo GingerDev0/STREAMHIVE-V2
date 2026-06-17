@@ -930,7 +930,8 @@ document.documentElement.classList.add('js-ready');
   const $reddit = $backdrop.find('.js-share-reddit').first();
   const $email = $backdrop.find('.js-share-email').first();
 
-  let shareTitle = document.title || 'StreamHIVE';
+  const siteName = String(document.body?.dataset?.siteName || 'StreamHIVE').trim() || 'StreamHIVE';
+  let shareTitle = document.title || siteName;
   let shareUrl = window.location.href;
 
   const encode = encodeURIComponent;
@@ -953,7 +954,7 @@ document.documentElement.classList.add('js-ready');
 
   const openShare = function (button) {
     const $button = $(button || []);
-    shareTitle = String($button.data('share-title') || document.title || 'StreamHIVE').trim();
+    shareTitle = String($button.data('share-title') || document.title || siteName).trim();
     shareUrl = String($button.data('share-url') || window.location.href).trim();
     try { shareUrl = new URL(shareUrl, window.location.href).href; } catch (error) { shareUrl = window.location.href; }
     setLinks();

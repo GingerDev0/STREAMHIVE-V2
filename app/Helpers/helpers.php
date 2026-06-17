@@ -73,8 +73,13 @@ function actor_url(array $person): string {
 }
 
 
+function site_name(): string {
+    $name = trim((string)\App\Core\Config::get('SITE_NAME', 'StreamHIVE'));
+    return $name !== '' ? $name : 'StreamHIVE';
+}
+
 function share_button(string $title, string $url, string $label = 'Share'): string {
-    $title = trim($title) !== '' ? $title : 'StreamHIVE';
+    $title = trim($title) !== '' ? $title : site_name();
     $url = absolute_url($url);
     return '<button class="btn btn-outline-light btn-lg v2-share-open js-share-open" type="button" data-share-title="' . e($title) . '" data-share-url="' . e($url) . '"><i class="fa-solid fa-share-nodes me-2"></i>' . e($label) . '</button>';
 }

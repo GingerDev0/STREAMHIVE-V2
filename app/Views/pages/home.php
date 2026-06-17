@@ -19,7 +19,7 @@ $heroBackground = $heroMovies[0] ?? ($moviesTrending[0] ?? $moviesRecent[0] ?? n
             $movieRuntime = media_runtime($movie, 'movie');
             $movieRating = round((float)($movie['vote_average'] ?? 0), 1);
             $movieGenres = is_array($movie['genres'] ?? null) ? array_slice($movie['genres'], 0, 3) : [];
-            $movieOverview = meta_excerpt((string)($movie['overview'] ?? 'Discover this movie in StreamHIVE.'), 190);
+            $movieOverview = meta_excerpt((string)($movie['overview'] ?? 'Discover this movie in ' . site_name() . '.'), 190);
             $movieMediaPayload = media_storage_payload($movie, 'movie', $movieUrl, $movieTitle);
           ?>
           <li class="splide__slide">

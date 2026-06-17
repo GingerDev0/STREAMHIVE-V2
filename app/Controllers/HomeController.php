@@ -33,10 +33,12 @@ final class HomeController
             );
         }
 
+        $siteName = site_name();
+
         return View::render('pages/home', compact('moviesRecent','moviesTrending','tvRecent','tvTrending','heroMovies') + [
-            'title' => 'StreamHIVE',
+            'title' => $siteName,
             'metaDescription' => 'Explore trending movies and TV shows with posters, cast, episodes, ratings, genres, bookmarks, and instant playback.',
-            'ogTitle' => 'StreamHIVE | Trending Movies and TV Shows',
+            'ogTitle' => $siteName . ' | Trending Movies and TV Shows',
             'ogDescription' => 'Discover trending movies and TV shows in a bold cinematic interface.',
             'canonicalUrl' => absolute_url('/'),
             'homeAlertSettings' => [],

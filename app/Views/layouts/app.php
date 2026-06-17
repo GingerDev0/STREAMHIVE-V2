@@ -1,7 +1,7 @@
 <?php require_once app_path('app/Helpers/helpers.php'); ?>
 <?php
-$siteName = 'StreamHIVE';
-$pageTitleRaw = trim((string)($title ?? 'StreamHIVE'));
+$siteName = site_name();
+$pageTitleRaw = trim((string)($title ?? $siteName));
 $pageTitle = str_contains($pageTitleRaw, $siteName) ? $pageTitleRaw : $pageTitleRaw . ' | ' . $siteName;
 $pageDescription = meta_excerpt((string)($metaDescription ?? 'Explore trending movies and TV shows with cast, episodes, ratings, genres, and instant playback in a bold cinematic layout.'), 165);
 $canonicalUrl = (string)($canonicalUrl ?? current_url());
@@ -68,13 +68,13 @@ $isBrowseNavActive = array_reduce($browseNavItems, static fn(bool $active, array
   <link href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css" rel="stylesheet">
   <link href="<?= e(asset('css/app.css') . '?v=' . (string)@filemtime(public_path('assets/css/app.css'))) ?>" rel="stylesheet">
 </head>
-<body class="v2-body">
+<body class="v2-body" data-site-name="<?= e($siteName) ?>">
 <div class="v2-orb v2-orb-one"></div>
 <div class="v2-orb v2-orb-two"></div>
 <nav class="navbar navbar-expand-lg navbar-dark v2-nav sticky-top">
   <div class="container-fluid px-3 px-lg-4">
     <a class="navbar-brand v2-brand" href="/">
-      <span class="v2-brand-mark"><img src="<?= e($siteLogo) ?>" alt="StreamHIVE logo"></span>
+      <span class="v2-brand-mark"><img src="<?= e($siteLogo) ?>" alt="<?= e($siteName) ?> logo"></span>
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"><span class="navbar-toggler-icon"></span></button>
     <div class="collapse navbar-collapse" id="mainNav">
@@ -126,8 +126,8 @@ $isBrowseNavActive = array_reduce($browseNavItems, static fn(bool $active, array
   <div class="pro-footer-shell">
     <div class="pro-footer-inner">
       <div class="pro-footer-brand-block">
-        <a class="pro-footer-brand" href="/" aria-label="StreamHIVE home">
-          <span class="pro-footer-brand-mark"><img src="<?= e($siteLogo) ?>" alt="StreamHIVE logo"></span>
+        <a class="pro-footer-brand" href="/" aria-label="<?= e($siteName) ?> home">
+          <span class="pro-footer-brand-mark"><img src="<?= e($siteLogo) ?>" alt="<?= e($siteName) ?> logo"></span>
         </a>
         <p>Find something worth watching without digging through the noise.</p>
       </div>

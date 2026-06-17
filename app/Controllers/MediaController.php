@@ -32,10 +32,12 @@ final class MediaController
             return $this->notFound();
         }
         if (!is_released_media($movie)) return $this->notFound();
+        $siteName = site_name();
+
         return View::render('pages/movie', [
             'title' => ($movie['title'] ?? 'Movie') . ' | Watch Movie',
             'metaDescription' => meta_excerpt($movie['overview'] ?? ('Watch ' . ($movie['title'] ?? 'this movie') . ' with cast, ratings, genres, and recommendations.')),
-            'ogTitle' => ($movie['title'] ?? 'Movie') . ' | StreamHIVE',
+            'ogTitle' => ($movie['title'] ?? 'Movie') . ' | ' . $siteName,
             'ogDescription' => meta_excerpt($movie['overview'] ?? ''),
             'ogType' => 'video.movie',
             'ogImage' => meta_image($movie['backdrop_path'] ?? ($movie['poster_path'] ?? null)),
@@ -216,10 +218,12 @@ final class MediaController
             return $this->fetchingPage('tv', (string)$params['slug'], 'This TV show is being fetched from TMDB. Please wait...');
         }
         if (!is_released_media($tv)) return $this->notFound();
+        $siteName = site_name();
+
         return View::render('pages/tv', [
             'title' => ($tv['title'] ?? 'TV Show') . ' | TV Show',
             'metaDescription' => meta_excerpt($tv['overview'] ?? ('Explore episodes, seasons, cast, ratings, and recommendations for ' . ($tv['title'] ?? 'this TV show') . '.')),
-            'ogTitle' => ($tv['title'] ?? 'TV Show') . ' | StreamHIVE',
+            'ogTitle' => ($tv['title'] ?? 'TV Show') . ' | ' . $siteName,
             'ogDescription' => meta_excerpt($tv['overview'] ?? ''),
             'ogType' => 'video.tv_show',
             'ogImage' => meta_image($tv['backdrop_path'] ?? ($tv['poster_path'] ?? null)),
@@ -321,7 +325,7 @@ final class MediaController
         return View::render('pages/season', [
             'title' => $tv['title'] . ' - Season ' . $seasonNumber,
             'metaDescription' => meta_excerpt('Browse every episode from ' . $tv['title'] . ' season ' . $seasonNumber . '.'),
-            'ogTitle' => $tv['title'] . ' - Season ' . $seasonNumber . ' | StreamHIVE',
+            'ogTitle' => $tv['title'] . ' - Season ' . $seasonNumber . ' | ' . site_name(),
             'ogDescription' => meta_excerpt($season['overview'] ?? ($tv['overview'] ?? '')),
             'ogType' => 'video.tv_show',
             'ogImage' => meta_image($season['poster_path'] ?? ($tv['backdrop_path'] ?? ($tv['poster_path'] ?? null))),
@@ -640,10 +644,12 @@ final class MediaController
             }
         }
 
+        $siteName = site_name();
+
         return View::render('pages/coming', [
             'title' => 'Coming This Year',
             'metaDescription' => 'Browse movies and TV shows coming later this year, grouped into tabs with quick pagination.',
-            'ogTitle' => 'Coming This Year | StreamHIVE',
+            'ogTitle' => 'Coming This Year | ' . $siteName,
             'ogDescription' => 'Upcoming movies and TV shows coming this year.',
             'canonicalUrl' => absolute_url('coming-this-year'),
             'year' => $year,
@@ -689,11 +695,13 @@ final class MediaController
         $pagination['items'] = $filteredItems;
         $pagination['items'] = array_slice($pagination['items'], ($page - 1) * $perPage, $perPage);
 
+        $siteName = site_name();
+
         return View::render('pages/search', [
             'title' => $query ? 'Search: ' . $query : 'Discover Movies and TV',
             'metaDescription' => $query ? meta_excerpt('Search results for ' . $query . ' across movies, TV shows, and actors.') : 'Discover movies and TV shows by title, genre, age rating, year, and sort order.',
-            'ogTitle' => $query ? 'Search: ' . $query . ' | StreamHIVE' : 'Discover Movies and TV | StreamHIVE',
-            'ogDescription' => $query ? meta_excerpt('Search results for ' . $query . ' on StreamHIVE.') : 'Find movies and TV shows with advanced filters.',
+            'ogTitle' => $query ? 'Search: ' . $query . ' | ' . $siteName : 'Discover Movies and TV | ' . $siteName,
+            'ogDescription' => $query ? meta_excerpt('Search results for ' . $query . ' on ' . $siteName . '.') : 'Find movies and TV shows with advanced filters.',
             'canonicalUrl' => absolute_url('s' . (!empty($_SERVER['QUERY_STRING'] ?? '') ? '?' . (string)$_SERVER['QUERY_STRING'] : '')),
             'items' => $pagination['items'],
             'total' => $pagination['total'],
@@ -726,11 +734,13 @@ final class MediaController
 
         $pagination = $this->liveListingItems($type, $page, $genre, $year, $score, $sort, $rating);
 
+        $siteName = site_name();
+
         return View::render('pages/listing', [
             'title' => $type === 'movie' ? 'All Movies' : 'All TV Shows',
             'metaDescription' => $type === 'movie' ? 'Browse live movie results from TMDB with filters and sorting.' : 'Browse live TV results from TMDB with filters and sorting.',
-            'ogTitle' => $type === 'movie' ? 'All Movies | StreamHIVE' : 'All TV Shows | StreamHIVE',
-            'ogDescription' => $type === 'movie' ? 'Browse all movies on StreamHIVE.' : 'Browse all TV shows on StreamHIVE.',
+            'ogTitle' => $type === 'movie' ? 'All Movies | ' . $siteName : 'All TV Shows | ' . $siteName,
+            'ogDescription' => $type === 'movie' ? 'Browse all movies on ' . $siteName . '.' : 'Browse all TV shows on ' . $siteName . '.',
             'canonicalUrl' => absolute_url($type === 'movie' ? 'movies' : 'tv'),
             'heading' => $type === 'movie' ? 'All Movies' : 'All TV Shows',
             'items' => $pagination['items'],
@@ -1383,7 +1393,7 @@ final class MediaController
     private function fetchingPage(string $type, string $slug, string $message): string
     {
         return View::render('pages/fetching-content', [
-            'title' => 'Fetching content | StreamHIVE',
+            'title' => 'Fetching content | ' . site_name(),
             'robots' => 'noindex, follow',
             'metaDescription' => 'This page is being fetched from TMDB.',
             'fetchType' => $type,

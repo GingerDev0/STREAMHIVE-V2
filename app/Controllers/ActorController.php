@@ -50,10 +50,12 @@ final class ActorController
         $page = min($page, $pages);
         $items = array_slice($items, ($page - 1) * $perPage, $perPage);
 
+        $siteName = site_name();
+
         return View::render('pages/actors', [
             'title' => 'Actors',
             'metaDescription' => 'Browse actor pages and filmographies from TMDB.',
-            'ogTitle' => 'Actors | StreamHIVE',
+            'ogTitle' => 'Actors | ' . $siteName,
             'ogDescription' => 'Browse actors and open filmography pages.',
             'canonicalUrl' => absolute_url('actors'),
             'items' => $items,
@@ -81,7 +83,7 @@ final class ActorController
 
         if (!$isFull) {
             return View::render('pages/fetching-content', [
-                'title' => 'Fetching actor | StreamHIVE',
+                'title' => 'Fetching actor | ' . site_name(),
                 'robots' => 'noindex, follow',
                 'metaDescription' => 'This actor page is being fetched from TMDB.',
                 'fetchType' => 'person',
@@ -94,7 +96,7 @@ final class ActorController
         return View::render('pages/actor', [
             'title' => ($actor['name'] ?? 'Actor') . ' | Filmography',
             'metaDescription' => meta_excerpt(($actor['biography'] ?? '') ?: ('Browse movies and TV shows featuring ' . ($actor['name'] ?? 'this actor') . '.')),
-            'ogTitle' => ($actor['name'] ?? 'Actor') . ' | StreamHIVE',
+            'ogTitle' => ($actor['name'] ?? 'Actor') . ' | ' . site_name(),
             'ogDescription' => meta_excerpt(($actor['biography'] ?? '') ?: ('Movies and TV shows featuring ' . ($actor['name'] ?? 'this actor') . '.')),
             'ogType' => 'profile',
             'ogImage' => meta_image($actor['profile_path'] ?? null, 'w500'),

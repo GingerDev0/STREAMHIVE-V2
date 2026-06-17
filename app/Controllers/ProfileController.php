@@ -10,11 +10,13 @@ final class ProfileController
 {
     public function index(): string
     {
+        $siteName = site_name();
+
         return View::render('pages/profile', [
             'title' => 'My Profile',
             'metaDescription' => 'View your local bookmarks and recently viewed movies and TV shows.',
-            'ogTitle' => 'My Profile | StreamHIVE',
-            'ogDescription' => 'Your local StreamHIVE profile with bookmarks and recently viewed items.',
+            'ogTitle' => 'My Profile | ' . $siteName,
+            'ogDescription' => 'Your local ' . $siteName . ' profile with bookmarks and recently viewed items.',
             'canonicalUrl' => absolute_url('profile'),
             'robots' => 'noindex, follow',
         ]);
