@@ -13,7 +13,7 @@ This version is intentionally **live-only**. It does not require MySQL, SQLite, 
 ## Highlights
 
 - **Live TMDB data** for movies, TV shows, seasons, episodes, actors, cast, crew, collections, recommendations, ratings, posters, and backdrops.
-- **No database required**. No schema, no imports, no cache warmup, no catalogue maintenance.
+- **No database required**. No schema, no imports, no catalogue maintenance.
 - **Premium streaming UI** with dark cinematic layouts, poster grids, backdrop heroes, responsive cards, and Font Awesome icons.
 - **Movie and TV detail pages** with inline player panels, metadata, genres, cast and crew, collections, seasons, episodes, and related titles.
 - **Coming This Year** page with English-language upcoming movie and TV results, client-side pagination, and click-to-open detail modals.
@@ -149,7 +149,7 @@ Movie, TV, season, episode, and actor pages are assembled from live TMDB respons
 
 ### Coming This Year
 
-The upcoming page fetches every available TMDB discover page for the remaining current-year date range, filters to English-original titles, removes duplicates, and renders tabbed movie/TV grids. Each card opens a high-layer Bootstrap modal with poster, backdrop, rating, release date, genres, and overview.
+The upcoming page fetches every available TMDB discover page for the remaining current-year date range, filters to English-original titles, removes duplicates, and renders tabbed movie/TV grids. A short-lived runtime cache avoids repeating the full TMDB page sweep on every request. Each card opens a high-layer Bootstrap modal with poster, backdrop, rating, release date, genres, and overview.
 
 ### Profile
 
@@ -199,7 +199,7 @@ The app does not:
 
 - Create a database schema
 - Persist movie or TV records
-- Store local API caches
+- Maintain a permanent local API cache
 - Run admin imports
 - Host or distribute video files
 

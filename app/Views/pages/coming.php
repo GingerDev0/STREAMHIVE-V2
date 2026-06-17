@@ -60,7 +60,7 @@
               data-poster="<?= e($poster) ?>"
               data-backdrop="<?= e($backdrop) ?>">
               <div class="coming-poster" aria-label="<?= e($title) ?> is not released yet">
-                <img src="<?= e($poster) ?>" alt="<?= e($title) ?> poster">
+                <img src="<?= e($poster) ?>" alt="<?= e($title) ?> poster" loading="lazy" decoding="async">
                 <span class="coming-poster-gradient"></span>
                 <span class="coming-soon-pill"><i class="fa-solid fa-lock"></i> Locked until release</span>
                 <span class="coming-info-pill"><i class="fa-solid fa-circle-info"></i> Details</span>

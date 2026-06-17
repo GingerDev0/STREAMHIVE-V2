@@ -976,6 +976,10 @@ final class MediaController
 
     private function collectComingThisYear(TmdbClient $tmdb, string $type, string $start, string $end, int $year): array
     {
+        $cacheKey = $this->comingCacheKey($type, $start, $end);
+        $cached = $this->readComingCache($cacheKey);
+        if (is_array($cached)) return $cached;
+
         $firstPage = $type === 'tv'
             ? $tmdb->comingTvThisYear($start, $end, 1)
             : $tmdb->comingMoviesThisYear($start, $end, 1);
@@ -1000,7 +1004,46 @@ final class MediaController
 
         $items = array_map(fn(array $item): array => $this->normaliseTmdbSummary($item, $type), $items);
 
-        return $this->comingItems($this->uniqueTmdbItems($items), $type, $year);
+        $items = $this->comingItems($this->uniqueTmdbItems($items), $type, $year);
+        $this->writeComingCache($cacheKey, $items);
+
+        return $items;
+    }
+
+    private function comingCacheKey(string $type, string $start, string $end): string
+    {
+        return 'coming-' . preg_replace('/[^a-z0-9_-]/i', '-', $type . '-' . $start . '-' . $end) . '.json';
+    }
+
+    private function readComingCache(string $key): ?array
+    {
+        $file = $this->comingCacheFile($key);
+        if ($file === null || !is_file($file)) return null;
+        if ((time() - (int)filemtime($file)) > 21600) return null;
+
+        $payload = json_decode((string)file_get_contents($file), true);
+        if (!is_array($payload)) return null;
+
+        return $payload;
+    }
+
+    private function writeComingCache(string $key, array $items): void
+    {
+        $file = $this->comingCacheFile($key, true);
+        if ($file === null) return;
+
+        @file_put_contents($file, (string)json_encode($items, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+    }
+
+    private function comingCacheFile(string $key, bool $create = false): ?string
+    {
+        $dir = rtrim(sys_get_temp_dir(), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'streamhive-cache';
+        if (!is_dir($dir)) {
+            if (!$create || !@mkdir($dir, 0775, true)) return null;
+        }
+        if (!is_writable($dir)) return null;
+
+        return $dir . DIRECTORY_SEPARATOR . $key;
     }
 
     private function comingItems(array $items, string $type, int $year): array
