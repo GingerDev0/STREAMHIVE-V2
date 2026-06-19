@@ -437,7 +437,7 @@ document.documentElement.classList.add('streamhive-js-ready');
   };
 
   $(document).on('click', '.streamhive-actor-tab[data-actor-tab]', function () {
-    activateActorTab($(this).data('streamhive-actor-tab'));
+    activateActorTab($(this).attr('data-actor-tab'));
   });
 
   $(document).on('click', '.streamhive-actor-page-btn[data-actor-page][data-page]', function () {
@@ -449,7 +449,7 @@ document.documentElement.classList.add('streamhive-js-ready');
   });
 
   $('.streamhive-actor-credit-panel').hide();
-  activateActorTab($('.streamhive-actor-tab.active').data('streamhive-actor-tab') || 'movie');
+  activateActorTab($('.streamhive-actor-tab.active').attr('data-actor-tab') || 'movie');
 })(window.jQuery);
 
 /* Movie detail tabs */
@@ -464,11 +464,11 @@ document.documentElement.classList.add('streamhive-js-ready');
   };
 
   $(document).on('click', '.streamhive-movie-detail-tab[data-movie-detail-tab]', function () {
-    activateMovieDetailTab($(this).data('streamhive-movie-detail-tab'));
+    activateMovieDetailTab($(this).attr('data-movie-detail-tab'));
   });
 
   $('.streamhive-movie-detail-panel').hide();
-  activateMovieDetailTab($('.streamhive-movie-detail-tab.active').data('streamhive-movie-detail-tab') || 'cast');
+  activateMovieDetailTab($('.streamhive-movie-detail-tab.active').attr('data-movie-detail-tab') || 'cast');
 })(window.jQuery);
 
 /* Coming this year tabs + jQuery pagination */
@@ -629,7 +629,7 @@ document.documentElement.classList.add('streamhive-js-ready');
   };
 
   $(document).on('click', '.streamhive-coming-tab[data-coming-tab]', function () {
-    activateComingTab($(this).data('streamhive-coming-tab'));
+    activateComingTab($(this).attr('data-coming-tab'));
   });
 
   $(document).on('click', '[data-coming-modal]', function (event) {
@@ -662,7 +662,7 @@ document.documentElement.classList.add('streamhive-js-ready');
   });
 
   $('.streamhive-coming-panel').hide();
-  activateComingTab($('.streamhive-coming-tab.active').data('streamhive-coming-tab') || 'movie');
+  activateComingTab($('.streamhive-coming-tab.active').attr('data-coming-tab') || 'movie');
 })(window.jQuery);
 
 /* jQuery listings: AJAX filters + pagination for /movies, /tv and /s */
