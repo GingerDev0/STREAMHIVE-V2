@@ -799,13 +799,16 @@ final class MediaController
             $total = 0;
         }
 
-        $items = $this->uniqueTmdbItems($items);
-        $total = array_sum($totalsByType);
-        $totalPages = $pagesByType ? max($pagesByType) : 1;
+        $items = array_values(array_filter(
+            $this->uniqueTmdbItems($items),
+            static fn(array $item): bool => ($item['media_type'] ?? '') === 'person' || is_released_media($item)
+        ));
+        $total = count($items);
+        $totalPages = max(1, (int)ceil($total / max(1, $perPage)));
 
         return [
             'items' => $items,
-            'total' => $total ?: count($items),
+            'total' => $total,
             'page' => $page,
             'pages' => max(1, min(500, $totalPages ?: (int)ceil(count($items) / max(1, $perPage)))),
         ];
@@ -968,6 +971,8 @@ final class MediaController
         return array_values(array_filter($items, static function (array $item) use ($genre, $year, $score): bool {
             $genres = $item['genres'] ?? [];
             if ($genre !== '' && !in_array($genre, $genres, true)) return false;
+
+            if (($item['media_type'] ?? '') !== 'person' && !is_released_media($item)) return false;
 
             $releaseYear = substr(media_release_date($item), 0, 4);
             if ($year !== '' && $releaseYear !== $year) return false;
