@@ -97,8 +97,17 @@ function github_version(): string {
     }
 
     $cacheBust = rawurlencode($localVersion . '-' . (string)time());
-    $url = 'https://raw.githubusercontent.com/GingerDev0/STREAMHIVE-V2/main/version.txt?streamhive_version=' . $cacheBust;
+    $url = 'https://api.github.com/repos/GingerDev0/STREAMHIVE-V2/contents/version.txt?ref=main&streamhive_version=' . $cacheBust;
     $version = '';
+    $decodeVersion = static function (string $body): string {
+        $body = trim($body);
+        $data = json_decode($body, true);
+        if (is_array($data) && isset($data['content'])) {
+            $decoded = base64_decode((string)preg_replace('/\s+/', '', (string)$data['content']), true);
+            if (is_string($decoded)) return trim($decoded);
+        }
+        return $body;
+    };
 
     if (function_exists('curl_init')) {
         $ch = curl_init($url);
@@ -112,7 +121,7 @@ function github_version(): string {
         $body = curl_exec($ch);
         $status = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
-        if (is_string($body) && $status >= 200 && $status < 300) $version = trim($body);
+        if (is_string($body) && $status >= 200 && $status < 300) $version = $decodeVersion($body);
     } else {
         $context = stream_context_create([
             'http' => [
@@ -121,7 +130,7 @@ function github_version(): string {
             ],
         ]);
         $body = @file_get_contents($url, false, $context);
-        if (is_string($body)) $version = trim($body);
+        if (is_string($body)) $version = $decodeVersion($body);
     }
 
     if ($version !== '') {
