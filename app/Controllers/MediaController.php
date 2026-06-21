@@ -774,9 +774,31 @@ final class MediaController
         try {
             $requests = [];
             if ($query === '') {
+                $today = (new \DateTimeImmutable('today'))->format('Y-m-d');
                 foreach ($tmdbPages as $tmdbPage) {
-                    if ($type !== 'tv' && $type !== 'person') $requests['movie:' . $tmdbPage] = ['path' => '/movie/popular', 'query' => ['page' => $tmdbPage]];
-                    if ($type !== 'movie' && $type !== 'person') $requests['tv:' . $tmdbPage] = ['path' => '/tv/popular', 'query' => ['page' => $tmdbPage]];
+                    if ($type !== 'tv' && $type !== 'person') {
+                        $requests['movie:' . $tmdbPage] = [
+                            'path' => '/discover/movie',
+                            'query' => [
+                                'include_adult' => 'false',
+                                'include_video' => 'false',
+                                'primary_release_date.lte' => $today,
+                                'sort_by' => 'popularity.desc',
+                                'page' => $tmdbPage,
+                            ],
+                        ];
+                    }
+                    if ($type !== 'movie' && $type !== 'person') {
+                        $requests['tv:' . $tmdbPage] = [
+                            'path' => '/discover/tv',
+                            'query' => [
+                                'include_adult' => 'false',
+                                'first_air_date.lte' => $today,
+                                'sort_by' => 'popularity.desc',
+                                'page' => $tmdbPage,
+                            ],
+                        ];
+                    }
                 }
             } else {
                 foreach ($tmdbPages as $tmdbPage) {
@@ -803,8 +825,10 @@ final class MediaController
             $this->uniqueTmdbItems($items),
             static fn(array $item): bool => ($item['media_type'] ?? '') === 'person' || is_released_media($item)
         ));
-        $total = count($items);
-        $totalPages = max(1, (int)ceil($total / max(1, $perPage)));
+        $total = $query === '' ? array_sum($totalsByType) : count($items);
+        $totalPages = $query === ''
+            ? ($pagesByType ? max($pagesByType) : 1)
+            : max(1, (int)ceil($total / max(1, $perPage)));
 
         return [
             'items' => $items,
