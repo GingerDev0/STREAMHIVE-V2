@@ -11,6 +11,9 @@ $ogType = (string)($ogType ?? 'website');
 $siteLogo = asset('img/logo.png');
 $ogImage = (string)($ogImage ?? absolute_url($siteLogo));
 $robots = (string)($robots ?? 'index, follow');
+$localVersion = app_version();
+$githubVersion = github_version();
+$hasVersionUpdate = $localVersion !== '' && $githubVersion !== '' && !hash_equals($localVersion, $githubVersion);
 $currentPath = '/' . trim((string)(parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/'), '/');
 if ($currentPath !== '/') $currentPath = rtrim($currentPath, '/');
 $genreNavItems = [
@@ -143,6 +146,11 @@ $isBrowseNavActive = array_reduce($browseNavItems, static fn(bool $active, array
 
         <div class="streamhive-pro-footer-group streamhive-pro-footer-note">
           <p>Created by <a href="https://github.com/GingerDev0" target="_blank" rel="noopener noreferrer">GingerDev</a></p>
+          <?php if ($hasVersionUpdate): ?>
+            <a class="streamhive-version-chip" href="https://github.com/GingerDev0/STREAMHIVE-V2" target="_blank" rel="noopener noreferrer" title="Installed <?= e($localVersion) ?>, latest <?= e($githubVersion) ?>">
+              <i class="fa-solid fa-cloud-arrow-down"></i><span>New version available</span>
+            </a>
+          <?php endif; ?>
         </div>
       </div>
     </div>

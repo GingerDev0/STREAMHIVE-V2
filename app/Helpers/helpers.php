@@ -78,6 +78,63 @@ function site_name(): string {
     return $name !== '' ? $name : 'StreamHIVE';
 }
 
+function app_version(): string {
+    $path = app_path('version.txt');
+    if (!is_file($path)) return '';
+    return trim((string)@file_get_contents($path));
+}
+
+function github_version(): string {
+    $cacheDir = app_path('storage/cache');
+    $cacheFile = $cacheDir . '/version-check.json';
+    $cacheTtl = 900;
+
+    if (is_file($cacheFile) && (time() - (int)@filemtime($cacheFile)) < $cacheTtl) {
+        $cached = json_decode((string)@file_get_contents($cacheFile), true);
+        if (is_array($cached)) return trim((string)($cached['version'] ?? ''));
+    }
+
+    $url = 'https://raw.githubusercontent.com/GingerDev0/STREAMHIVE-V2/main/version.txt';
+    $version = '';
+
+    if (function_exists('curl_init')) {
+        $ch = curl_init($url);
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_CONNECTTIMEOUT => 2,
+            CURLOPT_TIMEOUT => 3,
+            CURLOPT_USERAGENT => 'StreamHIVE-Version-Check',
+        ]);
+        $body = curl_exec($ch);
+        $status = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+        if (is_string($body) && $status >= 200 && $status < 300) $version = trim($body);
+    } else {
+        $context = stream_context_create([
+            'http' => [
+                'timeout' => 3,
+                'header' => "User-Agent: StreamHIVE-Version-Check\r\n",
+            ],
+        ]);
+        $body = @file_get_contents($url, false, $context);
+        if (is_string($body)) $version = trim($body);
+    }
+
+    if ($version !== '') {
+        if (!is_dir($cacheDir)) @mkdir($cacheDir, 0775, true);
+        @file_put_contents($cacheFile, json_encode(['version' => $version, 'checked_at' => time()]));
+    }
+
+    return $version;
+}
+
+function version_update_available(): bool {
+    $localVersion = app_version();
+    $githubVersion = github_version();
+    return $localVersion !== '' && $githubVersion !== '' && !hash_equals($localVersion, $githubVersion);
+}
+
 function share_button(string $title, string $url, string $label = 'Share'): string {
     $title = trim($title) !== '' ? $title : site_name();
     $url = absolute_url($url);

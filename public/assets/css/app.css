@@ -3846,6 +3846,29 @@ body.modal-open #contentFetchModal.streamhive-fetch-modal:not(.show){
   color:var(--brand)!important;
   background:transparent;
 }
+.streamhive-pro-footer-note .streamhive-version-chip{
+  display:inline-flex;
+  align-items:center;
+  gap:.35rem;
+  width:max-content;
+  max-width:100%;
+  padding:.32rem .55rem;
+  border-radius:999px;
+  background:rgba(229,9,20,.14);
+  border:1px solid rgba(229,9,20,.32);
+  color:#fff!important;
+  font-size:.76rem;
+  font-weight:900;
+  line-height:1;
+  text-decoration:none!important;
+}
+.streamhive-pro-footer-note .streamhive-version-chip i{
+  color:var(--brand,#e50914);
+}
+.streamhive-pro-footer-note .streamhive-version-chip:hover{
+  background:rgba(229,9,20,.24);
+  border-color:rgba(229,9,20,.52);
+}
 @media (max-width:1199.98px){
   .streamhive-pro-footer-inner,
   .streamhive-pro-footer-links{
