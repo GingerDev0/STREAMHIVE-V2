@@ -5284,19 +5284,21 @@ body.streamhive-v2-body{
   min-height:auto!important;
   padding:0!important;
   border:0!important;
-  border-radius:0!important;
+  border-radius:1.05rem!important;
   background:transparent!important;
   box-shadow:none!important;
-  overflow:visible!important;
+  overflow:hidden!important;
+  isolation:isolate!important;
 }
 .streamhive-v2-home-hero-carousel:after{
   display:none!important;
 }
 .streamhive-v2-home-hero-carousel .streamhive-v2-home-hero-backdrop{
-  inset:-1.5rem!important;
-  border-radius:1.15rem!important;
-  opacity:.34!important;
-  filter:saturate(1.12) contrast(1.05) blur(.2px)!important;
+  inset:0!important;
+  border-radius:inherit!important;
+  opacity:.3!important;
+  filter:saturate(1.12) contrast(1.05)!important;
+  transform:none!important;
 }
 .streamhive-v2-home-hero-carousel .streamhive-v2-home-splide{
   position:relative!important;
@@ -5315,9 +5317,12 @@ body.streamhive-v2-body{
   box-shadow:0 1.4rem 3.6rem rgba(0,0,0,.4)!important;
 }
 @media (max-width:767.98px){
-  .streamhive-v2-home-hero-carousel .streamhive-v2-home-hero-backdrop{
-    inset:-.75rem!important;
+  .streamhive-v2-home-hero-carousel{
     border-radius:.85rem!important;
+  }
+  .streamhive-v2-home-hero-carousel .streamhive-v2-home-hero-backdrop{
+    inset:0!important;
+    border-radius:inherit!important;
   }
   .streamhive-v2-home-hero-carousel .streamhive-v2-home-hero-slide,
   .streamhive-v2-home-hero-carousel .streamhive-v2-home-splide .splide__track{
