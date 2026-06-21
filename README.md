@@ -1,7 +1,7 @@
-# StreamHIVE V2
+# StreamHIVE 2.5
 
 <p align="center">
-  <img src="public/assets/img/logo.png" alt="StreamHIVE V2 logo" width="420">
+  <img src="public/assets/img/logo.png" alt="StreamHIVE 2.5 logo" width="420">
 </p>
 
 <p align="center">
@@ -11,10 +11,11 @@
   <img alt="CSS3" src="https://img.shields.io/badge/CSS3-responsive-1572b6?style=for-the-badge&logo=css3&logoColor=white">
   <img alt="JavaScript" src="https://img.shields.io/badge/JavaScript-UI-f7df1e?style=for-the-badge&logo=javascript&logoColor=111">
   <img alt="TMDB Powered" src="https://img.shields.io/badge/TMDB-powered-01b4e4?style=for-the-badge">
+  <img alt="StreamHIVE 2.5" src="https://img.shields.io/badge/version-2.5-e50914?style=for-the-badge">
   <img alt="No database required" src="https://img.shields.io/badge/database-not_required-111?style=for-the-badge">
 </p>
 
-**StreamHIVE V2** is a live TMDB-powered movie and TV discovery app built with PHP. It delivers a polished streaming-service interface with cinematic detail pages, live search, actor profiles, recommendations, local browser profiles, upcoming-release discovery, and configurable embed-player routing.
+**StreamHIVE 2.5** is a live TMDB-powered movie and TV discovery app built with PHP. It delivers a polished streaming-service interface with cinematic detail pages, live search, actor profiles, recommendations, local browser profiles, upcoming-release discovery, and configurable embed-player routing.
 
 This version is intentionally **live-only**. It does not require MySQL, SQLite, admin imports, or a local catalogue. Pages resolve against TMDB at request time, keeping the codebase lightweight, portable, and straightforward to deploy.
 
@@ -34,7 +35,7 @@ This version is intentionally **live-only**. It does not require MySQL, SQLite, 
 
 - Live TMDB data for movies, TV shows, seasons, episodes, actors, cast, crew, collections, recommendations, ratings, posters, and backdrops.
 - No database required for catalogue data.
-- Premium dark UI with responsive cards, cinematic heroes, backdrop layers, Font Awesome icons, and Bootstrap modals.
+- StreamHIVE 2.5 UI refresh with cleaner navigation, release badges, tighter discovery panels, refined poster cards, and a more professional dark-glass finish.
 - Movie and TV detail pages with inline player panels, metadata, genres, cast, crew, collections, seasons, episodes, and related titles.
 - Upcoming releases page with English-language movie and TV results, runtime caching, pagination, detail modals, and embedded trailers.
 - Search and discovery across titles, actors, genres, years, ratings, and score filters.
@@ -148,7 +149,7 @@ http://127.0.0.1:8000/
 
 ### Live Discovery
 
-StreamHIVE V2 resolves listings directly from TMDB discover/search endpoints. Users can browse movies, TV shows, actors, genres, release years, age ratings, score filters, and live search results without maintaining an imported local catalogue.
+StreamHIVE 2.5 resolves listings directly from TMDB discover/search endpoints. Users can browse movies, TV shows, actors, genres, release years, age ratings, score filters, and live search results without maintaining an imported local catalogue.
 
 ### Detail Pages
 
@@ -255,7 +256,7 @@ Use `--check-only` to check for an update without applying it, or `--dry-run` to
 
 ## Security And Content Notes
 
-StreamHIVE V2 does not host video files. It only builds configurable embed URLs and displays metadata from TMDB. Anyone deploying or modifying this project is responsible for ensuring that enabled providers, embeds, sources, and links comply with applicable law and third-party terms.
+StreamHIVE 2.5 does not host video files. It only builds configurable embed URLs and displays metadata from TMDB. Anyone deploying or modifying this project is responsible for ensuring that enabled providers, embeds, sources, and links comply with applicable law and third-party terms.
 
 Do not commit:
 
@@ -300,8 +301,8 @@ Copy `.env.example` to `.env` and fill in your values. The app intentionally ref
 | Icons | Font Awesome |
 | UI framework | Bootstrap |
 | Carousel UI | Splide |
-| Original project | GingerDev0 / StreamHIVE V2 |
+| Original project | GingerDev0 / StreamHIVE 2.5 |
 
 ## License
 
-StreamHIVE V2 is released under the MIT License. See [LICENSE](LICENSE) for details.
+StreamHIVE 2.5 is released under the MIT License. See [LICENSE](LICENSE) for details.
