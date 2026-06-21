@@ -86,7 +86,9 @@ function app_version(): string {
 
 function github_version(): string {
     $cacheDir = app_path('storage/cache');
-    $cacheFile = $cacheDir . '/version-check-v2.json';
+    $localVersion = app_version();
+    $cacheKey = preg_replace('/[^A-Za-z0-9_.-]/', '_', $localVersion) ?: 'unknown';
+    $cacheFile = $cacheDir . '/version-check-v2-' . $cacheKey . '.json';
     $cacheTtl = 60;
 
     if (is_file($cacheFile) && (time() - (int)@filemtime($cacheFile)) < $cacheTtl) {
@@ -94,8 +96,8 @@ function github_version(): string {
         if (is_array($cached)) return trim((string)($cached['version'] ?? ''));
     }
 
-    $cacheBucket = (string)floor(time() / max(1, $cacheTtl));
-    $url = 'https://raw.githubusercontent.com/GingerDev0/STREAMHIVE-V2/main/version.txt?streamhive_version=' . $cacheBucket;
+    $cacheBust = rawurlencode($localVersion . '-' . (string)time());
+    $url = 'https://raw.githubusercontent.com/GingerDev0/STREAMHIVE-V2/main/version.txt?streamhive_version=' . $cacheBust;
     $version = '';
 
     if (function_exists('curl_init')) {
