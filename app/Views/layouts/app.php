@@ -142,27 +142,26 @@ $isBrowseNavActive = array_reduce($browseNavItems, static fn(bool $active, array
         <a class="streamhive-pro-footer-brand" href="/" aria-label="<?= e($siteName) ?> home">
           <span class="streamhive-pro-footer-brand-mark"><img src="<?= e($siteLogo) ?>" alt="<?= e($siteName) ?> logo"></span>
         </a>
-        <p>Find something worth watching without digging through the noise.</p>
-        <?php if ($displayVersion !== ''): ?><span class="streamhive-footer-release"><i class="fa-solid fa-wand-magic-sparkles"></i> StreamHIVE <?= e($displayVersion) ?></span><?php endif; ?>
+        <p>Live TMDB discovery with a cleaner way to find your next watch.</p>
       </div>
 
       <div class="streamhive-pro-footer-links">
         <nav class="streamhive-pro-footer-group" aria-label="Browse">
-          <h2>Browse</h2>
           <a href="/movies"><i class="fa-solid fa-film"></i> Movies</a>
           <a href="/tv"><i class="fa-solid fa-tv"></i> TV Shows</a>
           <a href="/actors"><i class="fa-solid fa-user-group"></i> Actors</a>
           <a href="/s"><i class="fa-solid fa-compass"></i> Discover</a>
         </nav>
+      </div>
 
-        <div class="streamhive-pro-footer-group streamhive-pro-footer-note">
-          <p>Created by <a href="https://github.com/GingerDev0" target="_blank" rel="noopener noreferrer">GingerDev</a></p>
-          <?php if ($hasVersionUpdate): ?>
-            <a class="streamhive-version-chip" href="https://github.com/GingerDev0/STREAMHIVE-V2" target="_blank" rel="noopener noreferrer" title="Installed <?= e($localVersion) ?>, latest <?= e($githubVersion) ?>">
-              <i class="fa-solid fa-cloud-arrow-down"></i><span>New version available</span>
-            </a>
-          <?php endif; ?>
-        </div>
+      <div class="streamhive-pro-footer-meta">
+        <?php if ($displayVersion !== ''): ?><span class="streamhive-footer-release"><i class="fa-solid fa-code-branch"></i> v<?= e($displayVersion) ?></span><?php endif; ?>
+        <a href="https://github.com/GingerDev0" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-github"></i> GingerDev</a>
+        <?php if ($hasVersionUpdate): ?>
+          <a class="streamhive-version-chip" href="https://github.com/GingerDev0/STREAMHIVE-V2" target="_blank" rel="noopener noreferrer" title="Installed <?= e($localVersion) ?>, latest <?= e($githubVersion) ?>">
+            <i class="fa-solid fa-cloud-arrow-down"></i><span>Update available</span>
+          </a>
+        <?php endif; ?>
       </div>
     </div>
   </div>

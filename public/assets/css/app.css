@@ -5066,3 +5066,171 @@ body.streamhive-v2-body{
   }
 }
 
+/* StreamHIVE 2.5 footer redesign */
+.streamhive-pro-footer{
+  position:relative!important;
+  margin-top:3rem!important;
+  padding:0 clamp(.75rem,2vw,1.5rem) 1.1rem!important;
+  border-top:0!important;
+  background:linear-gradient(180deg,rgba(2,2,3,0),rgba(2,2,3,.78) 42%,rgba(2,2,3,.96))!important;
+}
+.streamhive-pro-footer-shell{
+  max-width:1760px!important;
+  margin:0 auto!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+.streamhive-pro-footer-inner{
+  display:grid!important;
+  grid-template-columns:minmax(16rem,1fr) auto minmax(14rem,auto)!important;
+  align-items:center!important;
+  gap:1rem!important;
+  padding:1rem 0 0!important;
+  border-top:1px solid rgba(255,255,255,.12)!important;
+}
+.streamhive-pro-footer-brand-block{
+  display:flex!important;
+  align-items:center!important;
+  gap:.85rem!important;
+  min-width:0!important;
+}
+.streamhive-pro-footer-brand{
+  display:inline-flex!important;
+  flex:0 0 auto!important;
+  padding:0!important;
+}
+.streamhive-pro-footer-brand-mark{
+  width:clamp(7.7rem,10vw,9.5rem)!important;
+  height:auto!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+.streamhive-pro-footer-brand-mark img{
+  display:block!important;
+  width:100%!important;
+  height:auto!important;
+  object-fit:contain!important;
+}
+.streamhive-pro-footer-brand-block p{
+  max-width:26rem!important;
+  margin:0!important;
+  color:rgba(255,255,255,.56)!important;
+  font-size:.86rem!important;
+  line-height:1.45!important;
+}
+.streamhive-pro-footer-links{
+  display:flex!important;
+  justify-content:center!important;
+  min-width:0!important;
+}
+.streamhive-pro-footer-group{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:.35rem!important;
+  padding:.28rem!important;
+  border:1px solid rgba(255,255,255,.1)!important;
+  border-radius:999px!important;
+  background:rgba(255,255,255,.045)!important;
+}
+.streamhive-pro-footer-group h2{
+  display:none!important;
+}
+.streamhive-pro-footer-group a,
+.streamhive-pro-footer-meta a,
+.streamhive-footer-release,
+.streamhive-pro-footer-meta .streamhive-version-chip{
+  display:inline-flex!important;
+  align-items:center!important;
+  gap:.42rem!important;
+  min-height:2.2rem!important;
+  padding:.48rem .68rem!important;
+  border-radius:999px!important;
+  color:rgba(255,255,255,.72)!important;
+  font-size:.82rem!important;
+  font-weight:850!important;
+  line-height:1!important;
+  text-decoration:none!important;
+  white-space:nowrap!important;
+}
+.streamhive-pro-footer-group a:hover,
+.streamhive-pro-footer-meta a:hover{
+  color:#fff!important;
+  background:rgba(255,255,255,.08)!important;
+  text-decoration:none!important;
+}
+.streamhive-pro-footer-group a i,
+.streamhive-pro-footer-meta a i{
+  color:rgba(255,209,102,.82)!important;
+}
+.streamhive-pro-footer-meta{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:flex-end!important;
+  gap:.45rem!important;
+  min-width:0!important;
+}
+.streamhive-footer-release{
+  margin:0!important;
+  border:1px solid rgba(255,209,102,.22)!important;
+  background:rgba(255,209,102,.08)!important;
+  color:rgba(255,232,181,.92)!important;
+}
+.streamhive-pro-footer-meta .streamhive-version-chip{
+  width:auto!important;
+  max-width:none!important;
+  border:1px solid rgba(229,9,20,.35)!important;
+  background:rgba(229,9,20,.14)!important;
+  color:#fff!important;
+}
+.streamhive-pro-footer-meta .streamhive-version-chip i{
+  color:#ff4b55!important;
+}
+@media (max-width:1199.98px){
+  .streamhive-pro-footer-inner{
+    grid-template-columns:1fr!important;
+    align-items:start!important;
+  }
+  .streamhive-pro-footer-links,
+  .streamhive-pro-footer-meta{
+    justify-content:flex-start!important;
+  }
+  .streamhive-pro-footer-brand-block{
+    flex-direction:row!important;
+  }
+}
+@media (max-width:767.98px){
+  .streamhive-pro-footer{
+    margin-top:2.2rem!important;
+    padding-bottom:.85rem!important;
+  }
+  .streamhive-pro-footer-inner{
+    gap:.85rem!important;
+  }
+  .streamhive-pro-footer-brand-block{
+    align-items:flex-start!important;
+    flex-direction:column!important;
+    gap:.55rem!important;
+  }
+  .streamhive-pro-footer-brand-mark{
+    width:8.5rem!important;
+  }
+  .streamhive-pro-footer-group,
+  .streamhive-pro-footer-meta{
+    flex-direction:row!important;
+    flex-wrap:wrap!important;
+    justify-content:flex-start!important;
+    border-radius:.85rem!important;
+  }
+  .streamhive-pro-footer-group{
+    width:100%!important;
+  }
+  .streamhive-pro-footer-group a{
+    flex:1 1 calc(50% - .35rem)!important;
+    justify-content:center!important;
+  }
+}
+
