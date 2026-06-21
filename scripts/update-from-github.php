@@ -8,7 +8,7 @@ if (PHP_SAPI !== 'cli') {
 }
 
 $root = dirname(__DIR__);
-$repo = 'GingerDev0/STREAMHIVE-V2';
+$repo = 'GingerDev0/StreamHIVE';
 $branch = 'main';
 $rawVersionUrl = "https://raw.githubusercontent.com/{$repo}/{$branch}/version.txt";
 $archiveUrl = "https://codeload.github.com/{$repo}/tar.gz/refs/heads/{$branch}";

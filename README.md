@@ -71,8 +71,8 @@ No database server is required.
 Clone the repository:
 
 ```bash
-git clone https://github.com/GingerDev0/STREAMHIVE-V2.git
-cd STREAMHIVE-V2
+git clone https://github.com/GingerDev0/StreamHIVE.git
+cd StreamHIVE
 ```
 
 Create your runtime environment file:
@@ -249,7 +249,7 @@ php scripts/update-from-github.php
 Cron example:
 
 ```cron
-*/30 * * * * cd /path/to/STREAMHIVE-V2 && php scripts/update-from-github.php --quiet >/dev/null 2>&1
+*/30 * * * * cd /path/to/StreamHIVE && php scripts/update-from-github.php --quiet >/dev/null 2>&1
 ```
 
 Use `--check-only` to check for an update without applying it, or `--dry-run` to preview file updates.

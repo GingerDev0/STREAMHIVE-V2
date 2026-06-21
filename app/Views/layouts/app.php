@@ -149,7 +149,7 @@ $isBrowseNavActive = array_reduce($browseNavItems, static fn(bool $active, array
         <?php if ($displayVersion !== ''): ?><span class="streamhive-footer-release"><i class="fa-solid fa-code-branch"></i> v<?= e($displayVersion) ?></span><?php endif; ?>
         <a href="https://github.com/GingerDev0" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-github"></i> GingerDev</a>
         <?php if ($hasVersionUpdate): ?>
-          <a class="streamhive-version-chip" href="https://github.com/GingerDev0/STREAMHIVE-V2" target="_blank" rel="noopener noreferrer" title="Installed <?= e($localVersion) ?>, latest <?= e($githubVersion) ?>">
+          <a class="streamhive-version-chip" href="https://github.com/GingerDev0/StreamHIVE" target="_blank" rel="noopener noreferrer" title="Installed <?= e($localVersion) ?>, latest <?= e($githubVersion) ?>">
             <i class="fa-solid fa-cloud-arrow-down"></i><span>Update available</span>
           </a>
         <?php endif; ?>

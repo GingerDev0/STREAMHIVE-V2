@@ -97,7 +97,7 @@ function github_version(): string {
     }
 
     $cacheBust = rawurlencode($localVersion . '-' . (string)time());
-    $url = 'https://api.github.com/repos/GingerDev0/STREAMHIVE-V2/contents/version.txt?ref=main&streamhive_version=' . $cacheBust;
+    $url = 'https://api.github.com/repos/GingerDev0/StreamHIVE/contents/version.txt?ref=main&streamhive_version=' . $cacheBust;
     $version = '';
     $decodeVersion = static function (string $body): string {
         $body = trim($body);
