@@ -10,7 +10,7 @@
   <form class="row g-2" method="get">
     <div class="col-md-8"><input name="q" value="<?= e($query) ?>" class="form-control" placeholder="Search actors"></div>
     <div class="col-md-2"><select name="sort" class="form-select">
-      <?php foreach (['name_asc'=>'Name A-Z','name_desc'=>'Name Z-A','updated_desc'=>'Recently updated'] as $value=>$label): ?>
+      <?php foreach (['popularity_desc'=>'Most popular','name_asc'=>'Name A-Z','name_desc'=>'Name Z-A'] as $value=>$label): ?>
         <option value="<?= e($value) ?>" <?= $sort===$value?'selected':'' ?>><?= e($label) ?></option>
       <?php endforeach; ?>
     </select></div>

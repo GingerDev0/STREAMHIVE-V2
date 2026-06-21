@@ -14,39 +14,25 @@ final class ActorController
 
     public function index(array $params): string
     {
-        $repo = new Repository();
         $query = trim((string)($_GET['q'] ?? ''));
-        $sort = (string)($_GET['sort'] ?? 'name_asc');
+        $sort = (string)($_GET['sort'] ?? 'popularity_desc');
         $page = max(1, (int)($_GET['page'] ?? 1));
         $perPage = min(48, max(6, (int)($_GET['per_page'] ?? 24)));
 
-        $items = $repo->people->all();
-        if ($query !== '') {
-            $needle = strtolower($query);
-            $items = array_values(array_filter($items, static function (array $actor) use ($needle): bool {
-                $knownFor = [];
-                foreach (($actor['known_for'] ?? []) as $credit) $knownFor[] = (string)($credit['title'] ?? '');
-                foreach (($actor['credits'] ?? []) as $credit) $knownFor[] = (string)($credit['title'] ?? '');
-                $haystack = strtolower(implode(' ', array_filter([
-                    (string)($actor['name'] ?? ''),
-                    (string)($actor['biography'] ?? ''),
-                    (string)($actor['known_for_department'] ?? ''),
-                    implode(' ', $knownFor),
-                ])));
-                return str_contains($haystack, $needle);
-            }));
-        }
+        $pagination = $this->livePeopleItems($query, $page, $perPage);
+        $items = $pagination['items'];
 
         usort($items, static function (array $a, array $b) use ($sort): int {
             return match ($sort) {
+                'popularity_desc' => ((float)($b['popularity'] ?? 0)) <=> ((float)($a['popularity'] ?? 0)),
                 'name_desc' => strnatcasecmp((string)($b['name'] ?? ''), (string)($a['name'] ?? '')),
                 'updated_desc' => strcmp((string)($b['updated_at'] ?? ''), (string)($a['updated_at'] ?? '')),
                 default => strnatcasecmp((string)($a['name'] ?? ''), (string)($b['name'] ?? '')),
             };
         });
 
-        $total = count($items);
-        $pages = max(1, (int)ceil($total / $perPage));
+        $total = $pagination['total'];
+        $pages = $pagination['pages'];
         $page = min($page, $pages);
         $items = array_slice($items, ($page - 1) * $perPage, $perPage);
 
@@ -66,6 +52,77 @@ final class ActorController
             'pages' => $pages,
             'perPage' => $perPage,
         ]);
+    }
+
+    private function livePeopleItems(string $query, int $page, int $perPage): array
+    {
+        $tmdbPages = range(1, min(500, (int)ceil(max(240, ($page + 1) * $perPage) / 20)));
+        $requests = [];
+
+        foreach ($tmdbPages as $tmdbPage) {
+            $requests['person:' . $tmdbPage] = $query === ''
+                ? ['path' => '/person/popular', 'query' => ['page' => $tmdbPage]]
+                : ['path' => '/search/person', 'query' => ['query' => $query, 'include_adult' => 'false', 'page' => $tmdbPage]];
+        }
+
+        $items = [];
+        $total = 0;
+        $pages = 1;
+
+        try {
+            foreach ((new TmdbClient())->getBatch($requests, 16) as $response) {
+                $total = max($total, (int)($response['total_results'] ?? 0));
+                $pages = max($pages, (int)($response['total_pages'] ?? 1));
+                foreach (($response['results'] ?? []) as $person) {
+                    $items[] = $this->normalisePersonSummary($person);
+                }
+            }
+        } catch (\Throwable) {
+            $items = [];
+        }
+
+        return [
+            'items' => $this->uniquePeople($items),
+            'total' => $total ?: count($items),
+            'pages' => max(1, min(500, $pages)),
+        ];
+    }
+
+    private function normalisePersonSummary(array $person): array
+    {
+        $name = (string)($person['name'] ?? 'Untitled');
+        $knownFor = [];
+
+        foreach (($person['known_for'] ?? []) as $credit) {
+            $title = (string)($credit['title'] ?? $credit['name'] ?? '');
+            if ($title === '') continue;
+            $credit['title'] = $title;
+            $knownFor[] = $credit;
+        }
+
+        $person['tmdb_id'] = (int)($person['id'] ?? 0);
+        $person['media_type'] = 'person';
+        $person['title'] = $name;
+        $person['name'] = $name;
+        $person['slug'] = slugify($name);
+        $person['known_for'] = $knownFor;
+
+        return $person;
+    }
+
+    private function uniquePeople(array $items): array
+    {
+        $seen = [];
+        $unique = [];
+
+        foreach ($items as $item) {
+            $key = (string)($item['tmdb_id'] ?? $item['id'] ?? $item['slug'] ?? '');
+            if ($key === '' || isset($seen[$key])) continue;
+            $seen[$key] = true;
+            $unique[] = $item;
+        }
+
+        return $unique;
     }
 
     public function show(array $params): string
