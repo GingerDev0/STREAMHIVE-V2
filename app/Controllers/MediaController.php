@@ -678,7 +678,7 @@ final class MediaController
         $rating = trim((string)($_GET['rating'] ?? ''));
         $year = trim((string)($_GET['year'] ?? ''));
         $score = trim((string)($_GET['user_rating'] ?? ($_GET['score'] ?? '')));
-        $sort = (string)($_GET['sort'] ?? 'title_asc');
+        $sort = (string)($_GET['sort'] ?? 'relevance');
         $page = max(1, (int)($_GET['page'] ?? 1));
         $perPage = min(48, max(6, (int)($_GET['per_page'] ?? 24)));
         $hasLocalFilters = $genre !== '' || $year !== '' || $score !== '';
@@ -967,13 +967,13 @@ final class MediaController
     {
         return array_values(array_filter($items, static function (array $item) use ($genre, $year, $score): bool {
             $genres = $item['genres'] ?? [];
-            if ($genre !== '' && $genres !== [] && !in_array($genre, $genres, true)) return false;
+            if ($genre !== '' && !in_array($genre, $genres, true)) return false;
 
             $releaseYear = substr(media_release_date($item), 0, 4);
-            if ($year !== '' && $releaseYear !== '' && $releaseYear !== $year) return false;
+            if ($year !== '' && $releaseYear !== $year) return false;
 
             $voteAverage = (float)($item['vote_average'] ?? 0);
-            if ($score !== '' && $voteAverage > 0 && $voteAverage < (float)$score) return false;
+            if ($score !== '' && ($voteAverage <= 0 || $voteAverage < (float)$score)) return false;
 
             return true;
         }));
@@ -1311,9 +1311,14 @@ final class MediaController
 
     private function sortItems(array $items, string $sort): array
     {
+        if ($sort === 'relevance') {
+            return $items;
+        }
+
         usort($items, function (array $a, array $b) use ($sort): int {
             return match ($sort) {
                 'title_desc' => strnatcasecmp($b['title'] ?? $b['name'] ?? '', $a['title'] ?? $a['name'] ?? ''),
+                'popularity_desc' => ((float)($b['popularity'] ?? 0)) <=> ((float)($a['popularity'] ?? 0)),
                 'date_asc' => strcmp((string)($a['release_date'] ?? ''), (string)($b['release_date'] ?? '')),
                 'date_desc' => strcmp((string)($b['release_date'] ?? ''), (string)($a['release_date'] ?? '')),
                 'rating_asc' => ((float)($a['vote_average'] ?? 0)) <=> ((float)($b['vote_average'] ?? 0)),

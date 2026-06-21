@@ -3486,6 +3486,34 @@ body.modal-open #contentFetchModal.streamhive-fetch-modal:not(.show){
 .streamhive-profile-grid.streamhive-is-profile-loading:after{content:"Loading...";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:5;border-radius:999px;padding:.85rem 1.35rem;background:rgba(0,0,0,.72);border:1px solid rgba(255,255,255,.13);box-shadow:0 1rem 2.4rem rgba(0,0,0,.48);color:#fff;font-weight:950;letter-spacing:.02em;}
 @media (max-width:575.98px){.streamhive-profile-pager-bar{align-items:stretch;flex-direction:column}.streamhive-profile-pager-actions{width:100%;justify-content:space-between}.streamhive-profile-tabs .streamhive-actor-tab{min-width:0}}
 
+/* Search page */
+.streamhive-search-page{display:block}
+.streamhive-search-hero{position:relative;display:grid;grid-template-columns:minmax(0,1fr) minmax(16rem,24rem);gap:1.25rem;align-items:end;margin-bottom:1rem;padding:clamp(1rem,3vw,2rem);border-radius:1.4rem;overflow:hidden;background:linear-gradient(135deg,rgba(255,255,255,.11),rgba(255,255,255,.04)),radial-gradient(circle at 12% 0,rgba(229,9,20,.18),transparent 22rem),radial-gradient(circle at 92% 22%,rgba(255,255,255,.08),transparent 18rem);border:1px solid rgba(255,255,255,.12);box-shadow:0 1.5rem 4rem rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.08)}
+.streamhive-search-hero-copy h1{max-width:58rem;margin:.65rem 0 1rem;color:#fff;font-size:clamp(2rem,4.7vw,4.8rem);line-height:.94;font-weight:1000}
+.streamhive-search-stats{display:flex;flex-wrap:wrap;gap:.55rem}
+.streamhive-search-stats span,.streamhive-search-page-count{display:inline-flex;align-items:center;gap:.38rem;padding:.48rem .7rem;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.74);font-size:.82rem;font-weight:800}
+.streamhive-search-stats strong,.streamhive-search-page-count{color:#fff}
+.streamhive-search-type-tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.6rem}
+.streamhive-search-type-tab{display:flex;align-items:center;justify-content:center;gap:.45rem;min-height:3.2rem;padding:.7rem .85rem;border-radius:.9rem;text-decoration:none;color:rgba(255,255,255,.76);background:rgba(0,0,0,.22);border:1px solid rgba(255,255,255,.12);font-weight:900;transition:background .18s ease,border-color .18s ease,color .18s ease,transform .18s ease}
+.streamhive-search-type-tab:hover,.streamhive-search-type-tab.active{color:#fff;background:rgba(229,9,20,.16);border-color:rgba(229,9,20,.42);transform:translateY(-1px)}
+.streamhive-search-type-tab i{color:var(--v2-gold,#e50914)}
+.streamhive-search-controls{margin-bottom:1rem;padding:1rem;border-radius:1.15rem;background:rgba(255,255,255,.065);border:1px solid rgba(255,255,255,.1);box-shadow:0 1rem 2.8rem rgba(0,0,0,.24)}
+.streamhive-search-controls form{display:grid;grid-template-columns:minmax(14rem,2fr) repeat(4,minmax(9rem,1fr)) auto;gap:.75rem;align-items:end}
+.streamhive-search-field{display:flex;flex-direction:column;gap:.35rem;min-width:0}
+.streamhive-search-field span{color:rgba(255,255,255,.64);font-size:.72rem;font-weight:950;text-transform:uppercase;letter-spacing:.08em}
+.streamhive-search-actions{display:flex;gap:.5rem;align-items:center}
+.streamhive-search-actions .btn{display:inline-flex;align-items:center;justify-content:center;gap:.42rem;min-height:3rem;white-space:nowrap}
+.streamhive-search-results{padding:1rem;border-radius:1.15rem;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.09)}
+.streamhive-search-results-head{display:flex;align-items:end;justify-content:space-between;gap:1rem;margin-bottom:.8rem}
+.streamhive-search-results-head h2{margin:.3rem 0 0;color:#fff;font-weight:1000}
+.streamhive-search-grid{margin-top:.75rem}
+.streamhive-search-empty{display:grid;place-items:center;min-height:18rem;padding:2rem;text-align:center;border-radius:1rem;background:rgba(0,0,0,.18);border:1px dashed rgba(255,255,255,.16);color:#fff}
+.streamhive-search-empty i{display:grid;place-items:center;width:3.4rem;height:3.4rem;margin-bottom:1rem;border-radius:999px;background:rgba(229,9,20,.14);color:var(--v2-gold,#e50914)}
+.streamhive-search-empty h3{margin:0 0 .35rem;font-weight:1000}
+.streamhive-search-empty p{margin:0;color:rgba(255,255,255,.68)}
+@media (max-width:1199.98px){.streamhive-search-controls form{grid-template-columns:repeat(2,minmax(0,1fr))}.streamhive-search-field-query,.streamhive-search-actions{grid-column:1/-1}}
+@media (max-width:767.98px){.streamhive-search-hero{grid-template-columns:1fr}.streamhive-search-controls form{grid-template-columns:1fr}.streamhive-search-field-query,.streamhive-search-actions{grid-column:auto}.streamhive-search-actions{flex-direction:column;align-items:stretch}.streamhive-search-results-head{align-items:flex-start;flex-direction:column}}
+
 /* Movie collection carousel on detail pages */
 .streamhive-v2-collection-section{
   position:relative;
