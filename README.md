@@ -235,6 +235,24 @@ LICENSE          MIT license
 - Review third-party embed providers for legal and terms-of-service compliance.
 - Rotate credentials immediately if `.env` is ever exposed.
 
+### Optional Auto Updates
+
+StreamHIVE includes a CLI-only updater that compares the installed `version.txt` with GitHub, downloads the latest `main` archive when GitHub is newer, backs up overwritten files to `storage/update-backups`, and skips private/runtime paths such as `.env`, `storage/`, `vendor/`, and `node_modules/`.
+
+Run manually:
+
+```bash
+php scripts/update-from-github.php
+```
+
+Cron example:
+
+```cron
+*/30 * * * * cd /path/to/STREAMHIVE-V2 && php scripts/update-from-github.php --quiet >/dev/null 2>&1
+```
+
+Use `--check-only` to check for an update without applying it, or `--dry-run` to preview file updates.
+
 ## Security And Content Notes
 
 StreamHIVE V2 does not host video files. It only builds configurable embed URLs and displays metadata from TMDB. Anyone deploying or modifying this project is responsible for ensuring that enabled providers, embeds, sources, and links comply with applicable law and third-party terms.

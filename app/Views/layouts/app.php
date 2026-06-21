@@ -13,7 +13,7 @@ $ogImage = (string)($ogImage ?? absolute_url($siteLogo));
 $robots = (string)($robots ?? 'index, follow');
 $localVersion = app_version();
 $githubVersion = github_version();
-$hasVersionUpdate = $localVersion !== '' && $githubVersion !== '' && !hash_equals($localVersion, $githubVersion);
+$hasVersionUpdate = version_is_newer($githubVersion, $localVersion);
 $currentPath = '/' . trim((string)(parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/'), '/');
 if ($currentPath !== '/') $currentPath = rtrim($currentPath, '/');
 $genreNavItems = [

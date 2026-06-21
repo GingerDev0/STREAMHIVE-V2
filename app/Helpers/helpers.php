@@ -129,10 +129,16 @@ function github_version(): string {
     return $version;
 }
 
+function version_is_newer(string $candidate, string $current): bool {
+    $candidate = trim($candidate);
+    $current = trim($current);
+    return $candidate !== '' && $current !== '' && version_compare($candidate, $current, '>');
+}
+
 function version_update_available(): bool {
     $localVersion = app_version();
     $githubVersion = github_version();
-    return $localVersion !== '' && $githubVersion !== '' && !hash_equals($localVersion, $githubVersion);
+    return version_is_newer($githubVersion, $localVersion);
 }
 
 function share_button(string $title, string $url, string $label = 'Share'): string {
