@@ -122,8 +122,8 @@ $isBrowseNavActive = array_reduce($browseNavItems, static fn(bool $active, array
       </ul>
       <form class="streamhive-v2-nav-search streamhive-js-live-search-form" action="/s" method="get" role="search" autocomplete="off">
         <i class="fa-solid fa-magnifying-glass"></i>
-        <input name="q" class="streamhive-js-live-search-input" placeholder="Search the universe..." autocomplete="off" aria-label="Search movies, TV shows and actors" aria-expanded="false" aria-controls="navLiveSearchResults">
-        <button type="submit">Go</button>
+        <input name="q" class="streamhive-js-live-search-input" placeholder="Search movies, shows, actors..." autocomplete="off" aria-label="Search movies, TV shows and actors" aria-expanded="false" aria-controls="navLiveSearchResults">
+        <button type="submit" aria-label="Search"><i class="fa-solid fa-arrow-right"></i></button>
         <div class="streamhive-v2-live-search-results streamhive-js-live-search-results" id="navLiveSearchResults" role="listbox" aria-label="Live search results"></div>
       </form>
       <?php if ($displayVersion !== ''): ?>
