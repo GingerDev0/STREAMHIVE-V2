@@ -3437,10 +3437,6 @@ body.modal-open #contentFetchModal.streamhive-fetch-modal:not(.show){
     linear-gradient(0deg,rgba(0,0,0,.96) 0%,transparent 42%,rgba(0,0,0,.46) 100%),
     radial-gradient(circle at 18% 22%,rgba(229,9,20,.24),transparent 24rem)!important;
 }
-.streamhive-v2-home-hero-shell{position:relative;z-index:2;display:grid;grid-template-columns:minmax(18rem,.45fr) minmax(0,1fr);gap:clamp(1rem,2.4vw,2.2rem);align-items:stretch;min-height:inherit;padding:clamp(1rem,3vw,3rem)}
-.streamhive-v2-home-hero-intro{display:flex;flex-direction:column;justify-content:center;min-width:0;padding:clamp(.35rem,1vw,1rem)}
-.streamhive-v2-home-hero-intro h1{max-width:46rem;font-size:clamp(2.15rem,4.6vw,5.55rem);line-height:.88;letter-spacing:-.08em;font-weight:1000;margin:.75rem 0 1rem;text-shadow:0 .45rem 2rem rgba(0,0,0,.7)}
-.streamhive-v2-home-hero-intro p{max-width:38rem;font-size:1.05rem;line-height:1.7;color:rgba(255,255,255,.72)}
 .streamhive-v2-home-splide{min-width:0;display:flex;align-items:center}
 .streamhive-v2-home-splide .splide__track{width:100%;overflow:hidden;border-radius:.95rem}
 .streamhive-v2-home-splide .splide__slide{display:flex;align-items:stretch}
@@ -3462,16 +3458,11 @@ body.modal-open #contentFetchModal.streamhive-fetch-modal:not(.show){
 .streamhive-v2-home-splide .splide__pagination{bottom:1rem;gap:.35rem}
 .streamhive-v2-home-splide .splide__pagination__page{width:.5rem;height:.5rem;background:rgba(255,255,255,.45);opacity:1;transform:none!important}
 .streamhive-v2-home-splide .splide__pagination__page.is-active{width:1.65rem;border-radius:999px;background:#e50914}
-@media (max-width:1199.98px){.streamhive-v2-home-hero-shell{grid-template-columns:1fr}.streamhive-v2-home-hero-intro{padding-bottom:0}.streamhive-v2-home-hero-intro h1{font-size:clamp(2.1rem,7vw,4.6rem)}.streamhive-v2-home-hero-slide{min-height:32rem}.streamhive-v2-home-hero-grid{grid-template-columns:minmax(9rem,13rem) minmax(0,1fr)!important}}
-@media (max-width:767.98px){.streamhive-v2-home-hero-carousel{border-radius:.75rem!important}.streamhive-v2-home-hero-shell{padding:1rem}.streamhive-v2-home-hero-intro p{font-size:.96rem}.streamhive-v2-home-hero-grid{grid-template-columns:1fr!important;align-items:start!important}.streamhive-v2-home-hero-poster-link{max-width:11rem!important}.streamhive-v2-home-hero-copy h2{font-size:clamp(2rem,12vw,3.7rem)}.streamhive-v2-home-hero-overview{-webkit-line-clamp:3!important}.streamhive-v2-home-splide .splide__arrows{display:none}.streamhive-v2-home-hero-slide{min-height:auto}.streamhive-v2-home-hero-play{width:3.9rem!important;height:3.9rem!important}}
+@media (max-width:1199.98px){.streamhive-v2-home-hero-slide{min-height:32rem}.streamhive-v2-home-hero-grid{grid-template-columns:minmax(9rem,13rem) minmax(0,1fr)!important}}
+@media (max-width:767.98px){.streamhive-v2-home-hero-carousel{border-radius:.75rem!important}.streamhive-v2-home-hero-grid{grid-template-columns:1fr!important;align-items:start!important}.streamhive-v2-home-hero-poster-link{max-width:11rem!important}.streamhive-v2-home-hero-copy h2{font-size:clamp(2rem,12vw,3.7rem)}.streamhive-v2-home-hero-overview{-webkit-line-clamp:3!important}.streamhive-v2-home-splide .splide__arrows{display:none}.streamhive-v2-home-hero-slide{min-height:auto}.streamhive-v2-home-hero-play{width:3.9rem!important;height:3.9rem!important}}
 
 
 /* Home Splide hero refinement: full-width carousel and streamhive-fetch-modal Watch Now links */
-.streamhive-v2-home-hero-carousel .streamhive-v2-home-hero-shell{
-  display:block!important;
-  grid-template-columns:1fr!important;
-  padding:clamp(1rem,3vw,3rem)!important;
-}
 .streamhive-v2-home-hero-carousel .streamhive-v2-home-splide{
   width:100%!important;
   max-width:none!important;
@@ -3907,11 +3898,12 @@ body.streamhive-v2-body{
   background-image:
     linear-gradient(180deg,rgba(2,2,3,.76) 0%,rgba(2,2,3,.86) 44%,rgba(2,2,3,.94) 100%),
     radial-gradient(circle at 50% -12%,rgba(229,9,20,.18),transparent 32rem),
-    radial-gradient(circle at 105% 10%,rgba(0,168,225,.12),transparent 30rem)!important;
-  background-position:center top,50% -12%,105% 10%!important;
-  background-size:auto,auto,auto!important;
-  background-repeat:no-repeat,no-repeat,no-repeat!important;
-  background-attachment:scroll,scroll,scroll!important;
+    radial-gradient(circle at 105% 10%,rgba(0,168,225,.12),transparent 30rem),
+    url('/assets/img/bg.png')!important;
+  background-position:center top,50% -12%,105% 10%,center top!important;
+  background-size:auto,auto,auto,cover!important;
+  background-repeat:no-repeat,no-repeat,no-repeat,no-repeat!important;
+  background-attachment:scroll,scroll,scroll,fixed!important;
   color:#fff!important;
 }
 
@@ -5285,5 +5277,66 @@ body.streamhive-v2-body{
   .streamhive-v2-nav-search{
     grid-template-columns:auto minmax(0,1fr) 2.35rem!important;
   }
+}
+
+/* Home carousel without the extra hero shell */
+.streamhive-v2-home-hero-carousel{
+  min-height:auto!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  overflow:visible!important;
+}
+.streamhive-v2-home-hero-carousel:after{
+  display:none!important;
+}
+.streamhive-v2-home-hero-carousel .streamhive-v2-home-hero-backdrop{
+  inset:-1.5rem!important;
+  border-radius:1.15rem!important;
+  opacity:.34!important;
+  filter:saturate(1.12) contrast(1.05) blur(.2px)!important;
+}
+.streamhive-v2-home-hero-carousel .streamhive-v2-home-splide{
+  position:relative!important;
+  z-index:2!important;
+  display:block!important;
+  width:100%!important;
+}
+.streamhive-v2-home-hero-carousel .streamhive-v2-home-splide .splide__track{
+  border-radius:1.05rem!important;
+}
+.streamhive-v2-home-hero-carousel .streamhive-v2-home-hero-slide{
+  min-height:clamp(28rem,58vh,40rem)!important;
+  border-radius:1.05rem!important;
+  background:rgba(5,6,9,.78)!important;
+  border:1px solid rgba(255,255,255,.12)!important;
+  box-shadow:0 1.4rem 3.6rem rgba(0,0,0,.4)!important;
+}
+@media (max-width:767.98px){
+  .streamhive-v2-home-hero-carousel .streamhive-v2-home-hero-backdrop{
+    inset:-.75rem!important;
+    border-radius:.85rem!important;
+  }
+  .streamhive-v2-home-hero-carousel .streamhive-v2-home-hero-slide,
+  .streamhive-v2-home-hero-carousel .streamhive-v2-home-splide .splide__track{
+    border-radius:.85rem!important;
+  }
+}
+
+/* Final global backdrop: keep bg.png active on every page. */
+body,
+body.streamhive-v2-body{
+  background-color:#020202!important;
+  background-image:
+    linear-gradient(180deg,rgba(2,2,3,.76) 0%,rgba(2,2,3,.86) 44%,rgba(2,2,3,.94) 100%),
+    radial-gradient(circle at 50% -12%,rgba(229,9,20,.18),transparent 32rem),
+    radial-gradient(circle at 105% 10%,rgba(0,168,225,.12),transparent 30rem),
+    url('/assets/img/bg.png')!important;
+  background-position:center top,50% -12%,105% 10%,center top!important;
+  background-size:auto,auto,auto,cover!important;
+  background-repeat:no-repeat,no-repeat,no-repeat,no-repeat!important;
+  background-attachment:scroll,scroll,scroll,fixed!important;
 }
 

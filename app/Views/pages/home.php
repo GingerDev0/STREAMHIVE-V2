@@ -4,7 +4,6 @@ $heroBackground = $heroMovies[0] ?? ($moviesTrending[0] ?? $moviesRecent[0] ?? n
 ?>
 <section class="streamhive-v2-detail-hero streamhive-v2-home-hero-carousel mb-4" aria-label="Featured random movies">
   <?php if ($heroBackground): ?><div class="streamhive-v2-detail-backdrop streamhive-v2-home-hero-backdrop" style="background-image:url('<?= e(tmdb_img($heroBackground['backdrop_path'] ?? ($heroBackground['poster_path'] ?? null), 'w1280')) ?>')"></div><?php endif; ?>
-  <div class="streamhive-v2-home-hero-shell">
     <?php if ($heroMovies): ?>
     <div class="splide streamhive-v2-home-splide streamhive-js-home-hero-splide" aria-label="Random movie spotlight carousel">
       <div class="splide__track">
@@ -52,7 +51,6 @@ $heroBackground = $heroMovies[0] ?? ($moviesTrending[0] ?? $moviesRecent[0] ?? n
       </div>
     </div>
     <?php endif; ?>
-  </div>
 </section>
 
 <?php if (!empty($homeAlertSettings['home_alert_enabled'])): ?>
