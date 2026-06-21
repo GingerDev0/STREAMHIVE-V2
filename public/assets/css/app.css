@@ -5296,8 +5296,8 @@ body.streamhive-v2-body{
 .streamhive-v2-home-hero-carousel .streamhive-v2-home-hero-backdrop{
   inset:0!important;
   border-radius:inherit!important;
-  opacity:.3!important;
-  filter:saturate(1.12) contrast(1.05)!important;
+  opacity:.42!important;
+  filter:saturate(1.16) contrast(1.06) brightness(1.08)!important;
   transform:none!important;
 }
 .streamhive-v2-home-hero-carousel .streamhive-v2-home-splide{
