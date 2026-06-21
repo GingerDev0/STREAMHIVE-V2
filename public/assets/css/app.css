@@ -2693,6 +2693,30 @@ main.streamhive-v2-main{
 .streamhive-listing-card-runtime{
   color:rgba(255,255,255,.62)!important;
 }
+.streamhive-listing-card-genres{
+  display:flex;
+  flex-wrap:wrap;
+  gap:.35rem;
+  margin-top:.55rem;
+}
+.streamhive-listing-card-genres span{
+  display:inline-flex;
+  align-items:center;
+  gap:.28rem;
+  max-width:100%;
+  padding:.24rem .48rem;
+  border-radius:999px;
+  background:rgba(229,9,20,.1);
+  border:1px solid rgba(229,9,20,.2);
+  color:rgba(255,255,255,.78);
+  font-size:.7rem;
+  font-weight:850;
+  line-height:1;
+}
+.streamhive-listing-card-genres i{
+  color:var(--v2-gold,#e50914);
+  font-size:.72rem;
+}
 
 /* Fetching content modal must sit above every app layer, including navbar live search and normal modals. */
 #contentFetchModal.streamhive-fetch-modal,

@@ -11,6 +11,15 @@ $link = $type === 'person' ? url('actors/' . $slug) : ($type === 'tv' ? url('tv/
 $rating = round((float)($item['vote_average'] ?? 0), 1);
 $genres = array_values(array_filter(array_map('strval', $item['genres'] ?? [])));
 $genreText = genre_links($genres, $type, 2, 'streamhive-genre-link streamhive-genre-link-home');
+$genreChips = [];
+if ($type === 'movie') {
+    foreach (array_slice($genres, 0, 2) as $genre) {
+        $genreChips[] = [
+            'name' => $genre,
+            'icon' => genre_icon($genre),
+        ];
+    }
+}
 $ageRating = display_age_rating($item['age_rating'] ?? '', $type);
 $overview = trim((string)($item['overview'] ?? $item['biography'] ?? '')) ?: 'No overview available yet.';
 $importStatus = (string)($item['import_status'] ?? '');
@@ -78,6 +87,13 @@ $homePoster = tmdb_img($item['poster_path'] ?? null, 'w500');
           <span class="streamhive-listing-card-runtime"><i class="fa-regular fa-clock"></i> <?= e($runtimeText) ?></span>
         <?php endif; ?>
       </div>
+      <?php if ($genreChips): ?>
+        <div class="streamhive-listing-card-genres" aria-label="Genres">
+          <?php foreach ($genreChips as $genreChip): ?>
+            <span><i class="fa-solid <?= e($genreChip['icon']) ?>" aria-hidden="true"></i><?= e($genreChip['name']) ?></span>
+          <?php endforeach; ?>
+        </div>
+      <?php endif; ?>
     </div>
   </a>
 </div>
