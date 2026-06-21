@@ -799,6 +799,12 @@ final class MediaController
                             ],
                         ];
                     }
+                    if ($type === 'person') {
+                        $requests['person:' . $tmdbPage] = [
+                            'path' => '/person/popular',
+                            'query' => ['page' => $tmdbPage],
+                        ];
+                    }
                 }
             } else {
                 foreach ($tmdbPages as $tmdbPage) {
