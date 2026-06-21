@@ -5345,3 +5345,181 @@ body.streamhive-v2-body{
   background-attachment:scroll,scroll,scroll,fixed!important;
 }
 
+/* Home page card refresh */
+.streamhive-v2-home-grid.streamhive-home-card-grid{
+  row-gap:1.15rem!important;
+}
+.streamhive-v2-home-grid .col{
+  display:flex!important;
+}
+.streamhive-v2-home-grid .streamhive-home-poster-card{
+  isolation:isolate!important;
+  display:block!important;
+  width:100%!important;
+  aspect-ratio:2/3.08!important;
+  border-radius:.72rem!important;
+  overflow:hidden!important;
+  background:#07080b!important;
+  border:1px solid rgba(255,255,255,.13)!important;
+  box-shadow:0 .7rem 1.6rem rgba(0,0,0,.34)!important;
+  transform:translateZ(0)!important;
+  transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease!important;
+}
+.streamhive-v2-home-grid .streamhive-home-poster-card:before{
+  content:""!important;
+  position:absolute!important;
+  inset:0!important;
+  z-index:2!important;
+  pointer-events:none!important;
+  background:
+    linear-gradient(180deg,rgba(0,0,0,.06) 0%,rgba(0,0,0,.08) 38%,rgba(0,0,0,.78) 100%),
+    linear-gradient(0deg,rgba(229,9,20,.12),transparent 42%)!important;
+}
+.streamhive-v2-home-grid .streamhive-home-poster-card:after{
+  content:""!important;
+  position:absolute!important;
+  inset:0!important;
+  z-index:3!important;
+  pointer-events:none!important;
+  opacity:0!important;
+  background:linear-gradient(135deg,rgba(255,255,255,.16),transparent 38%,rgba(229,9,20,.12))!important;
+  transition:opacity .2s ease!important;
+}
+.streamhive-v2-home-grid .streamhive-home-poster-card:hover{
+  transform:translateY(-.35rem)!important;
+  border-color:rgba(229,9,20,.42)!important;
+  box-shadow:0 1.2rem 2.6rem rgba(0,0,0,.48),0 .35rem 1.35rem rgba(229,9,20,.14)!important;
+}
+.streamhive-v2-home-grid .streamhive-home-poster-card:hover:after{
+  opacity:1!important;
+}
+.streamhive-v2-home-grid .streamhive-home-poster-card-img{
+  position:absolute!important;
+  inset:0!important;
+  width:100%!important;
+  height:100%!important;
+  object-fit:cover!important;
+  object-position:center center!important;
+  filter:saturate(1.04) contrast(1.04) brightness(.96)!important;
+  transform:scale(1.001)!important;
+  transition:transform .28s ease,filter .28s ease!important;
+}
+.streamhive-v2-home-grid .streamhive-home-poster-card:hover .streamhive-home-poster-card-img{
+  transform:scale(1.055)!important;
+  filter:saturate(1.08) contrast(1.08) brightness(.78)!important;
+}
+.streamhive-v2-home-grid .streamhive-home-poster-gradient,
+.streamhive-v2-home-grid .streamhive-home-card-sheen{
+  display:none!important;
+}
+.streamhive-v2-home-grid .streamhive-home-poster-content{
+  z-index:4!important;
+  left:.74rem!important;
+  right:.74rem!important;
+  bottom:.72rem!important;
+  display:grid!important;
+  grid-template-columns:auto minmax(0,1fr)!important;
+  align-items:end!important;
+  gap:.28rem .48rem!important;
+}
+.streamhive-v2-home-grid .streamhive-home-rating-badge{
+  grid-row:1 / span 2!important;
+  align-self:end!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  min-width:2.15rem!important;
+  height:2.15rem!important;
+  padding:0!important;
+  border-radius:.55rem!important;
+  background:rgba(229,9,20,.92)!important;
+  border:1px solid rgba(255,255,255,.14)!important;
+  color:#fff!important;
+  font-size:.76rem!important;
+  font-weight:950!important;
+  line-height:1!important;
+  box-shadow:0 .5rem 1rem rgba(0,0,0,.38)!important;
+}
+.streamhive-v2-home-grid .streamhive-home-poster-title{
+  display:-webkit-box!important;
+  -webkit-line-clamp:2!important;
+  -webkit-box-orient:vertical!important;
+  overflow:hidden!important;
+  margin:0!important;
+  color:#fff!important;
+  font-size:.96rem!important;
+  font-weight:950!important;
+  line-height:1.08!important;
+  letter-spacing:0!important;
+  text-shadow:0 .2rem .8rem rgba(0,0,0,.88)!important;
+}
+.streamhive-v2-home-grid .streamhive-home-poster-year{
+  margin:0!important;
+  color:rgba(255,255,255,.7)!important;
+  font-size:.78rem!important;
+  font-weight:800!important;
+  line-height:1!important;
+}
+.streamhive-v2-home-grid .streamhive-home-bookmark{
+  z-index:5!important;
+  top:.58rem!important;
+  right:.58rem!important;
+  width:2.05rem!important;
+  height:2.05rem!important;
+  border-radius:.6rem!important;
+  background:rgba(4,5,7,.64)!important;
+  border:1px solid rgba(255,255,255,.2)!important;
+  color:#fff!important;
+  backdrop-filter:blur(10px)!important;
+  box-shadow:0 .5rem 1.1rem rgba(0,0,0,.35)!important;
+}
+.streamhive-v2-home-grid .streamhive-home-bookmark:hover,
+.streamhive-v2-home-grid .streamhive-home-bookmark.streamhive-is-saved{
+  background:rgba(229,9,20,.92)!important;
+  border-color:rgba(229,9,20,.8)!important;
+  color:#fff!important;
+}
+.streamhive-v2-home-grid .streamhive-home-poster-play{
+  z-index:5!important;
+  top:47%!important;
+  left:50%!important;
+  width:3rem!important;
+  height:3rem!important;
+  border-radius:999px!important;
+  background:rgba(229,9,20,.94)!important;
+  border:1px solid rgba(255,255,255,.16)!important;
+  color:#fff!important;
+  box-shadow:0 .8rem 1.8rem rgba(0,0,0,.45)!important;
+  opacity:0!important;
+  transform:translate(-50%,-50%) scale(.86)!important;
+  transition:opacity .18s ease,transform .18s ease!important;
+}
+.streamhive-v2-home-grid .streamhive-home-poster-play i{
+  color:#fff!important;
+  margin-left:.16rem!important;
+}
+.streamhive-v2-home-grid .streamhive-home-poster-card:hover .streamhive-home-poster-play{
+  opacity:1!important;
+  transform:translate(-50%,-50%) scale(1)!important;
+}
+@media (min-width:1400px){
+  .streamhive-v2-home-grid .streamhive-home-poster-title{
+    font-size:1rem!important;
+  }
+}
+@media (max-width:767.98px){
+  .streamhive-v2-home-grid .streamhive-home-poster-content{
+    left:.62rem!important;
+    right:.62rem!important;
+    bottom:.62rem!important;
+  }
+  .streamhive-v2-home-grid .streamhive-home-rating-badge{
+    min-width:1.95rem!important;
+    height:1.95rem!important;
+    font-size:.7rem!important;
+  }
+  .streamhive-v2-home-grid .streamhive-home-poster-title{
+    font-size:.88rem!important;
+  }
+}
+
