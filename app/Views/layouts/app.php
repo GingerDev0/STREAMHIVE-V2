@@ -79,10 +79,6 @@ $isBrowseNavActive = array_reduce($browseNavItems, static fn(bool $active, array
   <div class="container-fluid px-3 px-lg-4">
     <a class="navbar-brand streamhive-v2-brand" href="/">
       <span class="streamhive-v2-brand-mark"><img src="<?= e($siteLogo) ?>" alt="<?= e($siteName) ?> logo"></span>
-      <span class="streamhive-v2-brand-copy">
-        <strong><?= e($siteName) ?></strong>
-        <?php if ($displayVersion !== ''): ?><small>Version <?= e($displayVersion) ?></small><?php endif; ?>
-      </span>
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"><span class="navbar-toggler-icon"></span></button>
     <div class="collapse navbar-collapse" id="mainNav">
@@ -126,11 +122,6 @@ $isBrowseNavActive = array_reduce($browseNavItems, static fn(bool $active, array
         <button type="submit" aria-label="Search"><i class="fa-solid fa-arrow-right"></i></button>
         <div class="streamhive-v2-live-search-results streamhive-js-live-search-results" id="navLiveSearchResults" role="listbox" aria-label="Live search results"></div>
       </form>
-      <?php if ($displayVersion !== ''): ?>
-        <a class="streamhive-release-chip" href="https://github.com/GingerDev0/STREAMHIVE-V2" target="_blank" rel="noopener noreferrer" title="<?= e($siteName) ?> version <?= e($displayVersion) ?>">
-          <i class="fa-solid fa-code-branch"></i><span>v<?= e($displayVersion) ?></span>
-        </a>
-      <?php endif; ?>
     </div>
   </div>
 </nav>

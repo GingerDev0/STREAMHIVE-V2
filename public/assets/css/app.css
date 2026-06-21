@@ -4806,26 +4806,6 @@ body.streamhive-v2-body{
   height:100%!important;
   object-fit:contain!important;
 }
-.streamhive-v2-brand-copy{
-  display:flex!important;
-  flex-direction:column!important;
-  gap:.04rem!important;
-  line-height:1!important;
-}
-.streamhive-v2-brand-copy strong{
-  font-size:.9rem!important;
-  font-weight:950!important;
-  letter-spacing:.08em!important;
-  text-transform:uppercase!important;
-}
-.streamhive-v2-brand-copy small{
-  display:block!important;
-  color:var(--streamhive-25-gold)!important;
-  font-size:.68rem!important;
-  font-weight:850!important;
-  letter-spacing:.08em!important;
-  text-transform:uppercase!important;
-}
 .streamhive-v2-nav-pills{
   padding:.22rem!important;
   border:1px solid rgba(255,255,255,.1)!important;
@@ -4863,7 +4843,6 @@ body.streamhive-v2-body{
   color:#08090c!important;
   box-shadow:none!important;
 }
-.streamhive-release-chip,
 .streamhive-footer-release{
   display:inline-flex!important;
   align-items:center!important;
@@ -4877,14 +4856,6 @@ body.streamhive-v2-body{
   font-weight:900!important;
   line-height:1!important;
   text-decoration:none!important;
-}
-.streamhive-release-chip{
-  padding:.62rem .78rem!important;
-  margin-left:.35rem!important;
-}
-.streamhive-release-chip:hover{
-  color:#fff!important;
-  background:rgba(229,9,20,.28)!important;
 }
 .streamhive-footer-release{
   margin-top:.35rem!important;
@@ -5017,9 +4988,6 @@ body.streamhive-v2-body{
   }
 }
 @media (max-width:1199.98px){
-  .streamhive-v2-brand-copy{
-    display:none!important;
-  }
   .streamhive-v2-nav-pills{
     margin-top:.85rem!important;
     border-radius:1rem!important;
@@ -5027,17 +4995,11 @@ body.streamhive-v2-body{
   .streamhive-v2-nav-pills .nav-link{
     justify-content:flex-start!important;
   }
-  .streamhive-release-chip{
-    margin:.65rem 0 0!important;
-  }
   .streamhive-v2-nav-search{
     min-width:100%!important;
   }
 }
 @media (max-width:1499.98px){
-  .streamhive-v2-brand-copy{
-    display:none!important;
-  }
   .streamhive-v2-nav-pills .nav-link{
     padding:.5rem .62rem!important;
   }
