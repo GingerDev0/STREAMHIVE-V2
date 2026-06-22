@@ -38,12 +38,33 @@
   <?php foreach ([['movie', 'Movies', $movies], ['tv', 'TV Shows', $tvShows]] as [$tabType, $tabLabel, $items]): ?>
     <div class="streamhive-coming-panel <?= $tabType === 'movie' ? 'active' : '' ?>" data-coming-panel="<?= e($tabType) ?>">
       <?php if ($items): ?>
+        <?php
+          $comingTotal = count($items);
+          $comingPages = max(1, (int)ceil($comingTotal / $comingPerPage));
+          $comingVisibleTo = min($comingTotal, $comingPerPage);
+        ?>
         <div class="streamhive-coming-grid" data-coming-grid="<?= e($tabType) ?>" data-per-page="<?= e((string)$comingPerPage) ?>" data-total="<?= e((string)count($items)) ?>" data-loaded-page="1">
           <?php foreach (array_slice($items, 0, $comingPerPage) as $item): ?>
             <?= \App\Core\View::partial('partials/coming-card', ['item' => $item, 'tabType' => $tabType]) ?>
           <?php endforeach; ?>
         </div>
-        <div class="streamhive-coming-footer mt-4" data-coming-pagination="<?= e($tabType) ?>"></div>
+        <div class="streamhive-coming-footer mt-4" data-coming-pagination="<?= e($tabType) ?>">
+          <?php if ($comingPages > 1): ?>
+            <div class="streamhive-actor-pager-bar streamhive-coming-pager-bar">
+              <div class="streamhive-pager-showing">
+                <span>Showing</span>
+                <strong>1<?= $comingVisibleTo !== 1 ? '&ndash;' . e((string)$comingVisibleTo) : '' ?></strong>
+                <span>of</span>
+                <strong><?= e((string)$comingTotal) ?></strong>
+                <span><?= e($tabLabel) ?></span>
+              </div>
+              <div class="streamhive-actor-pager-actions streamhive-coming-pager-actions">
+                <span class="streamhive-actor-page-current">Page <strong>1</strong> of <?= e((string)$comingPages) ?></span>
+                <button type="button" class="streamhive-actor-page-btn streamhive-coming-page-btn" data-coming-page="<?= e($tabType) ?>" data-page="2" aria-label="Next page"><i class="fa-solid fa-angle-right"></i></button>
+              </div>
+            </div>
+          <?php endif; ?>
+        </div>
       <?php else: ?>
         <div class="streamhive-coming-empty text-center py-5">
           <i class="fa-solid <?= $tabType === 'movie' ? 'fa-film' : 'fa-tv' ?> mb-3"></i>
