@@ -67,9 +67,9 @@ $isBrowseNavActive = array_reduce($browseNavItems, static fn(bool $active, array
   <meta name="twitter:description" content="<?= e($ogDescription) ?>">
   <meta name="twitter:image" content="<?= e($ogImage) ?>">
 
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css" rel="stylesheet">
+  <link href="<?= e(asset('vendor/bootstrap/5.3.3/css/bootstrap.min.css') . '?v=' . (string)@filemtime(public_path('assets/vendor/bootstrap/5.3.3/css/bootstrap.min.css'))) ?>" rel="stylesheet">
+  <link href="<?= e(asset('vendor/fontawesome/6.5.2/css/all.min.css') . '?v=' . (string)@filemtime(public_path('assets/vendor/fontawesome/6.5.2/css/all.min.css'))) ?>" rel="stylesheet">
+  <link href="<?= e(asset('vendor/splide/4.1.4/css/splide.min.css') . '?v=' . (string)@filemtime(public_path('assets/vendor/splide/4.1.4/css/splide.min.css'))) ?>" rel="stylesheet">
   <link href="<?= e(asset('css/app.css') . '?v=' . (string)@filemtime(public_path('assets/css/app.css'))) ?>" rel="stylesheet">
 </head>
 <body class="streamhive-v2-body" data-site-name="<?= e($siteName) ?>">
@@ -196,8 +196,8 @@ $isBrowseNavActive = array_reduce($browseNavItems, static fn(bool $active, array
     </div>
   </div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="<?= e(asset('vendor/bootstrap/5.3.3/js/bootstrap.bundle.min.js') . '?v=' . (string)@filemtime(public_path('assets/vendor/bootstrap/5.3.3/js/bootstrap.bundle.min.js'))) ?>"></script>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
+<script src="<?= e(asset('vendor/splide/4.1.4/js/splide.min.js') . '?v=' . (string)@filemtime(public_path('assets/vendor/splide/4.1.4/js/splide.min.js'))) ?>"></script>
 <script src="<?= e(asset('js/app.js') . '?v=' . (string)@filemtime(public_path('assets/js/app.js'))) ?>"></script>
 </body></html>

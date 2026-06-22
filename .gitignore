@@ -5,8 +5,8 @@
 *.local
 
 # Dependencies installed locally
-vendor/
-node_modules/
+/vendor/
+/node_modules/
 
 # Build/test output
 coverage/
