@@ -29,13 +29,25 @@ This version is intentionally **live-only**. It does not require MySQL, SQLite, 
 
 ## Screenshots
 
-| Home | Discovery |
+| Home | Movies |
 |---|---|
-| ![StreamHIVE home screen](docs/screenshots/home.png) | ![StreamHIVE discovery filters](docs/screenshots/discover.png) |
+| ![StreamHIVE home screen](docs/screenshots/home.png) | ![StreamHIVE movie discovery](docs/screenshots/movies.png) |
 
-| Upcoming modal |
+| TV Shows | Discovery Filters |
+|---|---|
+| ![StreamHIVE TV discovery](docs/screenshots/tv.png) | ![StreamHIVE discovery filters](docs/screenshots/discover.png) |
+
+| Coming This Year | Upcoming Modal |
+|---|---|
+| ![StreamHIVE upcoming release grid](docs/screenshots/coming-this-year.png) | ![StreamHIVE upcoming modal with trailer](docs/screenshots/upcoming-modal.png) |
+
+| Actors | Actor Profile |
+|---|---|
+| ![StreamHIVE actor discovery](docs/screenshots/actors.png) | ![StreamHIVE actor profile](docs/screenshots/actor-profile.png) |
+
+| Movie Detail |
 |---|
-| ![StreamHIVE upcoming modal with trailer](docs/screenshots/upcoming-modal.png) |
+| ![StreamHIVE movie detail page](docs/screenshots/movie-detail.png) |
 
 ## Highlights
 
