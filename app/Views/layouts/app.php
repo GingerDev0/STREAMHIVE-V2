@@ -199,5 +199,8 @@ $isBrowseNavActive = array_reduce($browseNavItems, static fn(bool $active, array
 <script src="<?= e(asset('vendor/bootstrap/5.3.3/js/bootstrap.bundle.min.js') . '?v=' . (string)@filemtime(public_path('assets/vendor/bootstrap/5.3.3/js/bootstrap.bundle.min.js'))) ?>"></script>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="<?= e(asset('vendor/splide/4.1.4/js/splide.min.js') . '?v=' . (string)@filemtime(public_path('assets/vendor/splide/4.1.4/js/splide.min.js'))) ?>"></script>
+<script src="<?= e(asset('vendor/dayjs/1.11.21/dayjs.min.js') . '?v=' . (string)@filemtime(public_path('assets/vendor/dayjs/1.11.21/dayjs.min.js'))) ?>"></script>
+<script src="<?= e(asset('vendor/htmx/2.0.10/htmx.min.js') . '?v=' . (string)@filemtime(public_path('assets/vendor/htmx/2.0.10/htmx.min.js'))) ?>"></script>
+<script src="<?= e(asset('vendor/alpinejs/3.15.12/cdn.min.js') . '?v=' . (string)@filemtime(public_path('assets/vendor/alpinejs/3.15.12/cdn.min.js'))) ?>"></script>
 <script src="<?= e(asset('js/app.js') . '?v=' . (string)@filemtime(public_path('assets/js/app.js'))) ?>"></script>
 </body></html>
