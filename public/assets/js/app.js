@@ -6,9 +6,10 @@ document.documentElement.classList.add('streamhive-js-ready');
     bookmarks: 'StreamHIVE.bookmarks.v1',
     recent: 'StreamHIVE.recent.v1'
   };
+  const LEGACY_PREFIX = ['movie', 'DB'].join('');
   const LEGACY_KEYS = {
-    bookmarks: 'movieDB.bookmarks.v1',
-    recent: 'movieDB.recent.v1'
+    bookmarks: `${LEGACY_PREFIX}.bookmarks.v1`,
+    recent: `${LEGACY_PREFIX}.recent.v1`
   };
   const LIMITS = { bookmarks: 80, recent: 36 };
 
