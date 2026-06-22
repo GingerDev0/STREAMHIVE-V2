@@ -481,72 +481,34 @@ document.documentElement.classList.add('streamhive-js-ready');
   activateMovieDetailTab($('.streamhive-movie-detail-tab.active').attr('data-movie-detail-tab') || 'cast');
 })(window.jQuery);
 
-/* Coming this year tabs + jQuery pagination */
+/* Coming this year: htmx pagination, Alpine tabs, Day.js release labels */
 (function ($) {
   if (!$ || !$('.streamhive-coming-tabs-shell').length) return;
 
-  const renderComingFooter = function (type, current, pages, total, perPage) {
-    const $footer = $('[data-coming-pagination="' + type + '"]');
-    if (!$footer.length) return;
+  const comingReleaseLabel = function (dateValue) {
+    if (!window.dayjs || !dateValue) return '';
+    const release = window.dayjs(String(dateValue));
+    if (!release.isValid()) return '';
 
-    if (pages <= 1) {
-      $footer.empty();
-      return;
-    }
-
-    const start = (current - 1) * perPage;
-    const visibleFrom = start + 1;
-    const visibleTo = Math.min(total, start + perPage);
-    const label = type === 'tv' ? 'TV Shows' : 'Movies';
-    let html = '<div class="streamhive-actor-pager-bar streamhive-coming-pager-bar">';
-    html += '<div class="streamhive-pager-showing"><span>Showing</span><strong>' + visibleFrom + (visibleTo !== visibleFrom ? '&ndash;' + visibleTo : '') + '</strong><span>of</span><strong>' + total + '</strong><span>' + label + '</span></div>';
-    html += '<div class="streamhive-actor-pager-actions streamhive-coming-pager-actions">';
-    if (current > 1) html += '<button type="button" class="streamhive-actor-page-btn streamhive-coming-page-btn" data-coming-page="' + type + '" data-page="' + (current - 1) + '" aria-label="Previous page"><i class="fa-solid fa-angle-left"></i></button>';
-    html += '<span class="streamhive-actor-page-current">Page <strong>' + current + '</strong> of ' + pages + '</span>';
-    if (current < pages) html += '<button type="button" class="streamhive-actor-page-btn streamhive-coming-page-btn" data-coming-page="' + type + '" data-page="' + (current + 1) + '" aria-label="Next page"><i class="fa-solid fa-angle-right"></i></button>';
-    html += '</div></div>';
-    $footer.html(html);
+    const today = window.dayjs().startOf('day');
+    const days = release.startOf('day').diff(today, 'day');
+    if (days > 1) return 'in ' + days + ' days';
+    if (days === 1) return 'tomorrow';
+    if (days === 0) return 'today';
+    return 'released';
   };
 
-  const renderComingPage = function (type, page) {
-    const $grid = $('[data-coming-grid="' + type + '"]');
-    const $footer = $('[data-coming-pagination="' + type + '"]');
-    if (!$grid.length || !$footer.length) return;
-
-    const perPage = parseInt($grid.data('per-page'), 10) || 18;
-    const total = parseInt($grid.attr('data-total') || $grid.data('total'), 10) || $grid.find('[data-coming-item]').length;
-    const pages = Math.max(1, Math.ceil(total / perPage));
-    const current = Math.min(Math.max(1, page || 1), pages);
-    const loadedPage = parseInt($grid.attr('data-loaded-page') || $grid.data('loaded-page'), 10) || 1;
-
-    renderComingFooter(type, current, pages, total, perPage);
-    if (loadedPage === current) {
-      return;
-    }
-
-    $grid.addClass('streamhive-is-loading').html('<div class="streamhive-coming-grid-loading"><i class="fa-solid fa-spinner fa-spin"></i></div>');
-    $.getJSON('/ajax/coming-this-year-items', { type: type, page: current, per_page: perPage })
-      .done(function (payload) {
-        if (!payload || !payload.ok) return;
-        $grid.attr('data-loaded-page', payload.page || current);
-        $grid.attr('data-total', payload.total || total);
-        $grid.html(payload.html || '');
-        renderComingFooter(type, payload.page || current, payload.pages || pages, payload.total || total, perPage);
-      })
-      .fail(function () {
-        $grid.html('<div class="streamhive-coming-empty text-center py-5"><i class="fa-solid fa-triangle-exclamation mb-3"></i><h3>Could not load this page</h3><p class="text-white-50 mb-0">Please try again in a moment.</p></div>');
-      })
-      .always(function () {
-        $grid.removeClass('streamhive-is-loading');
-      });
+  const enhanceComingDates = function (scope) {
+    $(scope || document).find('[data-coming-release-date]').addBack('[data-coming-release-date]').each(function () {
+      const label = comingReleaseLabel($(this).attr('data-release-date'));
+      $(this).find('[data-coming-release-relative]').text(label).toggle(label !== '');
+    });
   };
 
-  const activateComingTab = function (type) {
-    $('.streamhive-coming-tab').removeClass('active').attr('aria-selected', 'false');
-    $('.streamhive-coming-tab[data-coming-tab="' + type + '"]').addClass('active').attr('aria-selected', 'true');
-    $('.streamhive-coming-panel').removeClass('active').hide();
-    $('[data-coming-panel="' + type + '"]').addClass('active').fadeIn(140);
-    renderComingPage(type, 1);
+  const setComingLoading = function (target, loading) {
+    const $results = $(target).closest('[data-coming-results]');
+    const $grid = $results.find('[data-coming-grid]').first();
+    $grid.toggleClass('streamhive-is-loading', !!loading);
   };
 
   const setText = function (selector, value, fallback) {
@@ -613,6 +575,9 @@ document.documentElement.classList.add('streamhive-js-ready');
     const rating = String($card.data('rating') || '').trim();
     const mediaType = String($card.data('media-type') || '');
     const tmdbId = $card.data('tmdb-id');
+    const releaseDate = String($card.attr('data-release-date') || '').trim();
+    const releaseLabel = comingReleaseLabel(releaseDate);
+    const releaseText = [String($card.data('date') || '').trim(), releaseLabel].filter(Boolean).join(' · ');
 
     resetComingTrailer();
     $('[data-coming-info-title]').text(title);
@@ -623,7 +588,7 @@ document.documentElement.classList.add('streamhive-js-ready');
     $('[data-coming-info-type-icon]')
       .removeClass('fa-film fa-tv')
       .addClass(mediaType === 'tv' ? 'fa-tv' : 'fa-film');
-    setComingChip('[data-coming-info-date]', 'fa-calendar-days', $card.data('date'));
+    setComingChip('[data-coming-info-date]', 'fa-calendar-days', releaseText);
     setComingChip('[data-coming-info-rating]', 'fa-star', rating);
     $('[data-coming-info-genres]').html(genres.map(function (genre) {
       const safeGenre = $('<div>').text(genre).html();
@@ -661,10 +626,6 @@ document.documentElement.classList.add('streamhive-js-ready');
     window.scrollTo(0, comingModalScrollY || 0);
   };
 
-  $(document).on('click', '.streamhive-coming-tab[data-coming-tab]', function () {
-    activateComingTab($(this).attr('data-coming-tab'));
-  });
-
   $(document).on('click', '[data-coming-modal]', function (event) {
     if ($(event.target).closest('a, button').length) return;
     openComingModal(this);
@@ -686,16 +647,33 @@ document.documentElement.classList.add('streamhive-js-ready');
     unlockComingPageScroll();
   });
 
-  $(document).on('click', '.streamhive-coming-page-btn[data-coming-page][data-page]', function () {
-    const type = $(this).data('coming-page');
-    const page = parseInt($(this).data('page'), 10) || 1;
-    renderComingPage(type, page);
-    const $panel = $('[data-coming-panel="' + type + '"]');
+  document.body.addEventListener('htmx:beforeRequest', function (event) {
+    if (!event.target || !event.target.matches('.streamhive-coming-page-btn')) return;
+    setComingLoading(event.detail && event.detail.target, true);
+  });
+
+  document.body.addEventListener('htmx:afterSwap', function (event) {
+    const target = event.detail && event.detail.target;
+    if (!target || !target.matches('[data-coming-results]')) return;
+    setComingLoading(target, false);
+    enhanceComingDates(target);
+    const $panel = $(target).closest('[data-coming-panel]');
     if ($panel.length) $('html, body').animate({ scrollTop: Math.max(0, $panel.offset().top - 120) }, 220);
   });
 
-  $('.streamhive-coming-panel').hide();
-  activateComingTab($('.streamhive-coming-tab.active').attr('data-coming-tab') || 'movie');
+  document.body.addEventListener('htmx:afterRequest', function (event) {
+    if (!event.target || !event.target.matches('.streamhive-coming-page-btn')) return;
+    setComingLoading(event.detail && event.detail.target, false);
+  });
+
+  document.body.addEventListener('htmx:responseError', function (event) {
+    const target = event.detail && event.detail.target;
+    if (!target || !target.matches('[data-coming-results]')) return;
+    setComingLoading(target, false);
+    $(target).find('[data-coming-grid]').first().html('<div class="streamhive-coming-empty text-center py-5"><i class="fa-solid fa-triangle-exclamation mb-3"></i><h3>Could not load this page</h3><p class="text-white-50 mb-0">Please try again in a moment.</p></div>');
+  });
+
+  enhanceComingDates(document);
 })(window.jQuery);
 
 /* jQuery listings: AJAX filters + pagination for /movies, /tv and /s */

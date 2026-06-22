@@ -23,48 +23,33 @@
   </div>
 </section>
 
-<section class="streamhive-coming-tabs-shell streamhive-glass rounded-4 p-3 p-lg-4">
+<section class="streamhive-coming-tabs-shell streamhive-glass rounded-4 p-3 p-lg-4" x-data="{ activeTab: 'movie' }">
   <div class="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3 mb-4">
     <div>
       <span class="streamhive-v2-section-eyebrow"><i class="fa-solid fa-clock"></i> Release calendar</span>
       <h2 class="mb-0 text-white fw-black">Upcoming releases</h2>
     </div>
     <div class="streamhive-coming-tabs" role="tablist" aria-label="Coming this year tabs">
-      <button class="streamhive-coming-tab active" type="button" data-coming-tab="movie"><i class="fa-solid fa-film"></i> Movies <span><?= e((string)count($movies)) ?></span></button>
-      <button class="streamhive-coming-tab" type="button" data-coming-tab="tv"><i class="fa-solid fa-tv"></i> TV Shows <span><?= e((string)count($tvShows)) ?></span></button>
+      <button class="streamhive-coming-tab active" :class="{ active: activeTab === 'movie' }" type="button" data-coming-tab="movie" role="tab" :aria-selected="activeTab === 'movie' ? 'true' : 'false'" @click="activeTab = 'movie'"><i class="fa-solid fa-film"></i> Movies <span><?= e((string)count($movies)) ?></span></button>
+      <button class="streamhive-coming-tab" :class="{ active: activeTab === 'tv' }" type="button" data-coming-tab="tv" role="tab" :aria-selected="activeTab === 'tv' ? 'true' : 'false'" @click="activeTab = 'tv'"><i class="fa-solid fa-tv"></i> TV Shows <span><?= e((string)count($tvShows)) ?></span></button>
     </div>
   </div>
 
   <?php foreach ([['movie', 'Movies', $movies], ['tv', 'TV Shows', $tvShows]] as [$tabType, $tabLabel, $items]): ?>
-    <div class="streamhive-coming-panel <?= $tabType === 'movie' ? 'active' : '' ?>" data-coming-panel="<?= e($tabType) ?>">
+    <div class="streamhive-coming-panel <?= $tabType === 'movie' ? 'active' : '' ?>" :class="{ active: activeTab === '<?= e($tabType) ?>' }" x-show="activeTab === '<?= e($tabType) ?>'" data-coming-panel="<?= e($tabType) ?>" role="tabpanel">
       <?php if ($items): ?>
         <?php
           $comingTotal = count($items);
-          $comingPages = max(1, (int)ceil($comingTotal / $comingPerPage));
-          $comingVisibleTo = min($comingTotal, $comingPerPage);
+          $comingSlice = array_slice($items, 0, $comingPerPage);
         ?>
-        <div class="streamhive-coming-grid" data-coming-grid="<?= e($tabType) ?>" data-per-page="<?= e((string)$comingPerPage) ?>" data-total="<?= e((string)count($items)) ?>" data-loaded-page="1">
-          <?php foreach (array_slice($items, 0, $comingPerPage) as $item): ?>
-            <?= \App\Core\View::partial('partials/coming-card', ['item' => $item, 'tabType' => $tabType]) ?>
-          <?php endforeach; ?>
-        </div>
-        <div class="streamhive-coming-footer mt-4" data-coming-pagination="<?= e($tabType) ?>">
-          <?php if ($comingPages > 1): ?>
-            <div class="streamhive-actor-pager-bar streamhive-coming-pager-bar">
-              <div class="streamhive-pager-showing">
-                <span>Showing</span>
-                <strong>1<?= $comingVisibleTo !== 1 ? '&ndash;' . e((string)$comingVisibleTo) : '' ?></strong>
-                <span>of</span>
-                <strong><?= e((string)$comingTotal) ?></strong>
-                <span><?= e($tabLabel) ?></span>
-              </div>
-              <div class="streamhive-actor-pager-actions streamhive-coming-pager-actions">
-                <span class="streamhive-actor-page-current">Page <strong>1</strong> of <?= e((string)$comingPages) ?></span>
-                <button type="button" class="streamhive-actor-page-btn streamhive-coming-page-btn" data-coming-page="<?= e($tabType) ?>" data-page="2" aria-label="Next page"><i class="fa-solid fa-angle-right"></i></button>
-              </div>
-            </div>
-          <?php endif; ?>
-        </div>
+        <?= \App\Core\View::partial('partials/coming-results', [
+          'items' => $comingSlice,
+          'tabType' => $tabType,
+          'tabLabel' => $tabLabel,
+          'comingPerPage' => $comingPerPage,
+          'comingTotal' => $comingTotal,
+          'comingPage' => 1,
+        ]) ?>
       <?php else: ?>
         <div class="streamhive-coming-empty text-center py-5">
           <i class="fa-solid <?= $tabType === 'movie' ? 'fa-film' : 'fa-tv' ?> mb-3"></i>

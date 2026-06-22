@@ -684,6 +684,20 @@ final class MediaController
         $pages = max(1, (int)ceil($total / $perPage));
         $page = min($page, $pages);
         $slice = array_slice($items, ($page - 1) * $perPage, $perPage);
+        $tabLabel = $type === 'tv' ? 'TV Shows' : 'Movies';
+
+        if ((string)($_GET['fragment'] ?? '') === '1') {
+            header('Content-Type: text/html; charset=utf-8');
+            return View::partial('partials/coming-results', [
+                'items' => $slice,
+                'tabType' => $type,
+                'tabLabel' => $tabLabel,
+                'comingPerPage' => $perPage,
+                'comingTotal' => $total,
+                'comingPage' => $page,
+            ]);
+        }
+
         $html = '';
         foreach ($slice as $item) {
             $html .= View::partial('partials/coming-card', ['item' => $item, 'tabType' => $type]);

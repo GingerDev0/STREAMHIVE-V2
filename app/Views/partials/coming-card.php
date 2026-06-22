@@ -22,6 +22,7 @@ $tmdbId = (int)($item['tmdb_id'] ?? $item['id'] ?? 0);
   data-title="<?= e($title) ?>"
   data-type="<?= e($typeLabel) ?>"
   data-date="<?= e($prettyDate) ?>"
+  data-release-date="<?= e($date) ?>"
   data-rating="<?= e($rating > 0 ? (string)$rating : '') ?>"
   data-genres="<?= e(implode(', ', $genres)) ?>"
   data-genre-icons="<?= e(json_encode($genreIcons, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?: '{}') ?>"
@@ -37,7 +38,7 @@ $tmdbId = (int)($item['tmdb_id'] ?? $item['id'] ?? 0);
   </div>
   <div class="streamhive-coming-copy">
     <span class="streamhive-coming-title"><?= e($title) ?></span>
-    <?php if ($prettyDate !== ''): ?><span class="streamhive-coming-date"><i class="fa-solid fa-calendar-days"></i> <?= e($prettyDate) ?></span><?php endif; ?>
+    <?php if ($prettyDate !== ''): ?><span class="streamhive-coming-date" data-coming-release-date data-release-date="<?= e($date) ?>"><i class="fa-solid fa-calendar-days"></i> <span><?= e($prettyDate) ?></span><small data-coming-release-relative></small></span><?php endif; ?>
     <?php if ($genres): ?><span class="streamhive-coming-genres"><?= genre_links($genres, $tabType, 2, 'streamhive-genre-link streamhive-genre-link-home') ?></span><?php endif; ?>
   </div>
 </article>

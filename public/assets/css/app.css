@@ -5523,11 +5523,13 @@ body.streamhive-v2-body{
   }
 }
 
-/* 2.5.22 public-page refinements */
+/* 2.5.3 public-page refinements */
 .streamhive-coming-grid.streamhive-is-loading{
   min-height:34rem;
   display:grid;
   place-items:center;
+  opacity:.58;
+  pointer-events:none;
 }
 .streamhive-coming-grid-loading{
   width:100%;
@@ -5543,6 +5545,23 @@ body.streamhive-v2-body{
   gap:.35rem;
   max-width:100%;
   min-width:0;
+}
+.streamhive-coming-date small{
+  display:inline-flex;
+  align-items:center;
+  gap:.25rem;
+  color:rgba(255,255,255,.58);
+  font-size:.7rem;
+  font-weight:850;
+}
+.streamhive-coming-date small:not(:empty)::before{
+  content:"·";
+  color:rgba(255,255,255,.34);
+}
+.streamhive-coming-page-btn[disabled],
+.streamhive-coming-page-btn.htmx-request{
+  opacity:.58;
+  pointer-events:none;
 }
 .streamhive-genre-link-home{
   max-width:100%;
