@@ -252,16 +252,34 @@ document.documentElement.classList.add('streamhive-js-ready');
 
   const escapeHtml = (value) => String(value || '').replace(/[&<>'"]/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[ch]));
   const typeLabel = (type) => type === 'person' ? 'Actor' : (type === 'tv' ? 'TV' : (type === 'episode' ? 'Episode' : 'Movie'));
+  const profileTimeLabel = (item, section) => {
+    if (!window.dayjs) return '';
+    const timestamp = section === 'recent'
+      ? (item.viewedAt || item.lastWatchedAt || item.savedAt)
+      : (item.savedAt || item.viewedAt || item.lastWatchedAt);
+    if (!timestamp) return '';
+    const date = window.dayjs(Number(timestamp));
+    if (!date.isValid()) return '';
+    const minutes = window.dayjs().diff(date, 'minute');
+    if (minutes < 1) return section === 'recent' ? 'viewed just now' : 'saved just now';
+    if (minutes < 60) return (section === 'recent' ? 'viewed ' : 'saved ') + minutes + 'm ago';
+    const hours = window.dayjs().diff(date, 'hour');
+    if (hours < 24) return (section === 'recent' ? 'viewed ' : 'saved ') + hours + 'h ago';
+    const days = window.dayjs().diff(date, 'day');
+    if (days < 30) return (section === 'recent' ? 'viewed ' : 'saved ') + days + 'd ago';
+    return (section === 'recent' ? 'viewed ' : 'saved ') + date.format('MMM D, YYYY');
+  };
   const renderCard = (item, section) => {
     const saved = hasBookmark(item);
     const meta = item.meta || [typeLabel(item.type), item.year].filter(Boolean).join(' · ');
+    const recency = profileTimeLabel(item, section);
     return `<article class="streamhive-profile-card">
       <a href="${escapeHtml(item.url)}" class="streamhive-profile-card-link streamhive-js-media-link" data-media='${escapeHtml(JSON.stringify(item))}'>
         <img src="${escapeHtml(item.poster)}" alt="${escapeHtml(item.title)} poster" loading="lazy">
         <span class="streamhive-profile-card-gradient"></span>
         <span class="streamhive-profile-type">${escapeHtml(typeLabel(item.type))}</span>
         ${item.rating ? `<span class="streamhive-profile-rating"><i class="fa-solid fa-star"></i> ${escapeHtml(item.rating)}</span>` : ''}
-        <span class="streamhive-profile-card-copy"><strong>${escapeHtml(item.title)}</strong><small>${escapeHtml(meta)}</small></span>
+        <span class="streamhive-profile-card-copy"><strong>${escapeHtml(item.title)}</strong><small>${escapeHtml(meta)}</small>${recency ? `<em class="streamhive-profile-recency"><i class="fa-regular fa-clock"></i> ${escapeHtml(recency)}</em>` : ''}</span>
       </a>
       <button class="streamhive-profile-remove ${section === 'bookmarks' ? 'streamhive-js-bookmark-btn' : 'streamhive-js-profile-remove'} ${saved ? 'streamhive-is-saved' : ''}" type="button" data-section="${escapeHtml(section)}" data-media='${escapeHtml(JSON.stringify(item))}' aria-label="${section === 'bookmarks' ? 'Remove bookmark' : 'Remove item'}"><i class="${section === 'bookmarks' || saved ? 'fa-solid fa-bookmark' : 'fa-solid fa-xmark'}"></i></button>
     </article>`;
@@ -755,6 +773,7 @@ document.documentElement.classList.add('streamhive-js-ready');
   };
 
   $(document).on('submit', shellSelector + ' form[method="get"]', function (event) {
+    if (window.htmx) return;
     event.preventDefault();
     const form = this;
     const action = form.getAttribute('action') || window.location.pathname;
@@ -766,6 +785,7 @@ document.documentElement.classList.add('streamhive-js-ready');
   });
 
   $(document).on('click', shellSelector + ' .streamhive-pager-shell a[href], ' + shellSelector + ' .streamhive-pagination-mobile a[href]', function (event) {
+    if (window.htmx) return;
     if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
     const href = this.getAttribute('href') || '';
     const url = new URL(href, window.location.href);
@@ -776,7 +796,27 @@ document.documentElement.classList.add('streamhive-js-ready');
 
   $(document).on('change', shellSelector + ' select', function () {
     const $form = $(this).closest('form');
-    if ($form.length) $form.trigger('submit');
+    if (!$form.length) return;
+    if (window.htmx && $form[0].requestSubmit) $form[0].requestSubmit();
+    else $form.trigger('submit');
+  });
+
+  document.body.addEventListener('htmx:beforeRequest', function (event) {
+    const shell = event.target && event.target.closest ? event.target.closest(shellSelector) : null;
+    if (shell) setListingLoading($(shell), true);
+  });
+
+  document.body.addEventListener('htmx:afterSwap', function (event) {
+    const target = event.detail && event.detail.target;
+    if (!target || !target.matches || !target.matches(shellSelector)) return;
+    setListingLoading($(target), false);
+    refreshListingBehaviours();
+    $('html, body').animate({ scrollTop: Math.max(0, $(target).offset().top - 110) }, 220);
+  });
+
+  document.body.addEventListener('htmx:afterRequest', function (event) {
+    const shell = event.target && event.target.closest ? event.target.closest(shellSelector) : null;
+    if (shell) setListingLoading($(shell), false);
   });
 
   window.addEventListener('popstate', function () {

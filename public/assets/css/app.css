@@ -5563,6 +5563,20 @@ body.streamhive-v2-body{
   opacity:.58;
   pointer-events:none;
 }
+.streamhive-profile-recency{
+  display:inline-flex;
+  align-items:center;
+  gap:.3rem;
+  margin-top:.2rem;
+  color:rgba(255,255,255,.62);
+  font-size:.72rem;
+  font-style:normal;
+  font-weight:850;
+}
+.streamhive-profile-recency i{
+  color:rgba(229,9,20,.85);
+  font-size:.7rem;
+}
 .streamhive-genre-link-home{
   max-width:100%;
   min-width:0;

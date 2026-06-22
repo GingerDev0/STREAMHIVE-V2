@@ -66,22 +66,22 @@ $collectionBackdrop = tmdb_img($collectionMovies[0]['collection_backdrop_path'] 
 </section>
 
 
-<section class="streamhive-movie-detail-tabs-shell streamhive-actor-credits-shell streamhive-glass rounded-4 p-3 p-lg-4 mt-4">
+<section class="streamhive-movie-detail-tabs-shell streamhive-actor-credits-shell streamhive-glass rounded-4 p-3 p-lg-4 mt-4" x-data="{ activeDetail: 'cast' }">
   <div class="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3 mb-4">
     <div>
       <span class="streamhive-v2-section-eyebrow"><i class="fa-solid fa-layer-group"></i> Movie details</span>
       <h2 class="mb-0 text-white fw-black">Details</h2>
     </div>
     <div class="streamhive-actor-tabs streamhive-movie-detail-tabs" role="tablist" aria-label="Movie detail tabs">
-      <button class="streamhive-actor-tab streamhive-movie-detail-tab active" type="button" data-movie-detail-tab="cast" aria-selected="true"><i class="fa-solid fa-users"></i> Cast & Crew <span><?= e((string)$castCrewCount) ?></span></button>
+      <button class="streamhive-actor-tab streamhive-movie-detail-tab active" :class="{ active: activeDetail === 'cast' }" type="button" data-movie-detail-tab="cast" :aria-selected="activeDetail === 'cast' ? 'true' : 'false'" @click="activeDetail = 'cast'"><i class="fa-solid fa-users"></i> Cast & Crew <span><?= e((string)$castCrewCount) ?></span></button>
       <?php if ($collectionMovies): ?>
-      <button class="streamhive-actor-tab streamhive-movie-detail-tab" type="button" data-movie-detail-tab="collection" aria-selected="false"><i class="fa-solid fa-layer-group"></i> Collection <span><?= e((string)count($collectionMovies)) ?></span></button>
+      <button class="streamhive-actor-tab streamhive-movie-detail-tab" :class="{ active: activeDetail === 'collection' }" type="button" data-movie-detail-tab="collection" :aria-selected="activeDetail === 'collection' ? 'true' : 'false'" @click="activeDetail = 'collection'"><i class="fa-solid fa-layer-group"></i> Collection <span><?= e((string)count($collectionMovies)) ?></span></button>
       <?php endif; ?>
-      <button class="streamhive-actor-tab streamhive-movie-detail-tab" type="button" data-movie-detail-tab="recommended" aria-selected="false"><i class="fa-solid fa-layer-group"></i> More like this <span><?= e((string)$relatedCount) ?></span></button>
+      <button class="streamhive-actor-tab streamhive-movie-detail-tab" :class="{ active: activeDetail === 'recommended' }" type="button" data-movie-detail-tab="recommended" :aria-selected="activeDetail === 'recommended' ? 'true' : 'false'" @click="activeDetail = 'recommended'"><i class="fa-solid fa-layer-group"></i> More like this <span><?= e((string)$relatedCount) ?></span></button>
     </div>
   </div>
 
-  <div class="streamhive-movie-detail-panel streamhive-movie-tab-surface streamhive-movie-cast-panel active" data-movie-detail-panel="cast">
+  <div class="streamhive-movie-detail-panel streamhive-movie-tab-surface streamhive-movie-cast-panel active" :class="{ active: activeDetail === 'cast' }" x-show="activeDetail === 'cast'" data-movie-detail-panel="cast">
     <div class="streamhive-movie-tab-surface-bg" style="background-image:url('<?= e(tmdb_img($item['backdrop_path'] ?? ($item['poster_path'] ?? null), 'w1280')) ?>')"></div>
     <div class="streamhive-movie-tab-surface-overlay"></div>
     <div class="streamhive-movie-tab-surface-inner">
@@ -148,7 +148,7 @@ $collectionBackdrop = tmdb_img($collectionMovies[0]['collection_backdrop_path'] 
   </div>
 
   <?php if ($collectionMovies): ?>
-  <div class="streamhive-movie-detail-panel streamhive-movie-tab-surface streamhive-movie-collection-panel" data-movie-detail-panel="collection">
+  <div class="streamhive-movie-detail-panel streamhive-movie-tab-surface streamhive-movie-collection-panel" :class="{ active: activeDetail === 'collection' }" x-show="activeDetail === 'collection'" data-movie-detail-panel="collection">
     <div class="streamhive-movie-tab-surface-bg" style="background-image:url('<?= e($collectionBackdrop) ?>')"></div>
     <div class="streamhive-movie-tab-surface-overlay"></div>
     <div class="streamhive-movie-tab-surface-inner">
@@ -198,7 +198,7 @@ $collectionBackdrop = tmdb_img($collectionMovies[0]['collection_backdrop_path'] 
   </div>
   <?php endif; ?>
 
-  <div class="streamhive-movie-detail-panel streamhive-movie-tab-surface streamhive-movie-recommended-panel" data-movie-detail-panel="recommended">
+  <div class="streamhive-movie-detail-panel streamhive-movie-tab-surface streamhive-movie-recommended-panel" :class="{ active: activeDetail === 'recommended' }" x-show="activeDetail === 'recommended'" data-movie-detail-panel="recommended">
     <div class="streamhive-movie-tab-surface-bg" style="background-image:url('<?= e(tmdb_img($item['backdrop_path'] ?? ($item['poster_path'] ?? null), 'w1280')) ?>')"></div>
     <div class="streamhive-movie-tab-surface-overlay"></div>
     <div class="streamhive-movie-tab-surface-inner">

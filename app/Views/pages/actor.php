@@ -55,22 +55,22 @@ $profile = tmdb_img($actor['profile_path'] ?? null, 'w500');
   </div>
 </section>
 
-<section class="streamhive-actor-credits-shell streamhive-glass rounded-4 p-3 p-lg-4">
+<section class="streamhive-actor-credits-shell streamhive-glass rounded-4 p-3 p-lg-4" x-data="{ activeTab: 'movie' }">
   <div class="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3 mb-4">
     <div>
       <span class="streamhive-v2-section-eyebrow"><i class="fa-solid fa-layer-group"></i> Filmography</span>
       <h2 class="mb-0 text-white fw-black">Movies & TV Shows</h2>
     </div>
     <div class="streamhive-actor-tabs" role="tablist" aria-label="Actor credits tabs">
-      <button class="streamhive-actor-tab active" type="button" data-actor-tab="movie"><i class="fa-solid fa-film"></i> Movies <span><?= e((string)count($movieCredits)) ?></span></button>
-      <button class="streamhive-actor-tab" type="button" data-actor-tab="tv"><i class="fa-solid fa-tv"></i> TV Shows <span><?= e((string)count($tvCredits)) ?></span></button>
-      <?php if ($productionCredits): ?><button class="streamhive-actor-tab" type="button" data-actor-tab="production"><i class="fa-solid fa-screwdriver-wrench"></i> In Production <span><?= e((string)count($productionCredits)) ?></span></button><?php endif; ?>
+      <button class="streamhive-actor-tab active" :class="{ active: activeTab === 'movie' }" type="button" data-actor-tab="movie" :aria-selected="activeTab === 'movie' ? 'true' : 'false'" @click="activeTab = 'movie'"><i class="fa-solid fa-film"></i> Movies <span><?= e((string)count($movieCredits)) ?></span></button>
+      <button class="streamhive-actor-tab" :class="{ active: activeTab === 'tv' }" type="button" data-actor-tab="tv" :aria-selected="activeTab === 'tv' ? 'true' : 'false'" @click="activeTab = 'tv'"><i class="fa-solid fa-tv"></i> TV Shows <span><?= e((string)count($tvCredits)) ?></span></button>
+      <?php if ($productionCredits): ?><button class="streamhive-actor-tab" :class="{ active: activeTab === 'production' }" type="button" data-actor-tab="production" :aria-selected="activeTab === 'production' ? 'true' : 'false'" @click="activeTab = 'production'"><i class="fa-solid fa-screwdriver-wrench"></i> In Production <span><?= e((string)count($productionCredits)) ?></span></button><?php endif; ?>
     </div>
   </div>
 
   <?php foreach ([['movie', 'Movies', $movieCredits], ['tv', 'TV Shows', $tvCredits], ['production', 'In Production', $productionCredits]] as [$tabType, $tabLabel, $items]): ?>
     <?php if ($tabType === 'production' && !$items) continue; ?>
-    <div class="streamhive-actor-credit-panel <?= $tabType === 'movie' ? 'active' : '' ?>" data-actor-panel="<?= e($tabType) ?>">
+    <div class="streamhive-actor-credit-panel <?= $tabType === 'movie' ? 'active' : '' ?>" :class="{ active: activeTab === '<?= e($tabType) ?>' }" x-show="activeTab === '<?= e($tabType) ?>'" data-actor-panel="<?= e($tabType) ?>">
       <?php if ($items): ?>
         <div class="streamhive-actor-credit-grid" data-actor-grid="<?= e($tabType) ?>" data-per-page="12">
           <?php foreach ($items as $credit):

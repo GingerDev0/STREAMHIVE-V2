@@ -46,7 +46,7 @@ if ($query !== '') {
     $summary = 'Explore popular ' . $typeSummary;
 }
 ?>
-<div class="streamhive-js-jquery-listing-shell streamhive-jquery-listing-shell streamhive-search-page" data-jquery-listing="search">
+<div class="streamhive-js-jquery-listing-shell streamhive-jquery-listing-shell streamhive-search-page" data-jquery-listing="search" hx-boost="true" hx-target="this" hx-select=".streamhive-js-jquery-listing-shell" hx-swap="outerHTML" hx-push-url="true">
   <section class="streamhive-search-hero">
     <div class="streamhive-search-hero-copy">
       <span class="streamhive-v2-kicker"><i class="fa-solid fa-magnifying-glass"></i> Discover</span>

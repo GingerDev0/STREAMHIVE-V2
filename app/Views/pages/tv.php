@@ -49,20 +49,20 @@ $relatedCount = count(array_values(array_filter($related ?? [], static fn(array 
   </div>
 </section>
 
-<section id="seasons" class="streamhive-movie-detail-tabs-shell streamhive-actor-credits-shell streamhive-glass rounded-4 p-3 p-lg-4 mt-4">
+<section id="seasons" class="streamhive-movie-detail-tabs-shell streamhive-actor-credits-shell streamhive-glass rounded-4 p-3 p-lg-4 mt-4" x-data="{ activeDetail: 'seasons' }">
   <div class="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3 mb-4">
     <div>
       <span class="streamhive-v2-section-eyebrow"><i class="fa-solid fa-layer-group"></i> TV details</span>
       <h2 class="mb-0 text-white fw-black">Details</h2>
     </div>
     <div class="streamhive-actor-tabs streamhive-movie-detail-tabs" role="tablist" aria-label="TV detail tabs">
-      <button class="streamhive-actor-tab streamhive-movie-detail-tab active" type="button" data-movie-detail-tab="seasons" aria-selected="true"><i class="fa-solid fa-layer-group"></i> Seasons <span><?= e((string)count($releasedSeasons)) ?></span></button>
-      <button class="streamhive-actor-tab streamhive-movie-detail-tab" type="button" data-movie-detail-tab="cast" aria-selected="false"><i class="fa-solid fa-users"></i> Cast & Crew <span><?= e((string)$castCrewCount) ?></span></button>
-      <button class="streamhive-actor-tab streamhive-movie-detail-tab" type="button" data-movie-detail-tab="recommended" aria-selected="false"><i class="fa-solid fa-layer-group"></i> More like this <span><?= e((string)$relatedCount) ?></span></button>
+      <button class="streamhive-actor-tab streamhive-movie-detail-tab active" :class="{ active: activeDetail === 'seasons' }" type="button" data-movie-detail-tab="seasons" :aria-selected="activeDetail === 'seasons' ? 'true' : 'false'" @click="activeDetail = 'seasons'"><i class="fa-solid fa-layer-group"></i> Seasons <span><?= e((string)count($releasedSeasons)) ?></span></button>
+      <button class="streamhive-actor-tab streamhive-movie-detail-tab" :class="{ active: activeDetail === 'cast' }" type="button" data-movie-detail-tab="cast" :aria-selected="activeDetail === 'cast' ? 'true' : 'false'" @click="activeDetail = 'cast'"><i class="fa-solid fa-users"></i> Cast & Crew <span><?= e((string)$castCrewCount) ?></span></button>
+      <button class="streamhive-actor-tab streamhive-movie-detail-tab" :class="{ active: activeDetail === 'recommended' }" type="button" data-movie-detail-tab="recommended" :aria-selected="activeDetail === 'recommended' ? 'true' : 'false'" @click="activeDetail = 'recommended'"><i class="fa-solid fa-layer-group"></i> More like this <span><?= e((string)$relatedCount) ?></span></button>
     </div>
   </div>
 
-  <div class="streamhive-movie-detail-panel streamhive-movie-tab-surface streamhive-tv-seasons-panel active" data-movie-detail-panel="seasons">
+  <div class="streamhive-movie-detail-panel streamhive-movie-tab-surface streamhive-tv-seasons-panel active" :class="{ active: activeDetail === 'seasons' }" x-show="activeDetail === 'seasons'" data-movie-detail-panel="seasons">
     <div class="streamhive-movie-tab-surface-bg" style="background-image:url('<?= e(tmdb_img($item['backdrop_path'] ?? ($item['poster_path'] ?? null), 'w1280')) ?>')"></div>
     <div class="streamhive-movie-tab-surface-overlay"></div>
     <div class="streamhive-movie-tab-surface-inner">
@@ -98,7 +98,7 @@ $relatedCount = count(array_values(array_filter($related ?? [], static fn(array 
     </div>
   </div>
 
-  <div class="streamhive-movie-detail-panel streamhive-movie-tab-surface streamhive-movie-cast-panel" data-movie-detail-panel="cast">
+  <div class="streamhive-movie-detail-panel streamhive-movie-tab-surface streamhive-movie-cast-panel" :class="{ active: activeDetail === 'cast' }" x-show="activeDetail === 'cast'" data-movie-detail-panel="cast">
     <div class="streamhive-movie-tab-surface-bg" style="background-image:url('<?= e(tmdb_img($item['backdrop_path'] ?? ($item['poster_path'] ?? null), 'w1280')) ?>')"></div>
     <div class="streamhive-movie-tab-surface-overlay"></div>
     <div class="streamhive-movie-tab-surface-inner">
@@ -132,7 +132,7 @@ $relatedCount = count(array_values(array_filter($related ?? [], static fn(array 
     </div>
   </div>
 
-  <div class="streamhive-movie-detail-panel streamhive-movie-tab-surface streamhive-movie-recommended-panel" data-movie-detail-panel="recommended">
+  <div class="streamhive-movie-detail-panel streamhive-movie-tab-surface streamhive-movie-recommended-panel" :class="{ active: activeDetail === 'recommended' }" x-show="activeDetail === 'recommended'" data-movie-detail-panel="recommended">
     <div class="streamhive-movie-tab-surface-bg" style="background-image:url('<?= e(tmdb_img($item['backdrop_path'] ?? ($item['poster_path'] ?? null), 'w1280')) ?>')"></div>
     <div class="streamhive-movie-tab-surface-overlay"></div>
     <div class="streamhive-movie-tab-surface-inner">

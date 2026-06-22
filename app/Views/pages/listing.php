@@ -1,5 +1,5 @@
 <?php require_once app_path('app/Helpers/helpers.php'); use App\Core\View; ?>
-<div class="streamhive-js-jquery-listing-shell streamhive-jquery-listing-shell" data-jquery-listing="<?= e($type === 'movie' ? 'movies' : 'tv') ?>">
+<div class="streamhive-js-jquery-listing-shell streamhive-jquery-listing-shell" data-jquery-listing="<?= e($type === 'movie' ? 'movies' : 'tv') ?>" hx-boost="true" hx-target="this" hx-select=".streamhive-js-jquery-listing-shell" hx-swap="outerHTML" hx-push-url="true">
 <section class="streamhive-glass streamhive-listing-hero rounded-4 p-4 mb-4 text-white">
   <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
     <div>

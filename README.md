@@ -1,7 +1,7 @@
-# StreamHIVE 2.5.3
+# StreamHIVE 2.5.4
 
 <p align="center">
-  <img src="public/assets/img/logo.png" alt="StreamHIVE 2.5.3 logo" width="420">
+  <img src="public/assets/img/logo.png" alt="StreamHIVE 2.5.4 logo" width="420">
 </p>
 
 <p align="center">
@@ -11,11 +11,11 @@
   <img alt="CSS3" src="https://img.shields.io/badge/CSS3-responsive-1572b6?style=for-the-badge&logo=css3&logoColor=white">
   <img alt="JavaScript" src="https://img.shields.io/badge/JavaScript-UI-f7df1e?style=for-the-badge&logo=javascript&logoColor=111">
   <img alt="TMDB Powered" src="https://img.shields.io/badge/TMDB-powered-01b4e4?style=for-the-badge">
-  <img alt="StreamHIVE 2.5.3" src="https://img.shields.io/badge/version-2.5.3-e50914?style=for-the-badge">
+  <img alt="StreamHIVE 2.5.4" src="https://img.shields.io/badge/version-2.5.4-e50914?style=for-the-badge">
   <img alt="No database required" src="https://img.shields.io/badge/database-not_required-111?style=for-the-badge">
 </p>
 
-**StreamHIVE 2.5.3** is a live TMDB-powered movie and TV discovery app built with PHP. It delivers a polished streaming-service interface with cinematic detail pages, live search, actor profiles, recommendations, local browser profiles, upcoming-release discovery, and configurable embed-player routing.
+**StreamHIVE 2.5.4** is a live TMDB-powered movie and TV discovery app built with PHP. It delivers a polished streaming-service interface with cinematic detail pages, live search, actor profiles, recommendations, local browser profiles, upcoming-release discovery, and configurable embed-player routing.
 
 This version is intentionally **live-only**. It does not require MySQL, SQLite, admin imports, or a local catalogue. Pages resolve against TMDB at request time, keeping the codebase lightweight, portable, and straightforward to deploy.
 
@@ -306,4 +306,5 @@ Copy `.env.example` to `.env` and fill in your values. The app intentionally ref
 ## License
 
 StreamHIVE 2.5 is released under the MIT License. See [LICENSE](LICENSE) for details.
+
 
