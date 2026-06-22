@@ -67,7 +67,7 @@ $isBrowseNavActive = array_reduce($browseNavItems, static fn(bool $active, array
   <meta name="twitter:description" content="<?= e($ogDescription) ?>">
   <meta name="twitter:image" content="<?= e($ogImage) ?>">
 
-  <link href="<?= e(asset('vendor/bootstrap/5.3.3/css/bootstrap.min.css') . '?v=' . (string)@filemtime(public_path('assets/vendor/bootstrap/5.3.3/css/bootstrap.min.css'))) ?>" rel="stylesheet">
+  <link href="<?= e(asset('vendor/bootstrap/5.3.8/css/bootstrap.min.css') . '?v=' . (string)@filemtime(public_path('assets/vendor/bootstrap/5.3.8/css/bootstrap.min.css'))) ?>" rel="stylesheet">
   <link href="<?= e(asset('vendor/fontawesome/6.5.2/css/all.min.css') . '?v=' . (string)@filemtime(public_path('assets/vendor/fontawesome/6.5.2/css/all.min.css'))) ?>" rel="stylesheet">
   <link href="<?= e(asset('vendor/splide/4.1.4/css/splide.min.css') . '?v=' . (string)@filemtime(public_path('assets/vendor/splide/4.1.4/css/splide.min.css'))) ?>" rel="stylesheet">
   <link href="<?= e(asset('css/app.css') . '?v=' . (string)@filemtime(public_path('assets/css/app.css'))) ?>" rel="stylesheet">
@@ -196,7 +196,7 @@ $isBrowseNavActive = array_reduce($browseNavItems, static fn(bool $active, array
     </div>
   </div>
 </div>
-<script src="<?= e(asset('vendor/bootstrap/5.3.3/js/bootstrap.bundle.min.js') . '?v=' . (string)@filemtime(public_path('assets/vendor/bootstrap/5.3.3/js/bootstrap.bundle.min.js'))) ?>"></script>
+<script src="<?= e(asset('vendor/bootstrap/5.3.8/js/bootstrap.bundle.min.js') . '?v=' . (string)@filemtime(public_path('assets/vendor/bootstrap/5.3.8/js/bootstrap.bundle.min.js'))) ?>"></script>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="<?= e(asset('vendor/splide/4.1.4/js/splide.min.js') . '?v=' . (string)@filemtime(public_path('assets/vendor/splide/4.1.4/js/splide.min.js'))) ?>"></script>
 <script src="<?= e(asset('vendor/dayjs/1.11.21/dayjs.min.js') . '?v=' . (string)@filemtime(public_path('assets/vendor/dayjs/1.11.21/dayjs.min.js'))) ?>"></script>
