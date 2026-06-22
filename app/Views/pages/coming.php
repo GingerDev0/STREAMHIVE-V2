@@ -7,6 +7,7 @@
   }));
   $comingHeroItem = $comingBackdropPool ? $comingBackdropPool[array_rand($comingBackdropPool)] : null;
   $comingHeroBackdrop = $comingHeroItem ? tmdb_img($comingHeroItem['backdrop_path'] ?? ($comingHeroItem['poster_path'] ?? null), !empty($comingHeroItem['backdrop_path']) ? 'w1280' : 'w780') : '';
+  $comingPerPage = 18;
 ?>
 <section class="streamhive-coming-hero streamhive-glass rounded-4 overflow-hidden mb-4<?= $comingHeroBackdrop !== '' ? ' has-backdrop' : '' ?>"<?= $comingHeroBackdrop !== '' ? ' style="--coming-hero-bg:url(' . e($comingHeroBackdrop) . ')"' : '' ?>>
   <?php if ($comingHeroBackdrop !== ''): ?><div class="streamhive-coming-hero-backdrop" aria-hidden="true"></div><?php endif; ?>
@@ -37,47 +38,9 @@
   <?php foreach ([['movie', 'Movies', $movies], ['tv', 'TV Shows', $tvShows]] as [$tabType, $tabLabel, $items]): ?>
     <div class="streamhive-coming-panel <?= $tabType === 'movie' ? 'active' : '' ?>" data-coming-panel="<?= e($tabType) ?>">
       <?php if ($items): ?>
-        <div class="streamhive-coming-grid" data-coming-grid="<?= e($tabType) ?>" data-per-page="18">
-          <?php foreach ($items as $item):
-            $title = (string)($item['title'] ?? 'Untitled');
-            $date = media_release_date($item);
-            $prettyDate = format_date($date);
-            $poster = tmdb_img($item['poster_path'] ?? null, 'w500');
-            $backdrop = tmdb_img($item['backdrop_path'] ?? ($item['poster_path'] ?? null), !empty($item['backdrop_path']) ? 'w1280' : 'w780');
-            $rating = round((float)($item['vote_average'] ?? 0), 1);
-            $genres = array_values(array_filter(array_map('strval', $item['genres'] ?? [])));
-            $genreIcons = [];
-            foreach ($genres as $genre) $genreIcons[$genre] = genre_icon($genre);
-            $overview = trim((string)($item['overview'] ?? ''));
-            $typeLabel = $tabType === 'tv' ? 'TV Show' : 'Movie';
-            $tmdbId = (int)($item['tmdb_id'] ?? $item['id'] ?? 0);
-          ?>
-            <article class="streamhive-coming-card" data-coming-item data-coming-modal
-              role="button" tabindex="0" aria-label="View details for <?= e($title) ?>"
-              data-tmdb-id="<?= e((string)$tmdbId) ?>"
-              data-media-type="<?= e($tabType) ?>"
-              data-title="<?= e($title) ?>"
-              data-type="<?= e($typeLabel) ?>"
-              data-date="<?= e($prettyDate) ?>"
-              data-rating="<?= e($rating > 0 ? (string)$rating : '') ?>"
-              data-genres="<?= e(implode(', ', $genres)) ?>"
-              data-genre-icons="<?= e(json_encode($genreIcons, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?: '{}') ?>"
-              data-overview="<?= e($overview) ?>"
-              data-poster="<?= e($poster) ?>"
-              data-backdrop="<?= e($backdrop) ?>">
-              <div class="streamhive-coming-poster" aria-label="<?= e($title) ?> is not released yet">
-                <img src="<?= e($poster) ?>" alt="<?= e($title) ?> poster" loading="lazy" decoding="async">
-                <span class="streamhive-coming-poster-gradient"></span>
-                <span class="streamhive-coming-soon-pill"><i class="fa-solid fa-lock"></i> Locked until release</span>
-                <span class="streamhive-coming-info-pill"><i class="fa-solid fa-circle-info"></i> Details</span>
-                <?php if ($rating > 0): ?><span class="streamhive-coming-rating"><i class="fa-solid fa-star"></i> <?= e((string)$rating) ?></span><?php endif; ?>
-              </div>
-              <div class="streamhive-coming-copy">
-                <span class="streamhive-coming-title"><?= e($title) ?></span>
-                <?php if ($prettyDate !== ''): ?><span class="streamhive-coming-date"><i class="fa-solid fa-calendar-days"></i> <?= e($prettyDate) ?></span><?php endif; ?>
-                <?php if ($genres): ?><span class="streamhive-coming-genres"><?= genre_links($genres, $tabType, 2, 'streamhive-genre-link streamhive-genre-link-home') ?></span><?php endif; ?>
-              </div>
-            </article>
+        <div class="streamhive-coming-grid" data-coming-grid="<?= e($tabType) ?>" data-per-page="<?= e((string)$comingPerPage) ?>" data-total="<?= e((string)count($items)) ?>" data-loaded-page="1">
+          <?php foreach (array_slice($items, 0, $comingPerPage) as $item): ?>
+            <?= \App\Core\View::partial('partials/coming-card', ['item' => $item, 'tabType' => $tabType]) ?>
           <?php endforeach; ?>
         </div>
         <div class="streamhive-coming-footer mt-4" data-coming-pagination="<?= e($tabType) ?>"></div>

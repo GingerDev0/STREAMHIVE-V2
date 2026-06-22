@@ -658,6 +658,49 @@ final class MediaController
         ]);
     }
 
+    public function comingThisYearItems(array $params): string
+    {
+        $type = (string)($_GET['type'] ?? 'movie');
+        if (!in_array($type, ['movie', 'tv'], true)) $type = 'movie';
+
+        $page = max(1, (int)($_GET['page'] ?? 1));
+        $perPage = min(36, max(6, (int)($_GET['per_page'] ?? 18)));
+        $year = (int)(new \DateTimeImmutable('today'))->format('Y');
+        $today = new \DateTimeImmutable('today');
+        $start = max($today->modify('+1 day')->format('Y-m-d'), sprintf('%d-01-01', $year));
+        $end = sprintf('%d-12-31', $year);
+        $items = [];
+
+        if ($start <= $end) {
+            try {
+                $items = $this->collectComingThisYear(new TmdbClient(), $type, $start, $end, $year);
+                $items = array_values(array_filter($items, static fn(array $item): bool => has_media_poster($item)));
+            } catch (\Throwable) {
+                $items = [];
+            }
+        }
+
+        $total = count($items);
+        $pages = max(1, (int)ceil($total / $perPage));
+        $page = min($page, $pages);
+        $slice = array_slice($items, ($page - 1) * $perPage, $perPage);
+        $html = '';
+        foreach ($slice as $item) {
+            $html .= View::partial('partials/coming-card', ['item' => $item, 'tabType' => $type]);
+        }
+
+        header('Content-Type: application/json; charset=utf-8');
+        return (string)json_encode([
+            'ok' => true,
+            'type' => $type,
+            'page' => $page,
+            'pages' => $pages,
+            'per_page' => $perPage,
+            'total' => $total,
+            'html' => $html,
+        ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+    }
+
     public function movies(array $params): string
     {
         return $this->listing('movie');
@@ -696,12 +739,26 @@ final class MediaController
         $pagination['items'] = array_slice($pagination['items'], ($page - 1) * $perPage, $perPage);
 
         $siteName = site_name();
+        $searchTitle = $query ? 'Search: ' . $query : match ($type) {
+            'movie' => 'Discover Movies',
+            'tv' => 'Discover TV Shows',
+            'person' => 'Discover Actors',
+            default => 'Discover Movies and TV',
+        };
+        $searchDescription = $query
+            ? meta_excerpt('Search results for ' . $query . ' across movies, TV shows, and actors.')
+            : match ($type) {
+                'movie' => 'Discover movies by title, genre, year, rating, and sort order.',
+                'tv' => 'Discover TV shows by title, genre, year, rating, and sort order.',
+                'person' => 'Discover actors and filmographies from TMDB.',
+                default => 'Discover movies and TV shows by title, genre, age rating, year, and sort order.',
+            };
 
         return View::render('pages/search', [
-            'title' => $query ? 'Search: ' . $query : 'Discover Movies and TV',
-            'metaDescription' => $query ? meta_excerpt('Search results for ' . $query . ' across movies, TV shows, and actors.') : 'Discover movies and TV shows by title, genre, age rating, year, and sort order.',
-            'ogTitle' => $query ? 'Search: ' . $query . ' | ' . $siteName : 'Discover Movies and TV | ' . $siteName,
-            'ogDescription' => $query ? meta_excerpt('Search results for ' . $query . ' on ' . $siteName . '.') : 'Find movies and TV shows with advanced filters.',
+            'title' => $searchTitle,
+            'metaDescription' => $searchDescription,
+            'ogTitle' => $searchTitle . ' | ' . $siteName,
+            'ogDescription' => $query ? meta_excerpt('Search results for ' . $query . ' on ' . $siteName . '.') : $searchDescription,
             'canonicalUrl' => absolute_url('s' . (!empty($_SERVER['QUERY_STRING'] ?? '') ? '?' . (string)$_SERVER['QUERY_STRING'] : '')),
             'items' => $pagination['items'],
             'total' => $pagination['total'],
@@ -728,7 +785,7 @@ final class MediaController
         $rating = trim((string)($_GET['rating'] ?? ''));
         $year = trim((string)($_GET['year'] ?? ''));
         $score = trim((string)($_GET['user_rating'] ?? ($_GET['score'] ?? '')));
-        $sort = (string)($_GET['sort'] ?? 'title_asc');
+        $sort = (string)($_GET['sort'] ?? 'popularity_desc');
         $page = max(1, (int)($_GET['page'] ?? 1));
         $perPage = 20;
 
@@ -844,7 +901,7 @@ final class MediaController
         ];
     }
 
-    private function liveListingItems(string $type, int $page, string $genre = '', string $year = '', string $score = '', string $sort = 'title_asc', string $rating = ''): array
+    private function liveListingItems(string $type, int $page, string $genre = '', string $year = '', string $score = '', string $sort = 'popularity_desc', string $rating = ''): array
     {
         $tmdb = new TmdbClient();
 

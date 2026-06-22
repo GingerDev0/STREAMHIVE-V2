@@ -31,7 +31,20 @@ $baseParams = [
 $activeFilters = array_filter([$query, $genre, $year, $score], static fn($value): bool => trim((string)$value) !== '');
 $showingFrom = $total > 0 ? (($page - 1) * ($perPage ?? 24)) + 1 : 0;
 $showingTo = $total > 0 ? min((int)$total, $showingFrom + (int)($perPage ?? 24) - 1) : 0;
-$summary = $query !== '' ? 'Results for "' . $query . '"' : 'Explore popular movies and TV shows';
+$typeSummary = match ($type) {
+    'movie' => 'movies',
+    'tv' => 'TV shows',
+    'person' => 'actors',
+    default => 'movies, TV shows and actors',
+};
+$filterSummary = array_values(array_filter([$genre, $year], static fn($value): bool => trim((string)$value) !== ''));
+if ($query !== '') {
+    $summary = 'Results for "' . $query . '"';
+} elseif ($filterSummary) {
+    $summary = 'Explore ' . implode(' ', $filterSummary) . ' ' . $typeSummary;
+} else {
+    $summary = 'Explore popular ' . $typeSummary;
+}
 ?>
 <div class="streamhive-js-jquery-listing-shell streamhive-jquery-listing-shell streamhive-search-page" data-jquery-listing="search">
   <section class="streamhive-search-hero">

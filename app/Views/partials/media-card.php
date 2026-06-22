@@ -42,7 +42,7 @@ $profile = tmdb_img($item['profile_path'] ?? null, 'w500');
 ?>
 <div class="col-6 col-md-3 col-xl-2">
   <a class="card streamhive-media-card h-100 text-decoration-none streamhive-person-result-card streamhive-js-media-link" href="<?= e($link) ?>" data-fetch-content="<?= e($fetchAttr) ?>" data-media="<?= media_storage_payload($item, $type, $link) ?>">
-    <img src="<?= e($profile) ?>" class="card-img-top" alt="<?= e($title) ?> profile">
+    <img src="<?= e($profile) ?>" class="card-img-top" alt="<?= e($title) ?> profile" loading="lazy" decoding="async">
     <div class="card-body">
       <h3 class="h6 card-title text-white mb-1"><?= e($title) ?></h3>
       <div class="small text-white-50"><?= e((string)($item['known_for_department'] ?? 'Actor')) ?></div>
@@ -57,7 +57,7 @@ $homePoster = tmdb_img($item['poster_path'] ?? null, 'w500');
 ?>
 <div class="col">
   <a class="streamhive-home-poster-card streamhive-js-media-link" href="<?= e($link) ?>" aria-label="Open <?= e($title) ?>" data-fetch-content="<?= e($fetchAttr) ?>" data-media="<?= media_storage_payload($item, $type, $link) ?>">
-    <img src="<?= e($homePoster) ?>" class="streamhive-home-poster-card-img" alt="<?= e($title) ?> poster">
+    <img src="<?= e($homePoster) ?>" class="streamhive-home-poster-card-img" alt="<?= e($title) ?> poster" loading="lazy" decoding="async">
     <button class="streamhive-home-bookmark streamhive-js-bookmark-btn" type="button" aria-label="Save <?= e($title) ?>" data-media="<?= media_storage_payload($item, $type, $link) ?>"><i class="fa-regular fa-bookmark"></i></button>
     <span class="streamhive-home-poster-play"><i class="fa-solid fa-play"></i></span>
     <span class="streamhive-home-card-sheen" aria-hidden="true"></span>
@@ -73,7 +73,7 @@ $homePoster = tmdb_img($item['poster_path'] ?? null, 'w500');
 <div class="col-6 col-md-3 col-xl-2">
   <a class="card streamhive-media-card streamhive-listing-media-card h-100 text-decoration-none streamhive-js-media-link" href="<?= e($link) ?>" data-fetch-content="<?= e($fetchAttr) ?>" data-media="<?= media_storage_payload($item, $type, $link) ?>">
     <span class="streamhive-listing-poster-wrap">
-      <img src="<?= e(tmdb_img($item['poster_path'] ?? null)) ?>" class="card-img-top" alt="<?= e($title) ?>">
+      <img src="<?= e(tmdb_img($item['poster_path'] ?? null)) ?>" class="card-img-top" alt="<?= e($title) ?>" loading="lazy" decoding="async">
       <button class="streamhive-listing-bookmark streamhive-home-bookmark streamhive-js-bookmark-btn" type="button" aria-label="Save <?= e($title) ?>" data-media="<?= media_storage_payload($item, $type, $link) ?>"><i class="fa-regular fa-bookmark"></i></button>
       <span class="streamhive-listing-play streamhive-home-poster-play"><i class="fa-solid fa-play"></i></span>
       <span class="streamhive-listing-poster-gradient" aria-hidden="true"></span>

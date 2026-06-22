@@ -24,6 +24,7 @@ $router->get('/ajax/content-status', [MediaController::class, 'contentStatus']);
 $router->get('/ajax/ensure-content', [MediaController::class, 'ensureContent']);
 $router->get('/ajax/live-search', [MediaController::class, 'liveSearch']);
 $router->get('/ajax/upcoming-trailer', [MediaController::class, 'upcomingTrailer']);
+$router->get('/ajax/coming-this-year-items', [MediaController::class, 'comingThisYearItems']);
 $router->get('/movies/{slug}', [MediaController::class, 'movie']);
 $router->get('/tv/{slug}', [MediaController::class, 'tv']);
 $router->get('/tv/{slug}/s{season}/e{episode}', [MediaController::class, 'episode']);

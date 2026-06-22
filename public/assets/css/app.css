@@ -5523,3 +5523,74 @@ body.streamhive-v2-body{
   }
 }
 
+/* 2.5.2 public-page refinements */
+.streamhive-coming-grid.streamhive-is-loading{
+  min-height:34rem;
+  display:grid;
+  place-items:center;
+}
+.streamhive-coming-grid-loading{
+  width:100%;
+  min-height:18rem;
+  display:grid;
+  place-items:center;
+  color:rgba(255,255,255,.78);
+  font-size:2rem;
+}
+.streamhive-coming-genres{
+  display:flex;
+  flex-wrap:wrap;
+  gap:.35rem;
+  max-width:100%;
+  min-width:0;
+}
+.streamhive-genre-link-home{
+  max-width:100%;
+  min-width:0;
+  overflow:hidden;
+}
+.streamhive-genre-link-home span{
+  min-width:0;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.streamhive-profile-empty{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:.65rem;
+  color:rgba(255,255,255,.72);
+}
+.streamhive-profile-empty>i{
+  width:2.35rem;
+  height:2.35rem;
+  display:grid;
+  place-items:center;
+  border-radius:.85rem;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.14);
+  color:#fff;
+}
+.streamhive-profile-empty strong{
+  color:#fff;
+  font-size:1rem;
+  font-weight:950;
+}
+.streamhive-profile-empty span{
+  display:block;
+  max-width:42rem;
+}
+@media (max-width:575.98px){
+  .streamhive-coming-genres .streamhive-genre-link-home{
+    max-width:100%;
+    flex:1 1 auto;
+  }
+  .streamhive-profile-empty{
+    align-items:stretch;
+  }
+  .streamhive-profile-empty .btn{
+    justify-content:center;
+  }
+}
+

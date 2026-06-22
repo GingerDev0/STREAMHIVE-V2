@@ -31,13 +31,23 @@
 
   <div class="streamhive-profile-list-panel active" data-profile-panel="bookmarks:movie">
     <div class="streamhive-profile-grid" data-profile-grid="bookmarks:movie" data-per-page="12"></div>
-    <div class="streamhive-profile-empty streamhive-glass rounded-4 p-4" data-profile-empty="bookmarks:movie">Tap the bookmark icon on a movie to save it here.</div>
+    <div class="streamhive-profile-empty streamhive-glass rounded-4 p-4" data-profile-empty="bookmarks:movie">
+      <i class="fa-regular fa-bookmark"></i>
+      <strong>No saved movies yet</strong>
+      <span>Tap the bookmark icon on any movie to keep it here.</span>
+      <a class="btn btn-sm btn-outline-light" href="/movies"><i class="fa-solid fa-film"></i> Browse movies</a>
+    </div>
     <div class="streamhive-profile-pagination mt-4" data-profile-pagination="bookmarks:movie"></div>
   </div>
 
   <div class="streamhive-profile-list-panel" data-profile-panel="bookmarks:tv">
     <div class="streamhive-profile-grid" data-profile-grid="bookmarks:tv" data-per-page="12"></div>
-    <div class="streamhive-profile-empty streamhive-glass rounded-4 p-4" data-profile-empty="bookmarks:tv">Tap the bookmark icon on a TV show or episode to save it here.</div>
+    <div class="streamhive-profile-empty streamhive-glass rounded-4 p-4" data-profile-empty="bookmarks:tv">
+      <i class="fa-regular fa-bookmark"></i>
+      <strong>No saved TV shows yet</strong>
+      <span>Bookmark a show or episode and it will appear here.</span>
+      <a class="btn btn-sm btn-outline-light" href="/tv"><i class="fa-solid fa-tv"></i> Browse TV shows</a>
+    </div>
     <div class="streamhive-profile-pagination mt-4" data-profile-pagination="bookmarks:tv"></div>
   </div>
 </section>
@@ -60,19 +70,34 @@
 
   <div class="streamhive-profile-list-panel active" data-profile-panel="recent:movie">
     <div class="streamhive-profile-grid" data-profile-grid="recent:movie" data-per-page="12"></div>
-    <div class="streamhive-profile-empty streamhive-glass rounded-4 p-4" data-profile-empty="recent:movie">Movies you open will show up here.</div>
+    <div class="streamhive-profile-empty streamhive-glass rounded-4 p-4" data-profile-empty="recent:movie">
+      <i class="fa-solid fa-clock-rotate-left"></i>
+      <strong>No recent movies yet</strong>
+      <span>Movies you open will show up here automatically.</span>
+      <a class="btn btn-sm btn-outline-light" href="/movies"><i class="fa-solid fa-film"></i> Start browsing</a>
+    </div>
     <div class="streamhive-profile-pagination mt-4" data-profile-pagination="recent:movie"></div>
   </div>
 
   <div class="streamhive-profile-list-panel" data-profile-panel="recent:tv">
     <div class="streamhive-profile-grid" data-profile-grid="recent:tv" data-per-page="12"></div>
-    <div class="streamhive-profile-empty streamhive-glass rounded-4 p-4" data-profile-empty="recent:tv">TV shows, seasons and episodes you open will show up here.</div>
+    <div class="streamhive-profile-empty streamhive-glass rounded-4 p-4" data-profile-empty="recent:tv">
+      <i class="fa-solid fa-clock-rotate-left"></i>
+      <strong>No recent TV yet</strong>
+      <span>Shows, seasons and episodes you open will show up here.</span>
+      <a class="btn btn-sm btn-outline-light" href="/tv"><i class="fa-solid fa-tv"></i> Start browsing</a>
+    </div>
     <div class="streamhive-profile-pagination mt-4" data-profile-pagination="recent:tv"></div>
   </div>
 
   <div class="streamhive-profile-list-panel" data-profile-panel="recent:person">
     <div class="streamhive-profile-grid" data-profile-grid="recent:person" data-per-page="12"></div>
-    <div class="streamhive-profile-empty streamhive-glass rounded-4 p-4" data-profile-empty="recent:person">Actors you open will show up here.</div>
+    <div class="streamhive-profile-empty streamhive-glass rounded-4 p-4" data-profile-empty="recent:person">
+      <i class="fa-solid fa-user-group"></i>
+      <strong>No recent actors yet</strong>
+      <span>Actors you open will show up here automatically.</span>
+      <a class="btn btn-sm btn-outline-light" href="/actors"><i class="fa-solid fa-user-group"></i> Browse actors</a>
+    </div>
     <div class="streamhive-profile-pagination mt-4" data-profile-pagination="recent:person"></div>
   </div>
 </section>

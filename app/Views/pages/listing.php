@@ -22,7 +22,7 @@
       </select>
     </div>
     <div class="col-md-2"><select name="sort" class="form-select">
-      <?php foreach (['title_asc'=>'Title A-Z','title_desc'=>'Title Z-A','date_desc'=>'Newest release','date_asc'=>'Oldest release','rating_desc'=>'Top rated','rating_asc'=>'Lowest rated','updated_desc'=>'Recently updated'] as $value=>$label): ?>
+      <?php foreach (['popularity_desc'=>'Most popular','date_desc'=>'Newest release','rating_desc'=>'Top rated','title_asc'=>'Title A-Z','title_desc'=>'Title Z-A','date_asc'=>'Oldest release','rating_asc'=>'Lowest rated','updated_desc'=>'Recently updated'] as $value=>$label): ?>
         <option value="<?= e($value) ?>" <?= $sort===$value?'selected':'' ?>><?= e($label) ?></option>
       <?php endforeach; ?>
     </select></div>

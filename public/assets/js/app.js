@@ -475,28 +475,18 @@ document.documentElement.classList.add('streamhive-js-ready');
 (function ($) {
   if (!$ || !$('.streamhive-coming-tabs-shell').length) return;
 
-  const renderComingPage = function (type, page) {
-    const $grid = $('[data-coming-grid="' + type + '"]');
+  const renderComingFooter = function (type, current, pages, total, perPage) {
     const $footer = $('[data-coming-pagination="' + type + '"]');
-    if (!$grid.length || !$footer.length) return;
-
-    const perPage = parseInt($grid.data('per-page'), 10) || 18;
-    const $items = $grid.find('[data-coming-item]');
-    const total = $items.length;
-    const pages = Math.max(1, Math.ceil(total / perPage));
-    const current = Math.min(Math.max(1, page || 1), pages);
-    const start = (current - 1) * perPage;
-    const end = start + perPage;
-
-    $items.hide().slice(start, end).fadeIn(140);
+    if (!$footer.length) return;
 
     if (pages <= 1) {
       $footer.empty();
       return;
     }
 
+    const start = (current - 1) * perPage;
     const visibleFrom = start + 1;
-    const visibleTo = Math.min(total, end);
+    const visibleTo = Math.min(total, start + perPage);
     const label = type === 'tv' ? 'TV Shows' : 'Movies';
     let html = '<div class="streamhive-actor-pager-bar streamhive-coming-pager-bar">';
     html += '<div class="streamhive-pager-showing"><span>Showing</span><strong>' + visibleFrom + (visibleTo !== visibleFrom ? '&ndash;' + visibleTo : '') + '</strong><span>of</span><strong>' + total + '</strong><span>' + label + '</span></div>';
@@ -506,6 +496,39 @@ document.documentElement.classList.add('streamhive-js-ready');
     if (current < pages) html += '<button type="button" class="streamhive-actor-page-btn streamhive-coming-page-btn" data-coming-page="' + type + '" data-page="' + (current + 1) + '" aria-label="Next page"><i class="fa-solid fa-angle-right"></i></button>';
     html += '</div></div>';
     $footer.html(html);
+  };
+
+  const renderComingPage = function (type, page) {
+    const $grid = $('[data-coming-grid="' + type + '"]');
+    const $footer = $('[data-coming-pagination="' + type + '"]');
+    if (!$grid.length || !$footer.length) return;
+
+    const perPage = parseInt($grid.data('per-page'), 10) || 18;
+    const total = parseInt($grid.attr('data-total') || $grid.data('total'), 10) || $grid.find('[data-coming-item]').length;
+    const pages = Math.max(1, Math.ceil(total / perPage));
+    const current = Math.min(Math.max(1, page || 1), pages);
+    const loadedPage = parseInt($grid.attr('data-loaded-page') || $grid.data('loaded-page'), 10) || 1;
+
+    renderComingFooter(type, current, pages, total, perPage);
+    if (loadedPage === current) {
+      return;
+    }
+
+    $grid.addClass('streamhive-is-loading').html('<div class="streamhive-coming-grid-loading"><i class="fa-solid fa-spinner fa-spin"></i></div>');
+    $.getJSON('/ajax/coming-this-year-items', { type: type, page: current, per_page: perPage })
+      .done(function (payload) {
+        if (!payload || !payload.ok) return;
+        $grid.attr('data-loaded-page', payload.page || current);
+        $grid.attr('data-total', payload.total || total);
+        $grid.html(payload.html || '');
+        renderComingFooter(type, payload.page || current, payload.pages || pages, payload.total || total, perPage);
+      })
+      .fail(function () {
+        $grid.html('<div class="streamhive-coming-empty text-center py-5"><i class="fa-solid fa-triangle-exclamation mb-3"></i><h3>Could not load this page</h3><p class="text-white-50 mb-0">Please try again in a moment.</p></div>');
+      })
+      .always(function () {
+        $grid.removeClass('streamhive-is-loading');
+      });
   };
 
   const activateComingTab = function (type) {
