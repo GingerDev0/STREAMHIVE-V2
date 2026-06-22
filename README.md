@@ -17,6 +17,10 @@
   <img alt="No database required" src="https://img.shields.io/badge/database-not_required-111?style=for-the-badge">
 </p>
 
+<p align="center">
+  <strong>Live site:</strong> <a href="https://streamhive.uk/">https://streamhive.uk/</a>
+</p>
+
 **StreamHIVE 2.5.4** is a live TMDB-powered movie and TV discovery app built with PHP. It delivers a polished streaming-service interface with cinematic detail pages, live search, actor profiles, recommendations, local browser profiles, upcoming-release discovery, and configurable embed-player routing.
 
 This version is intentionally **live-only**. It does not require MySQL, SQLite, admin imports, or a local catalogue. Pages resolve against TMDB at request time, keeping the codebase lightweight, portable, and straightforward to deploy.
