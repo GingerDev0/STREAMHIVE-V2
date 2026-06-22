@@ -3,13 +3,22 @@ document.documentElement.classList.add('streamhive-js-ready');
 
 (() => {
   const KEYS = {
+    bookmarks: 'StreamHIVE.bookmarks.v1',
+    recent: 'StreamHIVE.recent.v1'
+  };
+  const LEGACY_KEYS = {
     bookmarks: 'movieDB.bookmarks.v1',
     recent: 'movieDB.recent.v1'
   };
   const LIMITS = { bookmarks: 80, recent: 36 };
 
   const read = (key) => {
-    try { return JSON.parse(localStorage.getItem(KEYS[key]) || '[]'); }
+    try {
+      if (!localStorage.getItem(KEYS[key]) && localStorage.getItem(LEGACY_KEYS[key])) {
+        localStorage.setItem(KEYS[key], localStorage.getItem(LEGACY_KEYS[key]) || '[]');
+      }
+      return JSON.parse(localStorage.getItem(KEYS[key]) || '[]');
+    }
     catch { return []; }
   };
   const write = (key, items) => localStorage.setItem(KEYS[key], JSON.stringify(items.slice(0, LIMITS[key] || 50)));
