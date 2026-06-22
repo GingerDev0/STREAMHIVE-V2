@@ -10,6 +10,8 @@
   <img alt="HTML5" src="https://img.shields.io/badge/HTML5-frontend-e34f26?style=for-the-badge&logo=html5&logoColor=white">
   <img alt="CSS3" src="https://img.shields.io/badge/CSS3-responsive-1572b6?style=for-the-badge&logo=css3&logoColor=white">
   <img alt="JavaScript" src="https://img.shields.io/badge/JavaScript-UI-f7df1e?style=for-the-badge&logo=javascript&logoColor=111">
+  <img alt="htmx" src="https://img.shields.io/badge/htmx-enhanced-3366cc?style=for-the-badge">
+  <img alt="Alpine.js" src="https://img.shields.io/badge/Alpine.js-state-77c1d2?style=for-the-badge">
   <img alt="TMDB Powered" src="https://img.shields.io/badge/TMDB-powered-01b4e4?style=for-the-badge">
   <img alt="StreamHIVE 2.5.4" src="https://img.shields.io/badge/version-2.5.4-e50914?style=for-the-badge">
   <img alt="No database required" src="https://img.shields.io/badge/database-not_required-111?style=for-the-badge">
@@ -38,8 +40,10 @@ This version is intentionally **live-only**. It does not require MySQL, SQLite, 
 - StreamHIVE 2.5 UI refresh with cleaner navigation, release badges, tighter discovery panels, refined poster cards, and a more professional dark-glass finish.
 - Movie and TV detail pages with inline player panels, metadata, genres, cast, crew, collections, seasons, episodes, and related titles.
 - Upcoming releases page with English-language movie and TV results, runtime caching, pagination, detail modals, and embedded trailers.
+- htmx-enhanced browse/search pagination and filtering for smoother server-rendered page swaps.
+- Alpine-powered tabs across upcoming releases, actor filmographies, and movie/TV/season detail sections.
 - Search and discovery across titles, actors, genres, years, ratings, and score filters.
-- Browser-local profile features using `localStorage` for saved titles and recently viewed content.
+- Browser-local profile features using `localStorage` for saved titles and recently viewed content, with Day.js recency labels.
 - Configurable embed provider with built-in presets and custom URL template support.
 - Renameable public site branding through `SITE_NAME` in `.env`.
 
@@ -50,8 +54,8 @@ This version is intentionally **live-only**. It does not require MySQL, SQLite, 
 | Runtime | PHP 8.1+ |
 | Routing | Custom lightweight PHP router |
 | Data | TMDB API |
-| Frontend | Server-rendered PHP views, HTML, CSS, JavaScript, jQuery |
-| UI | Bootstrap, Font Awesome, Splide |
+| Frontend | Server-rendered PHP views, HTML, CSS, JavaScript, jQuery, htmx, Alpine.js, Day.js |
+| UI | Locally served Bootstrap, Font Awesome, Splide |
 | Persistence | Browser `localStorage` for profile data |
 | Server | Apache/XAMPP with `mod_rewrite`, or PHP built-in server |
 
@@ -144,12 +148,15 @@ http://127.0.0.1:8000/
 | `/profile` | Browser-local saved and recent titles |
 | `/ajax/live-search` | Navbar live-search endpoint |
 | `/ajax/upcoming-trailer` | Trailer lookup endpoint for upcoming modal |
+| `/ajax/coming-this-year-items` | htmx/JSON pagination endpoint for upcoming results |
 
 ## Feature Overview
 
 ### Live Discovery
 
 StreamHIVE 2.5 resolves listings directly from TMDB discover/search endpoints. Users can browse movies, TV shows, actors, genres, release years, age ratings, score filters, and live search results without maintaining an imported local catalogue.
+
+Browse and search pages use htmx-boosted forms and pagination, so filters and page changes can update the server-rendered result shell without a full-page refresh while keeping normal links and history behavior intact.
 
 ### Detail Pages
 
@@ -159,9 +166,20 @@ Movie, TV, season, episode, and actor pages are assembled from live TMDB respons
 
 The upcoming page fetches available TMDB discover pages for the remaining current-year date range, filters to English-original titles, removes duplicates, and renders tabbed movie/TV grids. Cards open a high-layer modal with poster, release date, rating, genres, overview, and a fitted trailer embed where available.
 
+Upcoming tabs use Alpine.js for lightweight UI state, pagination uses htmx fragments, and Day.js adds relative release timing such as `tomorrow` or `in 42 days`.
+
 ### Local Profile
 
-Saved titles and recent history are stored in the browser with `localStorage`. No account system or server-side profile storage is required.
+Saved titles and recent history are stored in the browser with `localStorage`. No account system or server-side profile storage is required. Profile cards show Day.js-powered saved/viewed recency labels.
+
+### Frontend Utilities
+
+StreamHIVE keeps frontend dependencies local under `public/assets/vendor` so the app is not dependent on Bootstrap, Font Awesome, Splide, htmx, Alpine.js, or Day.js CDNs at runtime. These utilities are used progressively:
+
+- htmx enhances browse/search filters, pagination, and upcoming-result fragments.
+- Alpine.js handles lightweight tab state on public detail and upcoming pages.
+- Day.js formats release timing and browser-local profile recency.
+- jQuery remains for legacy delegated behavior, live search, profile rendering, and compatibility fallbacks.
 
 ### Player Routing
 
@@ -204,7 +222,7 @@ docs/
   screenshots/   README screenshots
 
 public/
-  assets/        CSS, JavaScript, images, favicon, and metadata image
+  assets/        CSS, JavaScript, locally served frontend vendors, images, favicon, and metadata image
   index.php      Front controller
 
 .env.example     Safe runtime configuration template
@@ -225,6 +243,7 @@ LICENSE          MIT license
 | `app/Helpers/helpers.php` | Shared formatting, slug, image, rating, site-name, and player helpers |
 | `public/assets/js/app.js` | Search, modals, profile state, trailer embeds, and UI behavior |
 | `public/assets/css/app.css` | Visual system and responsive styling |
+| `public/assets/vendor/` | Local Bootstrap, Font Awesome, Splide, htmx, Alpine.js, and Day.js assets |
 
 ## Deployment Checklist
 
@@ -301,6 +320,9 @@ Copy `.env.example` to `.env` and fill in your values. The app intentionally ref
 | Icons | Font Awesome |
 | UI framework | Bootstrap |
 | Carousel UI | Splide |
+| Progressive AJAX | htmx |
+| Lightweight UI state | Alpine.js |
+| Date formatting | Day.js |
 | Original project | GingerDev0 / StreamHIVE 2.5 |
 
 ## License
